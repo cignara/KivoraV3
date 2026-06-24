@@ -6,13 +6,13 @@
 (function () {
   /* ── Data ─────────────────────────────────────────── */
   const NAV_LINKS = [
-    { href: '/activities.html', label: 'Activities', color: 'kivora-purple' },
-    { href: '/games.html',      label: 'Games',      color: 'kivora-orange' },
-    { href: '/stories.html',    label: 'Stories',    color: 'kivora-pink'   },
-    { href: '/printables.html', label: 'Printables', color: 'kivora-green'  },
-    { href: '/parents.html',    label: 'Parents',    color: 'kivora-indigo' },
-    { href: '/teachers.html',   label: 'Teachers',   color: 'kivora-teal'   },
-    { href: '/pricing.html',    label: 'Pricing',    color: 'kivora-yellow' },
+    { href: './activities.html', label: 'Activities', color: 'kivora-purple' },
+    { href: './games.html',      label: 'Games',      color: 'kivora-orange' },
+    { href: './stories.html',    label: 'Stories',    color: 'kivora-pink'   },
+    { href: './printables.html', label: 'Printables', color: 'kivora-green'  },
+    { href: './parents.html',    label: 'Parents',    color: 'kivora-indigo' },
+    { href: './teachers.html',   label: 'Teachers',   color: 'kivora-teal'   },
+    { href: './pricing.html',    label: 'Pricing',    color: 'kivora-yellow' },
   ];
 
   const WORLDS = [

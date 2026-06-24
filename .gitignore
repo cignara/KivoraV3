@@ -1,0 +1,4 @@
+node_modules/
+dist/
+_original_head.html
+_*.js
