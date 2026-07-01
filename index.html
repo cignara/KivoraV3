@@ -3176,18 +3176,7 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
       </div>
 
       <!-- Google Sign-In button -->
-      <button id="googleSignInBtn" onclick="(function(btn){
-          if(btn.disabled) return;
-          btn.disabled=true; btn.textContent='Opening Google…';
-          var msg=document.getElementById('auth-error-msg'); if(msg) msg.style.display='none';
-          kivoraFirebase.signInWithGoogle().catch(function(e){
-            btn.disabled=false; btn.innerHTML='<span style=\"font-size:1.2rem\">G</span> Sign in with Google';
-            if(e&&e.code==='auth/cancelled-popup-request') return; // user opened twice — silently ignore
-            if(e&&e.code==='auth/popup-closed-by-user') return;   // user closed popup — silently ignore
-            var m=e&&e.message?e.message:'Google sign-in failed — please try again.';
-            if(msg){msg.textContent=m;msg.style.display='block';}
-          });
-        })(this)"
+      <button id="googleSignInBtn" onclick="googleSignIn('auth-error-msg','googleSignInBtn','Sign in with Google')"
         style="width:100%;padding:12px;border-radius:14px;border:2px solid #e2e8f0;background:#fff;font-family:inherit;font-size:.9rem;font-weight:700;color:#1e293b;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .2s"
         onmouseover="if(!this.disabled)this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='#e2e8f0'">
         <span style="font-size:1.2rem">G</span> Sign in with Google
@@ -3211,22 +3200,7 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
             onfocus="this.style.borderColor='#7C3AED'" onblur="this.style.borderColor='#e2e8f0'"
             onkeydown="if(event.key==='Enter'){var e=document.getElementById('loginEmail'),p=document.getElementById('loginPassword');if(e.value&&p.value)kivoraFirebase.signInWithEmail(e.value,p.value).catch(function(e){var el=document.getElementById('auth-error-msg');if(el){el.textContent=e.message;el.style.display='block'}})}">
         </div>
-        <button id="emailSignInBtn" onclick="(function(){
-          var e=document.getElementById('loginEmail'),p=document.getElementById('loginPassword'),
-              msg=document.getElementById('auth-error-msg'),btn=document.getElementById('emailSignInBtn');
-          msg.style.display='none';
-          if(!e.value){msg.textContent='Please enter your email address';msg.style.display='block';e.focus();return;}
-          if(!p.value){msg.textContent='Please enter your password';msg.style.display='block';p.focus();return;}
-          btn.disabled=true;btn.textContent='Signing in…';
-          kivoraFirebase.signInWithEmail(e.value,p.value).catch(function(err){
-            btn.disabled=false;btn.textContent='Sign In';
-            var m=err&&err.message?err.message:'Sign-in failed — please check your email and password.';
-            if(m.indexOf('user-not-found')>-1||m.indexOf('wrong-password')>-1||m.indexOf('invalid-credential')>-1)
-              m='Incorrect email or password — please try again.';
-            if(m.indexOf('too-many-requests')>-1) m='Too many attempts — please wait a moment and try again.';
-            msg.textContent=m;msg.style.display='block';
-          });
-        })()"
+        <button id="emailSignInBtn" onclick="emailSignIn()"
           style="width:100%;padding:12px;border-radius:14px;border:none;background:#4F46E5;color:#fff;font-family:inherit;font-size:.9rem;font-weight:800;cursor:pointer;transition:opacity .2s"
           onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
           Sign In
@@ -3247,17 +3221,7 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
       <div id="reg-error-msg" style="display:none;background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:10px 14px;font-size:.85rem;font-weight:700;color:#dc2626;margin-bottom:14px;text-align:center"></div>
 
       <!-- Google Sign-Up -->
-      <button id="googleSignUpBtn" onclick="(function(btn){
-          if(btn.disabled) return;
-          btn.disabled=true; btn.textContent='Opening Google…';
-          var msg=document.getElementById('reg-error-msg'); if(msg) msg.style.display='none';
-          kivoraFirebase.signInWithGoogle().catch(function(e){
-            btn.disabled=false; btn.innerHTML='<span style=\"font-size:1.2rem\">G</span> Sign up with Google';
-            if(e&&(e.code==='auth/cancelled-popup-request'||e.code==='auth/popup-closed-by-user')) return;
-            var m=e&&e.message?e.message:'Google sign-up failed — please try again.';
-            if(msg){msg.textContent=m;msg.style.display='block';}
-          });
-        })(this)"
+      <button id="googleSignUpBtn" onclick="googleSignIn('reg-error-msg','googleSignUpBtn','Sign up with Google')"
         style="width:100%;padding:12px;border-radius:14px;border:2px solid #e2e8f0;background:#fff;font-family:inherit;font-size:.9rem;font-weight:700;color:#1e293b;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .2s;margin-bottom:16px"
         onmouseover="if(!this.disabled)this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='#e2e8f0'">
         <span style="font-size:1.2rem">G</span> Sign up with Google
@@ -3279,22 +3243,7 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
           style="width:100%;padding:12px 14px;border-radius:12px;border:2px solid #e2e8f0;font-family:inherit;font-size:.9rem;font-weight:700;outline:none;transition:border .2s;box-sizing:border-box"
           onfocus="this.style.borderColor='#7C3AED'" onblur="this.style.borderColor='#e2e8f0'">
       </div>
-      <button id="createAccountBtn" onclick="(function(){
-          var e=document.getElementById('regEmail'),p=document.getElementById('regPassword'),
-              msg=document.getElementById('reg-error-msg'),btn=document.getElementById('createAccountBtn');
-          msg.style.display='none';
-          if(!e.value){msg.textContent='Please enter an email address';msg.style.display='block';e.focus();return;}
-          if(p.value.length<6){msg.textContent='Password must be at least 6 characters';msg.style.display='block';p.focus();return;}
-          btn.disabled=true;btn.textContent='Creating account…';
-          kivoraFirebase.createAccount(e.value,p.value).catch(function(err){
-            btn.disabled=false;btn.textContent='Create Account';
-            var m=err&&err.message?err.message:'Account creation failed — please try again.';
-            if(m.indexOf('email-already-in-use')>-1) m='That email is already registered — try signing in instead.';
-            if(m.indexOf('invalid-email')>-1) m='Please enter a valid email address.';
-            if(m.indexOf('not available')>-1) m='Service unavailable — please check your internet connection.';
-            msg.textContent=m;msg.style.display='block';
-          });
-        })()"
+      <button id="createAccountBtn" onclick="emailCreateAccount()"
         style="width:100%;padding:12px;border-radius:14px;border:none;background:linear-gradient(to right,#7C3AED,#4F46E5);color:#fff;font-family:inherit;font-size:.9rem;font-weight:800;cursor:pointer;transition:opacity .2s"
         onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
         Create Account
