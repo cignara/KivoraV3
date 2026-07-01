@@ -6857,7 +6857,9 @@ window._kActWrongAttempts = 0;
 
 function _childProgressKey() {
   try {
-    const id = localStorage.getItem('kivora_active_child');
+    // _lsSet stores strings JSON-encoded, so parse to strip the extra quotes
+    const raw = localStorage.getItem('kivora_active_child');
+    const id = raw ? JSON.parse(raw) : null;
     return id ? 'kivora_progress_' + id : 'kivora_progress';
   } catch(e) { return 'kivora_progress'; }
 }
@@ -6866,7 +6868,8 @@ function saveProgress(code) {
   try {
     const key = _childProgressKey();
     const d = JSON.parse(localStorage.getItem(key) || '{}');
-    d[code] = { ts: Date.now(), stars: 1 };
+    const act = ACTS.find(x => x.code === code);
+    d[code] = { ts: Date.now(), stars: 1, xp: act ? act.xp : 0, coins: act ? act.coins : 0 };
     localStorage.setItem(key, JSON.stringify(d));
   } catch(e) {}
 }

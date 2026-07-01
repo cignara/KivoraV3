@@ -121,7 +121,8 @@
   ns.saveProgress = function(childId, code, data) {
     if (!ns.db || !getUid()) return Promise.resolve();
     return dbRef('progress/' + childId + '/' + code).set({
-      childId: childId, code: code, ts: data.ts || Date.now(), stars: data.stars || 1
+      childId: childId, code: code, ts: data.ts || Date.now(), stars: data.stars || 1,
+      xp: data.xp || 0, coins: data.coins || 0
     });
   };
 
@@ -131,7 +132,7 @@
       var obj = {};
       snap.forEach(function(d) {
         var v = d.val();
-        obj[d.key] = { ts: v.ts, stars: v.stars || 1 };
+        obj[d.key] = { ts: v.ts, stars: v.stars || 1, xp: v.xp || 0, coins: v.coins || 0 };
       });
       return obj;
     });
@@ -227,8 +228,12 @@
       origSave(code);
       if (ns.ready) {
         try {
-          var childId = localStorage.getItem('kivora_active_child');
-          if (childId) ns.saveProgress(childId, code, { ts: Date.now(), stars: 1 });
+          var raw = localStorage.getItem('kivora_active_child');
+          var childId = raw ? JSON.parse(raw) : null;
+          if (childId) {
+            var act = (window.ACTS || []).find(function(x) { return x.code === code; });
+            ns.saveProgress(childId, code, { ts: Date.now(), stars: 1, xp: act ? act.xp : 0, coins: act ? act.coins : 0 });
+          }
         } catch(e) {}
       }
     };
@@ -238,7 +243,8 @@
       origLoad();
       if (!ns.ready) return;
       try {
-        var childId = localStorage.getItem('kivora_active_child');
+        var raw = localStorage.getItem('kivora_active_child');
+        var childId = raw ? JSON.parse(raw) : null;
         if (!childId) return;
         ns.loadProgress(childId).then(function(cloudData) {
           if (!cloudData || !Object.keys(cloudData).length) return;
@@ -249,15 +255,13 @@
               if (a) { window.totalXP = (window.totalXP || 0) + a.xp; window.totalCoins = (window.totalCoins || 0) + a.coins; }
             }
           });
-          // Save merged progress back to localStorage
-          var key = (function() {
-            try {
-              var id = localStorage.getItem('kivora_active_child');
-              return id ? 'kivora_progress_' + id : 'kivora_progress';
-            } catch(e) { return 'kivora_progress'; }
-          })();
+          // Save merged progress back to localStorage with xp/coins fields
+          var key = 'kivora_progress_' + childId;
           var merged = {};
-          window._kivoraCompleted.forEach(function(c) { merged[c] = { ts: Date.now(), stars: 1 }; });
+          window._kivoraCompleted.forEach(function(c) {
+            var a = (window.ACTS || []).find(function(x) { return x.code === c; });
+            merged[c] = { ts: Date.now(), stars: 1, xp: a ? a.xp : 0, coins: a ? a.coins : 0 };
+          });
           try { localStorage.setItem(key, JSON.stringify(merged)); } catch(e) {}
         });
       } catch(e) {}

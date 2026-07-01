@@ -3265,11 +3265,11 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;margin:12px 0 16px">
-        <a href="./kivora-activity-player.html"
-          style="display:block;text-align:center;padding:14px;background:linear-gradient(to right,#7C3AED,#4F46E5);border-radius:14px;color:#fff;font-weight:800;font-size:1rem;text-decoration:none">
+        <button onclick="startLearningAsChild(null)"
+          style="display:block;width:100%;text-align:center;padding:14px;background:linear-gradient(to right,#7C3AED,#4F46E5);border-radius:14px;color:#fff;font-weight:800;font-size:1rem;border:none;cursor:pointer;font-family:inherit">
           ▶ Continue Learning — Alphabet Island
-        </a>
-        <a href="./worlds.html"
+        </button>
+        <a href="#" onclick="closePageModal();spaNavigate('worlds');return false"
           style="display:block;text-align:center;padding:12px;background:#f1f5f9;border-radius:14px;color:#475569;font-weight:700;font-size:.9rem;text-decoration:none">
           🌍 Explore All Worlds
         </a>
@@ -3298,7 +3298,7 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
         style="width:100%;padding:11px;border-radius:14px;border:none;background:#f1f5f9;font-family:inherit;font-size:.9rem;font-weight:700;color:#475569;cursor:pointer;margin-bottom:10px">
         🏠 Back to Home
       </button>
-      <button onclick="openPage('login')"
+      <button onclick="openPage('login');document.getElementById('existing-children-panel').style.display='none';document.getElementById('new-child-form').style.display='block'"
         style="width:100%;padding:10px;border-radius:12px;border:2px dashed #e2e8f0;background:transparent;font-family:inherit;font-size:.88rem;font-weight:700;color:#7C3AED;cursor:pointer">
         + Add another child
       </button>
