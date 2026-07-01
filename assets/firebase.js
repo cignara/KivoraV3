@@ -53,26 +53,30 @@
     provider.setCustomParameters({ prompt: 'select_account' });
     return ns.auth.signInWithPopup(provider).then(function(result) {
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
-      // Always land on the parent dashboard — it shows "No children added yet" itself when empty
+      _syncLocalToCloud(result.user.uid);
       if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
       return result;
     });
   };
 
   ns.signInWithEmail = function(email, password) {
-    if (!ns.auth) return Promise.reject('Firebase not available');
+    if (!ns.auth) return Promise.reject(new Error('Firebase not available — please try again'));
     return ns.auth.signInWithEmailAndPassword(email, password).then(function(result) {
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
+      // Push any locally accumulated progress to the cloud account
+      _syncLocalToCloud(result.user.uid);
       if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
       return result;
     });
   };
 
   ns.createAccount = function(email, password) {
-    if (!ns.auth) return Promise.reject('Firebase not available');
+    if (!ns.auth) return Promise.reject(new Error('Firebase not available — please try again or use Google sign-in'));
     return ns.auth.createUserWithEmailAndPassword(email, password).then(function(result) {
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
-      if (typeof openPage === 'function') { setTimeout(function() { openPage('login'); }, 50); }
+      // Push any locally saved children + progress to the new account
+      _syncLocalToCloud(result.user.uid);
+      if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
       return result;
     });
   };
@@ -137,6 +141,26 @@
       ns._uid = null;
     }
   });
+
+  // Push all local children and their progress up to Firebase for this uid
+  function _syncLocalToCloud(uid) {
+    if (!ns.db) return;
+    try {
+      var kids = JSON.parse(localStorage.getItem('kivora_children') || '[]');
+      kids.forEach(function(child) {
+        ns.db.ref('users/' + uid + '/children/' + child.id).set(child);
+        try {
+          var progressKey = 'kivora_progress_' + child.id;
+          var prog = JSON.parse(localStorage.getItem(progressKey) || '{}');
+          Object.keys(prog).forEach(function(code) {
+            ns.db.ref('users/' + uid + '/progress/' + child.id + '/' + code).set({
+              childId: child.id, code: code, ts: prog[code].ts || Date.now(), stars: prog[code].stars || 1
+            });
+          });
+        } catch(e) {}
+      });
+    } catch(e) { console.warn('[Kivora Firebase] syncLocalToCloud error:', e.message); }
+  }
 
   // Merge cloud data into localStorage on first load
   function syncFromCloud() {
