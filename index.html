@@ -257,9 +257,14 @@
       <button class="tab-btn px-4 py-2 rounded-xl font-bold text-sm border-2 border-slate-200 dark:border-slate-600 hover:border-kivora-purple transition-all" data-filter="science">Science</button>
       <button class="tab-btn px-4 py-2 rounded-xl font-bold text-sm border-2 border-slate-200 dark:border-slate-600 hover:border-kivora-purple transition-all" data-filter="creative">Creative</button>
     </div>
-    <div id="gamesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
-    <div class="text-center mt-8 flex flex-wrap gap-4 justify-center">
-      <button id="gamesShowMore" onclick="showMoreGames()" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-kivora-purple border-2 border-kivora-purple hover:bg-kivora-purple hover:text-white transition-all">See More Games ↓</button>
+    <div style="position:relative">
+      <button onclick="scrollRow('gamesGrid',-1)" style="position:absolute;left:-16px;top:50%;transform:translateY(-50%);z-index:10;width:36px;height:36px;border-radius:50%;border:none;background:#7C3AED;color:#fff;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)">‹</button>
+      <div id="gamesGrid" style="display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;padding:8px 4px 16px;scrollbar-width:none;-ms-overflow-style:none"></div>
+      <button onclick="scrollRow('gamesGrid',1)" style="position:absolute;right:-16px;top:50%;transform:translateY(-50%);z-index:10;width:36px;height:36px;border-radius:50%;border:none;background:#7C3AED;color:#fff;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)">›</button>
+    </div>
+    <style>#gamesGrid::-webkit-scrollbar{display:none}</style>
+    <div class="text-center mt-6 flex flex-wrap gap-4 justify-center">
+      <button id="gamesShowMore" onclick="showMoreGames()" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-kivora-purple border-2 border-kivora-purple hover:bg-kivora-purple hover:text-white transition-all">Load More Games ↓</button>
       <a href="./games.html" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-white bg-gradient-to-r from-kivora-orange to-kivora-pink hover:shadow-xl hover:scale-105 transition-all">Explore All 280 Games 🎮</a>
     </div>
   </div>
@@ -385,9 +390,14 @@
       <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-800 dark:text-white mb-4">Reading Corner 📚</h2>
       <p class="text-slate-600 dark:text-slate-300 text-lg font-semibold">Magical stories that build reading skills and spark imagination!</p>
     </div>
-    <div id="storiesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
-    <div class="text-center mt-8 flex flex-wrap gap-4 justify-center">
-      <button id="storiesShowMore" onclick="showMoreStories()" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-kivora-pink border-2 border-kivora-pink hover:bg-kivora-pink hover:text-white transition-all">See More Stories ↓</button>
+    <div style="position:relative">
+      <button onclick="scrollRow('storiesGrid',-1)" style="position:absolute;left:-16px;top:50%;transform:translateY(-50%);z-index:10;width:36px;height:36px;border-radius:50%;border:none;background:#EC4899;color:#fff;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)">‹</button>
+      <div id="storiesGrid" style="display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;padding:8px 4px 16px;scrollbar-width:none;-ms-overflow-style:none"></div>
+      <button onclick="scrollRow('storiesGrid',1)" style="position:absolute;right:-16px;top:50%;transform:translateY(-50%);z-index:10;width:36px;height:36px;border-radius:50%;border:none;background:#EC4899;color:#fff;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)">›</button>
+    </div>
+    <style>#storiesGrid::-webkit-scrollbar{display:none}</style>
+    <div class="text-center mt-6 flex flex-wrap gap-4 justify-center">
+      <button id="storiesShowMore" onclick="showMoreStories()" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-kivora-pink border-2 border-kivora-pink hover:bg-kivora-pink hover:text-white transition-all">Load More Stories ↓</button>
       <a href="./stories.html" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-white bg-gradient-to-r from-kivora-pink to-kivora-purple hover:shadow-xl hover:scale-105 transition-all">Explore All 300 Stories 📚</a>
     </div>
   </div>
@@ -525,9 +535,14 @@
       <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-800 dark:text-white mb-4">Educational Videos 🎬</h2>
       <p class="text-slate-600 dark:text-slate-300 text-lg font-semibold">Animated, engaging videos that make every concept come alive!</p>
     </div>
-    <div id="videosGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-    <div class="text-center mt-8 flex flex-wrap gap-4 justify-center">
-      <button id="videosShowMore" onclick="showMoreVideos()" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-kivora-teal border-2 border-kivora-teal hover:bg-kivora-teal hover:text-white transition-all">See More Videos ↓</button>
+    <div style="position:relative">
+      <button onclick="scrollRow('videosGrid',-1)" style="position:absolute;left:-16px;top:50%;transform:translateY(-50%);z-index:10;width:36px;height:36px;border-radius:50%;border:none;background:#0D9488;color:#fff;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)">‹</button>
+      <div id="videosGrid" style="display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;padding:8px 4px 16px;scrollbar-width:none;-ms-overflow-style:none"></div>
+      <button onclick="scrollRow('videosGrid',1)" style="position:absolute;right:-16px;top:50%;transform:translateY(-50%);z-index:10;width:36px;height:36px;border-radius:50%;border:none;background:#0D9488;color:#fff;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)">›</button>
+    </div>
+    <style>#videosGrid::-webkit-scrollbar{display:none}</style>
+    <div class="text-center mt-6 flex flex-wrap gap-4 justify-center">
+      <button id="videosShowMore" onclick="showMoreVideos()" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-kivora-teal border-2 border-kivora-teal hover:bg-kivora-teal hover:text-white transition-all">Load More Videos ↓</button>
       <a href="./videos.html" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-white bg-gradient-to-r from-kivora-teal to-kivora-indigo hover:shadow-xl hover:scale-105 transition-all">Watch All 160 Videos 🎬</a>
     </div>
   </div>
@@ -543,9 +558,14 @@
       <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-800 dark:text-white mb-4">Printable Resources 🖨️</h2>
       <p class="text-slate-600 dark:text-slate-300 text-lg font-semibold">Beautiful, curriculum-aligned worksheets, activity sheets, flashcards, and learning tools — print in one click!</p>
     </div>
-    <div id="printablesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
-    <div class="text-center mt-8 flex flex-wrap gap-4 justify-center">
-      <button id="printablesShowMore" onclick="showMorePrintables()" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-kivora-green border-2 border-kivora-green hover:bg-kivora-green hover:text-white transition-all">See More Printables ↓</button>
+    <div style="position:relative">
+      <button onclick="scrollRow('printablesGrid',-1)" style="position:absolute;left:-16px;top:50%;transform:translateY(-50%);z-index:10;width:36px;height:36px;border-radius:50%;border:none;background:#16A34A;color:#fff;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)">‹</button>
+      <div id="printablesGrid" style="display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;padding:8px 4px 16px;scrollbar-width:none;-ms-overflow-style:none"></div>
+      <button onclick="scrollRow('printablesGrid',1)" style="position:absolute;right:-16px;top:50%;transform:translateY(-50%);z-index:10;width:36px;height:36px;border-radius:50%;border:none;background:#16A34A;color:#fff;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)">›</button>
+    </div>
+    <style>#printablesGrid::-webkit-scrollbar{display:none}</style>
+    <div class="text-center mt-6 flex flex-wrap gap-4 justify-center">
+      <button id="printablesShowMore" onclick="showMorePrintables()" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-kivora-green border-2 border-kivora-green hover:bg-kivora-green hover:text-white transition-all">Load More Printables ↓</button>
       <a href="./printables.html" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-white bg-gradient-to-r from-kivora-green to-kivora-teal hover:shadow-xl hover:scale-105 transition-all">Download All 550 Printables 🖨️</a>
     </div>
   </div>
