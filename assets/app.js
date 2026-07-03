@@ -3386,7 +3386,25 @@ function openPrintable(packKey){
     return;
   }
   const file = PRINTABLE_FILES[packKey];
-  if(file){ window.open(file.url, '_blank'); return; }
+  if(file){
+    // Open the tab immediately (within the click gesture) so popup blockers allow it,
+    // then verify the file actually exists before letting it load — falls back to a
+    // toast instead of a dead/blank tab when the PDF hasn't been uploaded yet.
+    const win = window.open('', '_blank');
+    fetch(file.url, { method: 'HEAD' }).then(function(res){
+      if(res.ok){
+        if(win) win.location = file.url; else window.open(file.url, '_blank');
+      } else {
+        if(win) win.close();
+        showToast('🖨️ This printable is being finalised — check back soon!');
+      }
+    }).catch(function(){
+      if(win) win.close();
+      showToast('🖨️ This printable is being finalised — check back soon!');
+    });
+    return;
+  }
+  showToast('🖨️ This printable is being finalised — check back soon!');
 }
 
 const SPA_PAGES = new Set([
