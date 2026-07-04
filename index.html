@@ -3199,11 +3199,23 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
         </button>
       </div>
 
-      <!-- Divider + Parent section -->
-      <div style="display:flex;align-items:center;gap:12px;margin:18px 0 16px">
+      <!-- Divider + Account section -->
+      <div style="display:flex;align-items:center;gap:12px;margin:18px 0 14px">
         <hr style="flex:1;border:none;border-top:1px solid #e2e8f0">
-        <span style="font-size:.8rem;font-weight:700;color:#94a3b8;white-space:nowrap">Parent Account</span>
+        <span style="font-size:.8rem;font-weight:700;color:#94a3b8;white-space:nowrap">Account Login</span>
         <hr style="flex:1;border:none;border-top:1px solid #e2e8f0">
+      </div>
+
+      <!-- Role toggle -->
+      <div id="login-role-toggle" style="display:flex;gap:8px;margin-bottom:14px">
+        <button id="login-role-parent" onclick="kivoraSetLoginRole('parent')"
+          style="flex:1;padding:9px;border-radius:10px;border:2px solid #7C3AED;background:#7C3AED;color:#fff;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">
+          👨‍👩‍👧 Parent
+        </button>
+        <button id="login-role-teacher" onclick="kivoraSetLoginRole('teacher')"
+          style="flex:1;padding:9px;border-radius:10px;border:2px solid #e2e8f0;background:#fff;color:#64748b;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">
+          🏫 Teacher
+        </button>
       </div>
 
       <!-- Google Sign-In button -->
@@ -3250,6 +3262,18 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
         <p style="color:#64748b;font-size:.82rem;font-weight:600;margin:0">Track your child's progress across devices</p>
       </div>
       <div id="reg-error-msg" style="display:none;background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:10px 14px;font-size:.85rem;font-weight:700;color:#dc2626;margin-bottom:14px;text-align:center"></div>
+
+      <!-- Role toggle -->
+      <div id="reg-role-toggle" style="display:flex;gap:8px;margin-bottom:14px">
+        <button id="reg-role-parent" onclick="kivoraSetLoginRole('parent')"
+          style="flex:1;padding:9px;border-radius:10px;border:2px solid #7C3AED;background:#7C3AED;color:#fff;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">
+          👨‍👩‍👧 Parent
+        </button>
+        <button id="reg-role-teacher" onclick="kivoraSetLoginRole('teacher')"
+          style="flex:1;padding:9px;border-radius:10px;border:2px solid #e2e8f0;background:#fff;color:#64748b;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">
+          🏫 Teacher
+        </button>
+      </div>
 
       <!-- Google Sign-Up -->
       <button id="googleSignUpBtn" onclick="googleSignIn('reg-error-msg','googleSignUpBtn','Sign up with Google')"
@@ -3502,6 +3526,34 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
 <!--  Firebase Auth + Firestore initialized in assets/firebase.js   -->
 <!--  Falls back to localStorage if offline / SDK unavailable.      -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+function kivoraSetLoginRole(role) {
+  window._kivoraLoginRole = role;
+  var isTeacher = role === 'teacher';
+  // login modal buttons
+  var lp = document.getElementById('login-role-parent');
+  var lt = document.getElementById('login-role-teacher');
+  if (lp && lt) {
+    lp.style.background = isTeacher ? '#fff' : '#7C3AED';
+    lp.style.color = isTeacher ? '#64748b' : '#fff';
+    lp.style.borderColor = isTeacher ? '#e2e8f0' : '#7C3AED';
+    lt.style.background = isTeacher ? '#7C3AED' : '#fff';
+    lt.style.color = isTeacher ? '#fff' : '#64748b';
+    lt.style.borderColor = isTeacher ? '#7C3AED' : '#e2e8f0';
+  }
+  // register modal buttons
+  var rp = document.getElementById('reg-role-parent');
+  var rt = document.getElementById('reg-role-teacher');
+  if (rp && rt) {
+    rp.style.background = isTeacher ? '#fff' : '#7C3AED';
+    rp.style.color = isTeacher ? '#64748b' : '#fff';
+    rp.style.borderColor = isTeacher ? '#e2e8f0' : '#7C3AED';
+    rt.style.background = isTeacher ? '#7C3AED' : '#fff';
+    rt.style.color = isTeacher ? '#fff' : '#64748b';
+    rt.style.borderColor = isTeacher ? '#7C3AED' : '#e2e8f0';
+  }
+}
+</script>
 
 
 

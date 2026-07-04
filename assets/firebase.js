@@ -34,6 +34,31 @@
 
   function getUid() { return ns.auth && ns.auth.currentUser && ns.auth.currentUser.uid; }
 
+  function getSelectedRole() {
+    return (window._kivoraLoginRole === 'teacher') ? 'teacher' : 'parent';
+  }
+
+  function redirectByRole(role) {
+    var dest = (role === 'teacher') ? './teachers.html' : './parents.html';
+    window.location.href = dest;
+  }
+
+  function saveUserProfile(user, role) {
+    if (!ns.db || !user) return;
+    var profile = {
+      uid: user.uid,
+      email: user.email || null,
+      displayName: user.displayName || null,
+      photoURL: user.photoURL || null,
+      role: role || 'parent',
+      lastLogin: Date.now()
+    };
+    ns.db.ref('users/' + user.uid + '/profile').set(profile).catch(function(e) {
+      console.warn('[Kivora Firebase] saveUserProfile error:', e.message);
+    });
+    try { localStorage.setItem('kivora_user_role', profile.role); } catch(e) {}
+  }
+
   ns.signInAnonymously = function() {
     if (!ns.auth) return Promise.reject('Firebase not available');
     return ns.auth.signInAnonymously().catch(function(e) {
@@ -56,14 +81,13 @@
     ns._googlePopupPending = true;
     var provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
+    var role = getSelectedRole();
     return ns.auth.signInWithPopup(provider).then(function(result) {
       ns._googlePopupPending = false;
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
+      saveUserProfile(result.user, role);
       _syncLocalToCloud(result.user.uid);
-      _loadCloudIntoLocal(true);
-      // Immediate redirect for users with local data; _loadCloudIntoLocal callback
-      // will navigate again once cloud data arrives (in case local was empty).
-      if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
+      setTimeout(function() { redirectByRole(role); }, 100);
       return result;
     }).catch(function(e) {
       ns._googlePopupPending = false;
@@ -73,22 +97,24 @@
 
   ns.signInWithEmail = function(email, password) {
     if (!ns.auth) return Promise.reject(new Error('Firebase not available — please try again'));
+    var role = getSelectedRole();
     return ns.auth.signInWithEmailAndPassword(email, password).then(function(result) {
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
+      saveUserProfile(result.user, role);
       _syncLocalToCloud(result.user.uid);
-      _loadCloudIntoLocal(true);
-      if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
+      setTimeout(function() { redirectByRole(role); }, 100);
       return result;
     });
   };
 
   ns.createAccount = function(email, password) {
     if (!ns.auth) return Promise.reject(new Error('Firebase not available — please try again or use Google sign-in'));
+    var role = getSelectedRole();
     return ns.auth.createUserWithEmailAndPassword(email, password).then(function(result) {
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
+      saveUserProfile(result.user, role);
       _syncLocalToCloud(result.user.uid);
-      _loadCloudIntoLocal(true);
-      if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
+      setTimeout(function() { redirectByRole(role); }, 100);
       return result;
     });
   };
