@@ -228,8 +228,11 @@
     list.innerHTML = allChildren.map(function(c, i) {
       return '<div class="child-tab' + (i === 0 ? ' active' : '') + '" onclick="selectChild(\'' + c.id + '\',this)">' +
         '<div class="child-avatar">' + (c.avatar || '🐨') + '</div>' +
-        '<div><div class="child-name">' + escHtml(c.name) + '</div>' +
+        '<div style="flex:1"><div class="child-name">' + escHtml(c.name) + '</div>' +
         '<div class="child-age">' + gradeLabel(c.grade) + '</div></div>' +
+        '<a href="index.html?childId=' + encodeURIComponent(c.id) + '" title="Start learning as ' + escHtml(c.name) + '" ' +
+          'style="font-size:.8rem;background:var(--green);color:#fff;border-radius:6px;padding:3px 8px;white-space:nowrap;text-decoration:none;flex-shrink:0" ' +
+          'onclick="event.stopPropagation()">▶</a>' +
         '</div>';
     }).join('');
     activeChildId = allChildren[0].id;

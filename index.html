@@ -3248,8 +3248,9 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
           onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
           Sign In
         </button>
-        <div style="text-align:center;margin-top:10px">
+        <div style="text-align:center;margin-top:10px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
           <a href="#" onclick="openPage('register');return false" style="font-size:.82rem;font-weight:700;color:#7C3AED;text-decoration:none">No account? Create one</a>
+          <a href="#" onclick="sendPasswordReset();return false" style="font-size:.82rem;font-weight:700;color:#94a3b8;text-decoration:none">Forgot password?</a>
         </div>
       </div>
     </div>
@@ -3258,8 +3259,8 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
     <div id="page-register" class="modal-page ep-auth" style="display:none">
       <div style="text-align:center;padding:8px 0 16px">
         <div style="font-size:2.5rem;margin-bottom:6px">👨‍👩‍👧‍👦</div>
-        <h2 style="font-size:1.4rem;font-weight:800;color:#1e293b;margin:0 0 4px">Create a Parent Account</h2>
-        <p style="color:#64748b;font-size:.82rem;font-weight:600;margin:0">Track your child's progress across devices</p>
+        <h2 id="reg-modal-heading" style="font-size:1.4rem;font-weight:800;color:#1e293b;margin:0 0 4px">Create a Parent Account</h2>
+        <p id="reg-modal-subtitle" style="color:#64748b;font-size:.82rem;font-weight:600;margin:0">Track your child's progress across devices</p>
       </div>
       <div id="reg-error-msg" style="display:none;background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:10px 14px;font-size:.85rem;font-weight:700;color:#dc2626;margin-bottom:14px;text-align:center"></div>
 
@@ -3530,7 +3531,7 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
 function kivoraSetLoginRole(role) {
   window._kivoraLoginRole = role;
   var isTeacher = role === 'teacher';
-  // login modal buttons
+  // Update login modal toggle
   var lp = document.getElementById('login-role-parent');
   var lt = document.getElementById('login-role-teacher');
   if (lp && lt) {
@@ -3541,7 +3542,7 @@ function kivoraSetLoginRole(role) {
     lt.style.color = isTeacher ? '#fff' : '#64748b';
     lt.style.borderColor = isTeacher ? '#7C3AED' : '#e2e8f0';
   }
-  // register modal buttons
+  // Update register modal toggle
   var rp = document.getElementById('reg-role-parent');
   var rt = document.getElementById('reg-role-teacher');
   if (rp && rt) {
@@ -3552,6 +3553,33 @@ function kivoraSetLoginRole(role) {
     rt.style.color = isTeacher ? '#fff' : '#64748b';
     rt.style.borderColor = isTeacher ? '#7C3AED' : '#e2e8f0';
   }
+  // Update register modal heading to match selected role
+  var regHeading = document.getElementById('reg-modal-heading');
+  var regSubtitle = document.getElementById('reg-modal-subtitle');
+  if (regHeading) regHeading.textContent = isTeacher ? 'Create a Teacher Account' : 'Create a Parent Account';
+  if (regSubtitle) regSubtitle.textContent = isTeacher
+    ? 'Manage your class and track student progress'
+    : 'Track your child\'s progress across devices';
+}
+
+function sendPasswordReset() {
+  var emailEl = document.getElementById('loginEmail');
+  var msg = document.getElementById('auth-error-msg');
+  var email = emailEl ? emailEl.value.trim() : '';
+  if (!email) {
+    if (msg) { msg.textContent = 'Enter your email address above, then click Forgot password.'; msg.style.display = 'block'; }
+    if (emailEl) emailEl.focus();
+    return;
+  }
+  if (!window.kivoraFirebase || !window.kivoraFirebase.auth) {
+    if (msg) { msg.textContent = 'Service not available — please try again.'; msg.style.display = 'block'; }
+    return;
+  }
+  window.kivoraFirebase.auth.sendPasswordResetEmail(email).then(function() {
+    if (msg) { msg.style.color = '#16a34a'; msg.textContent = 'Reset email sent — check your inbox.'; msg.style.display = 'block'; }
+  }).catch(function(e) {
+    if (msg) { msg.style.color = '#dc2626'; msg.textContent = e.message || 'Failed to send reset email.'; msg.style.display = 'block'; }
+  });
 }
 </script>
 

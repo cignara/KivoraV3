@@ -1956,9 +1956,28 @@ window.addEventListener('scroll', () => {
 // ────────────────────────────────────────────────
 // ── URL param auth (from inner pages) ─────────────────────────────
   (function(){
-    const p = new URLSearchParams(location.search).get('auth');
+    var params = new URLSearchParams(location.search);
+    var p = params.get('auth');
     if (p === 'login')    document.addEventListener('DOMContentLoaded', function(){ setTimeout(function(){ openPage('login');    }, 600); });
     if (p === 'register') document.addEventListener('DOMContentLoaded', function(){ setTimeout(function(){ openPage('register'); }, 600); });
+    // ?childId=… — launched from parent dashboard "▶ Start Learning" button
+    var launchChildId = params.get('childId');
+    if (launchChildId) {
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          var kids = getChildren();
+          var child = kids.find(function(c) { return c.id === launchChildId; });
+          if (child) {
+            _lsSet('kivora_active_child', child.id);
+            _lsSet('kivora_session', { name: child.name, createdAt: Date.now() });
+            updateNavAuth(child);
+            if (typeof startLearningAsChild === 'function') startLearningAsChild(child.id);
+          } else {
+            openPage('login');
+          }
+        }, 400);
+      });
+    }
   })();
   // ──────────────────────────────────────────────────────────────────
   /* ═══════════════════════════════════════
@@ -1989,6 +2008,11 @@ function kivoraLogout(){
   _lsSet('kivora_session', null);
   updateNavAuth(null);
   closePageModal();
+  // Firebase sign-out is also applied via the hook in firebase.js (DOMContentLoaded).
+  // Belt-and-suspenders: call it directly if available.
+  if (window.kivoraFirebase && window.kivoraFirebase.signOut) {
+    window.kivoraFirebase.signOut().catch(function() {});
+  }
 }
 
 function updateNavAuth(child){
@@ -3988,7 +4012,16 @@ function openPage(pageName) {
   }
 
   if(modal) modal.scrollTop = 0;
-  if (pageName === 'login'){ if(typeof buildAvatarPicker==='function') buildAvatarPicker(); if(typeof buildExistingChildren==='function') buildExistingChildren(); }
+  if (pageName === 'login' || pageName === 'register') {
+    if(typeof buildAvatarPicker==='function') buildAvatarPicker();
+    if(typeof buildExistingChildren==='function') buildExistingChildren();
+    // Pre-select role toggle from stored role so returning users see their role
+    if (typeof kivoraSetLoginRole === 'function') {
+      var savedRole = '';
+      try { savedRole = localStorage.getItem('kivora_user_role') || 'parent'; } catch(e) { savedRole = 'parent'; }
+      kivoraSetLoginRole(savedRole);
+    }
+  }
   if (pageName === 'parent-dashboard' && typeof showParentDashboard==='function') showParentDashboard();
   if (pageName === 'teacher-login' && typeof buildExistingClasses==='function') buildExistingClasses();
   if (pageName === 'teacher-dashboard' && typeof showTeacherDashboard==='function') showTeacherDashboard();

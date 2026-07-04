@@ -14,24 +14,6 @@
 
   function isFileProtocol() { return window.location && window.location.protocol === 'file:'; }
 
-  function init() {
-    if (typeof firebase === 'undefined') {
-      console.warn('[Kivora Firebase] SDK not loaded — localStorage fallback');
-      return;
-    }
-    try {
-      if (firebase.apps.length) return;
-      firebase.initializeApp(CONFIG);
-      ns.auth = firebase.auth();
-      ns.db  = firebase.database();
-      ns.ready = true;
-      console.log('[Kivora Firebase] Ready');
-      if (navigator.onLine !== false) syncFromCloud();
-    } catch (e) {
-      console.warn('[Kivora Firebase] Init error:', e.message);
-    }
-  }
-
   function getUid() { return ns.auth && ns.auth.currentUser && ns.auth.currentUser.uid; }
 
   function getSelectedRole() {
@@ -59,6 +41,49 @@
     try { localStorage.setItem('kivora_user_role', profile.role); } catch(e) {}
   }
 
+  // FIX: dbRef throws if uid is null, preventing writes to users/null/…
+  function dbRef(path) {
+    var uid = getUid();
+    if (!uid) throw new Error('[Kivora Firebase] dbRef called without authenticated uid');
+    return ns.db.ref('users/' + uid + '/' + path);
+  }
+
+  function init() {
+    if (typeof firebase === 'undefined') {
+      console.warn('[Kivora Firebase] SDK not loaded — localStorage fallback');
+      return;
+    }
+    try {
+      if (firebase.apps.length) return;
+      firebase.initializeApp(CONFIG);
+      ns.auth = firebase.auth();
+      ns.db   = firebase.database();
+      ns.ready = true;
+      console.log('[Kivora Firebase] Ready');
+
+      // FIX: persistent auth listener moved inside init() so ns.auth is defined
+      ns.auth.onAuthStateChanged(function(user) {
+        if (user) {
+          ns._uid = user.uid;
+          if (!user.isAnonymous) {
+            try { localStorage.setItem('kivora_firebase_uid', user.uid); } catch(e) {}
+          }
+        } else {
+          ns._uid = null;
+        }
+      });
+
+      if (navigator.onLine !== false) syncFromCloud();
+    } catch (e) {
+      console.warn('[Kivora Firebase] Init error:', e.message);
+    }
+  }
+
+  ns.onAuthChanged = function(cb) {
+    if (!ns.auth) { cb(null); return function() {}; }
+    return ns.auth.onAuthStateChanged(cb);
+  };
+
   ns.signInAnonymously = function() {
     if (!ns.auth) return Promise.reject('Firebase not available');
     return ns.auth.signInAnonymously().catch(function(e) {
@@ -72,9 +97,8 @@
   ns.signInWithGoogle = function() {
     if (!ns.auth) return Promise.reject(new Error('Firebase not available'));
     if (isFileProtocol()) {
-      return Promise.reject(new Error('Google sign-in requires a web server. Serve via http:// (e.g. "npx serve" or "npm run build" then upload to GitHub Pages).'));
+      return Promise.reject(new Error('Google sign-in requires a web server.'));
     }
-    // If a popup is already in flight, cancel it first to avoid the duplicate-popup error
     if (ns._googlePopupPending) {
       return Promise.reject({ code: 'auth/cancelled-popup-request', message: 'Already opening Google sign-in' });
     }
@@ -121,17 +145,12 @@
 
   ns.signOut = function() {
     if (!ns.auth) return Promise.reject('Firebase not available');
+    try { localStorage.removeItem('kivora_firebase_uid'); } catch(e) {}
+    try { localStorage.removeItem('kivora_user_role'); } catch(e) {}
     return ns.auth.signOut();
   };
 
-  ns.onAuthChanged = function(cb) {
-    if (!ns.auth) { cb(null); return function() {}; }
-    return ns.auth.onAuthStateChanged(cb);
-  };
-
-  function dbRef(path) {
-    return ns.db.ref('users/' + getUid() + '/' + path);
-  }
+  ns.getUser = function() { return ns.auth && ns.auth.currentUser; };
 
   ns.saveChildProfile = function(child) {
     if (!ns.db || !getUid()) return Promise.resolve();
@@ -150,9 +169,35 @@
   ns.saveProgress = function(childId, code, data) {
     if (!ns.db || !getUid()) return Promise.resolve();
     return dbRef('progress/' + childId + '/' + code).set({
-      childId: childId, code: code, ts: data.ts || Date.now(), stars: data.stars || 1,
-      xp: data.xp || 0, coins: data.coins || 0,
-      name: data.name || code, world: data.world || '', icon: data.icon || '📚'
+      childId: childId, code: code,
+      ts:    data.ts    || Date.now(),
+      stars: data.stars || 1,
+      xp:    data.xp    || 0,
+      coins: data.coins || 0,
+      name:  data.name  || code,
+      world: data.world || '',
+      icon:  data.icon  || '📚'
+    });
+  };
+
+  // FIX: loadProgress now returns full record including name/world/icon
+  ns.loadProgress = function(childId) {
+    if (!ns.db || !getUid()) return Promise.resolve({});
+    return dbRef('progress/' + childId).once('value').then(function(snap) {
+      var obj = {};
+      snap.forEach(function(d) {
+        var v = d.val();
+        obj[d.key] = {
+          ts:    v.ts,
+          stars: v.stars || 1,
+          xp:    v.xp    || 0,
+          coins: v.coins || 0,
+          name:  v.name  || d.key,
+          world: v.world || '',
+          icon:  v.icon  || '📚'
+        };
+      });
+      return obj;
     });
   };
 
@@ -168,66 +213,37 @@
     });
   };
 
-  ns.loadProgress = function(childId) {
-    if (!ns.db || !getUid()) return Promise.resolve({});
-    return dbRef('progress/' + childId).once('value').then(function(snap) {
-      var obj = {};
-      snap.forEach(function(d) {
-        var v = d.val();
-        obj[d.key] = { ts: v.ts, stars: v.stars || 1, xp: v.xp || 0, coins: v.coins || 0 };
-      });
-      return obj;
-    });
-  };
-
-  ns.getUser = function() { return ns.auth && ns.auth.currentUser; };
-
-  // Listen for auth state → sync to localStorage
-  ns.onAuthChanged(function(user) {
-    if (user) {
-      ns._uid = user.uid;
-      if (!user.isAnonymous) {
-        try { localStorage.setItem('kivora_firebase_uid', user.uid); } catch(e) {}
-      }
-    } else {
-      ns._uid = null;
-    }
-  });
-
-  // Push all local children and their progress up to Firebase for this uid
+  // FIX: _syncLocalToCloud now writes all fields (xp, coins, name, world, icon)
   function _syncLocalToCloud(uid) {
     if (!ns.db) return;
     try {
       var kids = JSON.parse(localStorage.getItem('kivora_children') || '[]');
       kids.forEach(function(child) {
-        ns.db.ref('users/' + uid + '/children/' + child.id).set(child);
+        ns.db.ref('users/' + uid + '/children/' + child.id).set(child).catch(function() {});
         try {
           var progressKey = 'kivora_progress_' + child.id;
           var prog = JSON.parse(localStorage.getItem(progressKey) || '{}');
           Object.keys(prog).forEach(function(code) {
+            var p = prog[code];
             ns.db.ref('users/' + uid + '/progress/' + child.id + '/' + code).set({
-              childId: child.id, code: code, ts: prog[code].ts || Date.now(), stars: prog[code].stars || 1
-            });
+              childId: child.id,
+              code:   code,
+              ts:     p.ts    || Date.now(),
+              stars:  p.stars || 1,
+              xp:     p.xp    || 0,
+              coins:  p.coins || 0,
+              name:   p.name  || code,
+              world:  p.world || '',
+              icon:   p.icon  || '📚'
+            }).catch(function() {});
           });
         } catch(e) {}
       });
     } catch(e) { console.warn('[Kivora Firebase] syncLocalToCloud error:', e.message); }
   }
 
-  // Merge cloud data into localStorage — stays subscribed until a real user signs in
-  function syncFromCloud() {
-    if (!ns.auth) return;
-    var unsub = ns.onAuthChanged(function(user) {
-      if (!user) return;
-      if (unsub) unsub(); // only unsub after we get a real user
-      _loadCloudIntoLocal();
-    });
-  }
-
-  // Load all cloud children + progress into localStorage
-  // navigate=true → open parent-dashboard after sync (from sign-in action)
-  // navigate=false → just merge data silently (from page-load syncFromCloud)
-  function _loadCloudIntoLocal(navigate) {
+  // Merge cloud data into localStorage
+  function _loadCloudIntoLocal() {
     ns.loadChildren().then(function(cloudKids) {
       if (!cloudKids.length) return;
       var local = JSON.parse(localStorage.getItem('kivora_children') || '[]');
@@ -235,8 +251,7 @@
       cloudKids.forEach(function(c) {
         if (!merged.find(function(x) { return x.id === c.id; })) merged.push(c);
       });
-      localStorage.setItem('kivora_children', JSON.stringify(merged));
-      // Load progress for each child
+      try { localStorage.setItem('kivora_children', JSON.stringify(merged)); } catch(e) {}
       cloudKids.forEach(function(c) {
         ns.loadProgress(c.id).then(function(cloudData) {
           if (!cloudData || !Object.keys(cloudData).length) return;
@@ -244,43 +259,71 @@
           var localProg = {};
           try { localProg = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) {}
           Object.keys(cloudData).forEach(function(code) {
-            if (!localProg[code]) localProg[code] = cloudData[code];
+            // Cloud wins — it has the full record
+            localProg[code] = cloudData[code];
           });
           try { localStorage.setItem(key, JSON.stringify(localProg)); } catch(e) {}
-        });
+        }).catch(function() {});
       });
-      if (navigate && typeof openPage === 'function') openPage('parent-dashboard');
-      else if (typeof showParentDashboard === 'function') showParentDashboard();
+    }).catch(function() {});
+  }
+
+  // FIX: syncFromCloud detects returning authenticated user and redirects to correct dashboard.
+  // Only redirects when on index.html — doesn't interfere with other pages.
+  function syncFromCloud() {
+    if (!ns.auth) return;
+    var handled = false;
+    var unsub = ns.auth.onAuthStateChanged(function(user) {
+      if (handled) return;
+      if (!user) return; // wait for a real sign-in
+      if (user.isAnonymous) return; // child session — stay on index.html
+      handled = true;
+      if (unsub) unsub();
+      // Silently merge cloud data into localStorage
+      _loadCloudIntoLocal();
+      // Redirect returning authenticated parent/teacher away from index.html
+      var path = window.location.pathname;
+      var onIndex = path === '/' || path.endsWith('/index.html') || path.endsWith('/');
+      if (onIndex) {
+        var role = localStorage.getItem('kivora_user_role') || 'parent';
+        redirectByRole(role);
+      }
     });
   }
 
-  // Explicit sync after sign-in (called from auth functions)
-  ns.loadFromCloud = function() { _loadCloudIntoLocal(false); };
+  ns.loadFromCloud = function() { _loadCloudIntoLocal(); };
 
-  // Hook into existing auth functions
-  var origStart = window.startLearning;
-  if (origStart) {
-    window.startLearning = function() {
-      origStart();
-      var kids = JSON.parse(localStorage.getItem('kivora_children') || '[]');
-      var active = kids[kids.length - 1];
-      if (active) {
-        ns.signInAnonymously().then(function() {
-          ns.saveChildProfile(active);
-        }).catch(function() {});
-      }
-    };
-  }
+  // Hook startLearning — deferred to DOMContentLoaded so app.js is guaranteed loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    var origStart = window.startLearning;
+    if (origStart && !window._fbStartHooked) {
+      window._fbStartHooked = true;
+      window.startLearning = function() {
+        origStart.apply(this, arguments);
+        try {
+          var kids = JSON.parse(localStorage.getItem('kivora_children') || '[]');
+          var active = kids[kids.length - 1];
+          if (active) {
+            ns.signInAnonymously().then(function() {
+              ns.saveChildProfile(active);
+            }).catch(function() {});
+          }
+        } catch(e) {}
+      };
+    }
 
-  var origLogout = window.kivoraLogout;
-  if (origLogout) {
-    window.kivoraLogout = function() {
-      origLogout();
-      ns.signOut().catch(function() {});
-    };
-  }
+    // FIX: kivoraLogout now always signs out of Firebase and clears auth state
+    var origLogout = window.kivoraLogout;
+    if (origLogout && !window._fbLogoutHooked) {
+      window._fbLogoutHooked = true;
+      window.kivoraLogout = function() {
+        origLogout.apply(this, arguments);
+        ns.signOut().catch(function() {});
+      };
+    }
+  });
 
-  // Lazy-hook progress functions once activities.js loads
+  // Lazy-hook progress save/load once activities.js defines them
   function hookProgress() {
     if (typeof saveProgress !== 'function') return false;
     if (window._fbProgressHooked) return true;
@@ -295,7 +338,14 @@
           var childId = raw ? JSON.parse(raw) : null;
           if (childId) {
             var act = (window.ACTS || []).find(function(x) { return x.code === code; });
-            ns.saveProgress(childId, code, { ts: Date.now(), stars: 1, xp: act ? act.xp : 0, coins: act ? act.coins : 0, name: act ? act.title : code, world: act ? act.world : '', icon: act ? act.icon : '📚' });
+            ns.saveProgress(childId, code, {
+              ts: Date.now(), stars: 1,
+              xp:    act ? act.xp    : 0,
+              coins: act ? act.coins : 0,
+              name:  act ? act.title : code,
+              world: act ? act.world : '',
+              icon:  act ? act.icon  : '📚'
+            });
           }
         } catch(e) {}
       }
@@ -318,23 +368,25 @@
               if (a) { window.totalXP = (window.totalXP || 0) + a.xp; window.totalCoins = (window.totalCoins || 0) + a.coins; }
             }
           });
-          // Save merged progress back to localStorage with xp/coins fields
           var key = 'kivora_progress_' + childId;
           var merged = {};
           window._kivoraCompleted.forEach(function(c) {
             var a = (window.ACTS || []).find(function(x) { return x.code === c; });
-            merged[c] = { ts: Date.now(), stars: 1, xp: a ? a.xp : 0, coins: a ? a.coins : 0 };
+            merged[c] = { ts: Date.now(), stars: 1, xp: a ? a.xp : 0, coins: a ? a.coins : 0,
+                          name: a ? a.title : c, world: a ? a.world : '', icon: a ? a.icon : '📚' };
           });
           try { localStorage.setItem(key, JSON.stringify(merged)); } catch(e) {}
-        });
+        }).catch(function() {});
       } catch(e) {}
     };
     return true;
   }
 
-  // Poll until activities.js defines these functions
+  // FIX: poll capped at 100 attempts (~30s) to avoid infinite loop on non-activity pages
+  var _pollCount = 0;
   (function poll() {
     if (hookProgress()) return;
+    if (++_pollCount > 100) return;
     setTimeout(poll, 300);
   })();
 
