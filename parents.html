@@ -195,36 +195,77 @@
     return streak;
   }
 
+  function getLocalChildren() {
+    try { return JSON.parse(localStorage.getItem('kivora_children') || '[]'); } catch(e) { return []; }
+  }
+
+  function getLocalProgress(childId) {
+    try { return JSON.parse(localStorage.getItem('kivora_progress_' + childId) || '{}'); } catch(e) { return {}; }
+  }
+
+  function syncLocalChildrenToFirebase(uid, localKids) {
+    localKids.forEach(function(c) {
+      db.ref('users/' + uid + '/children/' + c.id).set(c).catch(function() {});
+      var prog = getLocalProgress(c.id);
+      Object.keys(prog).forEach(function(code) {
+        var p = prog[code];
+        db.ref('users/' + uid + '/progress/' + c.id + '/' + code).set({
+          childId: c.id, code: code, ts: p.ts || Date.now(),
+          stars: p.stars || 1, xp: p.xp || 0, coins: p.coins || 0,
+          name: p.name || code, world: p.world || '', icon: p.icon || '📚'
+        }).catch(function() {});
+      });
+    });
+  }
+
+  function displayChildren(uid) {
+    var list = document.getElementById('childrenList');
+    if (!allChildren.length) {
+      list.innerHTML = '<div class="empty-state" style="padding:12px">No children yet.<br><a href="index.html" style="color:var(--sky)">Go to Activities</a> to add one!</div>';
+      renderMainEmpty();
+      return;
+    }
+    list.innerHTML = allChildren.map(function(c, i) {
+      return '<div class="child-tab' + (i === 0 ? ' active' : '') + '" onclick="selectChild(\'' + c.id + '\',this)">' +
+        '<div class="child-avatar">' + (c.avatar || '🐨') + '</div>' +
+        '<div><div class="child-name">' + escHtml(c.name) + '</div>' +
+        '<div class="child-age">' + gradeLabel(c.grade) + '</div></div>' +
+        '</div>';
+    }).join('');
+    activeChildId = allChildren[0].id;
+    renderChildDashboard(uid, allChildren[0]);
+  }
+
   function renderChildren(uid) {
+    // Step 1: load localStorage immediately so UI never hangs
+    var localKids = getLocalChildren();
+    allChildren = localKids.slice();
+    if (localKids.length) {
+      displayChildren(uid);
+      // sync local data up to Firebase in background
+      syncLocalChildrenToFirebase(uid, localKids);
+    }
+
+    // Step 2: also load from Firebase and merge any cloud-only children
     dbRef(uid, 'children').once('value').then(function(snap) {
-      allChildren = [];
-      snap.forEach(function(d) { allChildren.push(d.val()); });
-
-      // Also check localStorage for children not yet synced
-      try {
-        var local = JSON.parse(localStorage.getItem('kivora_children') || '[]');
-        local.forEach(function(c) {
-          if (!allChildren.find(function(x) { return x.id === c.id; })) allChildren.push(c);
-        });
-      } catch(e) {}
-
-      var list = document.getElementById('childrenList');
-      if (!allChildren.length) {
-        list.innerHTML = '<div class="empty-state" style="padding:12px">No children yet.<br>Start an activity to add one!</div>';
-        renderMainEmpty();
-        return;
+      var cloudKids = [];
+      snap.forEach(function(d) { cloudKids.push(d.val()); });
+      cloudKids.forEach(function(c) {
+        if (!allChildren.find(function(x) { return x.id === c.id; })) {
+          allChildren.push(c);
+        }
+      });
+      // Re-render only if Firebase added new children or local was empty
+      if (!localKids.length || cloudKids.length > 0) {
+        displayChildren(uid);
       }
-      list.innerHTML = allChildren.map(function(c, i) {
-        return '<div class="child-tab' + (i === 0 ? ' active' : '') + '" onclick="selectChild(\'' + c.id + '\',this)">' +
-          '<div class="child-avatar">' + (c.avatar || '🐨') + '</div>' +
-          '<div><div class="child-name">' + escHtml(c.name) + '</div>' +
-          '<div class="child-age">' + gradeLabel(c.grade) + '</div></div>' +
-          '</div>';
-      }).join('');
-
-      // select first child by default
-      activeChildId = allChildren[0].id;
-      renderChildDashboard(uid, allChildren[0]);
+    }).catch(function(err) {
+      console.warn('[ParentDash] Firebase children load failed:', err.message);
+      if (!localKids.length) {
+        var list = document.getElementById('childrenList');
+        list.innerHTML = '<div class="empty-state" style="padding:12px">No children yet.<br><a href="index.html" style="color:var(--sky)">Go to Activities</a> to add one!</div>';
+        renderMainEmpty();
+      }
     });
   }
 
@@ -236,13 +277,8 @@
     if (child) renderChildDashboard(auth.currentUser.uid, child);
   };
 
-  function renderChildDashboard(uid, child) {
-    var main = document.getElementById('pdMain');
-    main.innerHTML = '<div class="loading">Loading ' + escHtml(child.name) + '\'s data…</div>';
-
-    dbRef(uid, 'progress/' + child.id).once('value').then(function(snap) {
-      var progressObj = snap.val() || {};
-      var entries = Object.values(progressObj);
+  function buildDashboardFromProgress(uid, child, progressObj) {
+    var entries = Object.values(progressObj);
 
       // Stats
       var totalXP   = entries.reduce(function(s, p) { return s + (p.xp || 0); }, 0);
@@ -316,29 +352,62 @@
 
       // Load screen time settings
       loadScreenTime(uid, child.id);
+  }
+
+  function renderChildDashboard(uid, child) {
+    var main = document.getElementById('pdMain');
+    main.innerHTML = '<div class="loading">Loading ' + escHtml(child.name) + '\'s data…</div>';
+
+    // Load from localStorage immediately
+    var localProg = getLocalProgress(child.id);
+
+    // Try Firebase; fall back to localStorage on error or after timeout
+    var done = false;
+    function useFallback() {
+      if (done) return;
+      done = true;
+      buildDashboardFromProgress(uid, child, localProg);
+    }
+
+    var timer = setTimeout(useFallback, 5000); // 5s timeout
+
+    dbRef(uid, 'progress/' + child.id).once('value').then(function(snap) {
+      clearTimeout(timer);
+      if (done) return;
+      done = true;
+      var progressObj = snap.val() || {};
+      // Merge cloud + local (cloud wins for same key)
+      var merged = Object.assign({}, localProg, progressObj);
+      buildDashboardFromProgress(uid, child, merged);
+    }).catch(function() {
+      clearTimeout(timer);
+      useFallback();
     });
   }
 
   function loadScreenTime(uid, childId) {
     dbRef(uid, 'settings/' + childId).once('value').then(function(snap) {
-      var s = snap.val() || {};
-      var card = document.getElementById('screenTimeCard');
-      if (!card) return;
-      card.innerHTML =
-        '<div class="pd-card-title">⏰ Screen Time Controls</div>' +
-        '<div class="time-controls">' +
-          '<div class="time-ctrl">' +
-            '<div class="tc-label">Daily Time Limit</div>' +
-            '<div class="tc-input"><input type="number" id="stLimit" value="' + (s.dailyLimit || 60) + '" min="15" max="240"/><span>min / day</span></div>' +
-            '<button class="tc-save" onclick="saveScreenTime(\'' + childId + '\')">Save</button>' +
-          '</div>' +
-          '<div class="time-ctrl">' +
-            '<div class="tc-label">Bedtime Lock (no screen after)</div>' +
-            '<div class="tc-input"><input type="time" id="stBedtime" value="' + (s.bedtime || '20:00') + '"/></div>' +
-            '<button class="tc-save" onclick="saveScreenTime(\'' + childId + '\')">Save</button>' +
-          '</div>' +
-        '</div>';
-    });
+      renderScreenTimeCard(childId, snap.val() || {});
+    }).catch(function() { renderScreenTimeCard(childId, {}); });
+  }
+
+  function renderScreenTimeCard(childId, s) {
+    var card = document.getElementById('screenTimeCard');
+    if (!card) return;
+    card.innerHTML =
+      '<div class="pd-card-title">⏰ Screen Time Controls</div>' +
+      '<div class="time-controls">' +
+        '<div class="time-ctrl">' +
+          '<div class="tc-label">Daily Time Limit</div>' +
+          '<div class="tc-input"><input type="number" id="stLimit" value="' + (s.dailyLimit || 60) + '" min="15" max="240"/><span>min / day</span></div>' +
+          '<button class="tc-save" onclick="saveScreenTime(\'' + childId + '\')">Save</button>' +
+        '</div>' +
+        '<div class="time-ctrl">' +
+          '<div class="tc-label">Bedtime Lock (no screen after)</div>' +
+          '<div class="tc-input"><input type="time" id="stBedtime" value="' + (s.bedtime || '20:00') + '"/></div>' +
+          '<button class="tc-save" onclick="saveScreenTime(\'' + childId + '\')">Save</button>' +
+        '</div>' +
+      '</div>';
   }
 
   window.saveScreenTime = function(childId) {
