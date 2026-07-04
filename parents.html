@@ -107,7 +107,7 @@
     <div class="pd-children">
       <div class="pd-children-title">My Children</div>
       <div id="childrenList"><div class="loading">Loading…</div></div>
-      <div class="add-child-btn" onclick="alert('Add child — go to Activities and enter a new child name!')">+ Add Child</div>
+      <a href="index.html" class="add-child-btn" style="display:flex;align-items:center;gap:8px;color:var(--gray);text-decoration:none">+ Add Child</a>
     </div>
     <div class="pd-quick">
       <div class="pd-quick-title">Quick Links</div>
@@ -281,6 +281,7 @@
   };
 
   function buildDashboardFromProgress(uid, child, progressObj) {
+    var main = document.getElementById('pdMain');
     var entries = Object.values(progressObj);
 
       // Stats
