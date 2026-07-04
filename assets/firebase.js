@@ -60,6 +60,7 @@
       ns._googlePopupPending = false;
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
       _syncLocalToCloud(result.user.uid);
+      _loadCloudIntoLocal();
       if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
       return result;
     }).catch(function(e) {
@@ -72,8 +73,8 @@
     if (!ns.auth) return Promise.reject(new Error('Firebase not available — please try again'));
     return ns.auth.signInWithEmailAndPassword(email, password).then(function(result) {
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
-      // Push any locally accumulated progress to the cloud account
       _syncLocalToCloud(result.user.uid);
+      _loadCloudIntoLocal();
       if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
       return result;
     });
@@ -83,8 +84,8 @@
     if (!ns.auth) return Promise.reject(new Error('Firebase not available — please try again or use Google sign-in'));
     return ns.auth.createUserWithEmailAndPassword(email, password).then(function(result) {
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
-      // Push any locally saved children + progress to the new account
       _syncLocalToCloud(result.user.uid);
+      _loadCloudIntoLocal();
       if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
       return result;
     });
@@ -172,27 +173,45 @@
     } catch(e) { console.warn('[Kivora Firebase] syncLocalToCloud error:', e.message); }
   }
 
-  // Merge cloud data into localStorage on first load
+  // Merge cloud data into localStorage — stays subscribed until a real user signs in
   function syncFromCloud() {
     if (!ns.auth) return;
     var unsub = ns.onAuthChanged(function(user) {
-      if (unsub) unsub();
       if (!user) return;
-      ns.loadChildren().then(function(cloudKids) {
-        if (!cloudKids.length) return;
-        var local = JSON.parse(localStorage.getItem('kivora_children') || '[]');
-        var merged = local.slice();
-        cloudKids.forEach(function(c) {
-          if (!merged.find(function(x) { return x.id === c.id; })) merged.push(c);
-        });
-        localStorage.setItem('kivora_children', JSON.stringify(merged));
-        if (typeof showParentDashboard === 'function') showParentDashboard();
-      });
-      ns.loadProgress('all').then(function() {
-        // Progress is loaded per-child in activities.js
-      });
+      if (unsub) unsub(); // only unsub after we get a real user
+      _loadCloudIntoLocal();
     });
   }
+
+  // Load all cloud children + progress into localStorage
+  function _loadCloudIntoLocal() {
+    ns.loadChildren().then(function(cloudKids) {
+      if (!cloudKids.length) return;
+      var local = JSON.parse(localStorage.getItem('kivora_children') || '[]');
+      var merged = local.slice();
+      cloudKids.forEach(function(c) {
+        if (!merged.find(function(x) { return x.id === c.id; })) merged.push(c);
+      });
+      localStorage.setItem('kivora_children', JSON.stringify(merged));
+      // Load progress for each child
+      cloudKids.forEach(function(c) {
+        ns.loadProgress(c.id).then(function(cloudData) {
+          if (!cloudData || !Object.keys(cloudData).length) return;
+          var key = 'kivora_progress_' + c.id;
+          var localProg = {};
+          try { localProg = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) {}
+          Object.keys(cloudData).forEach(function(code) {
+            if (!localProg[code]) localProg[code] = cloudData[code];
+          });
+          try { localStorage.setItem(key, JSON.stringify(localProg)); } catch(e) {}
+        });
+      });
+      if (typeof showParentDashboard === 'function') showParentDashboard();
+    });
+  }
+
+  // Explicit sync after sign-in (called from auth functions)
+  ns.loadFromCloud = _loadCloudIntoLocal;
 
   // Hook into existing auth functions
   var origStart = window.startLearning;
