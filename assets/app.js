@@ -3966,16 +3966,27 @@ document.addEventListener('DOMContentLoaded', function(){
   if(child) updateNavAuth(child);
 });
 /* ═══════════════════════════════════════ */
-  function openPage(pageName) {
-  // register page now has its own content (Google + email sign-up)
+function openPage(pageName) {
   var modal = document.getElementById('pageModal');
-  if(modal){ modal.classList.add('modal-open'); modal.style.display='flex'; }
+  var closeBtn = document.getElementById('closeModal');
+  var mc = document.getElementById('modalContent');
+  if (modal){ modal.classList.add('modal-open'); modal.style.display='flex'; }
   document.body.style.overflow = 'hidden';
   document.querySelectorAll('.modal-page').forEach(function(p){
     p.classList.remove('active'); p.style.display='none';
   });
   var target = document.getElementById('page-' + pageName);
   if (target){ target.classList.add('active'); target.style.display='flex'; target.style.flexDirection='column'; }
+
+  // Parent dashboard: full-viewport layout — hide close button & modal white bg
+  if (pageName === 'parent-dashboard') {
+    if (closeBtn) closeBtn.style.display = 'none';
+    if (mc) mc.style.background = 'transparent';
+  } else {
+    if (closeBtn) closeBtn.style.display = 'flex';
+    if (mc) mc.style.background = '';
+  }
+
   if(modal) modal.scrollTop = 0;
   if (pageName === 'login'){ if(typeof buildAvatarPicker==='function') buildAvatarPicker(); if(typeof buildExistingChildren==='function') buildExistingChildren(); }
   if (pageName === 'parent-dashboard' && typeof showParentDashboard==='function') showParentDashboard();
@@ -3984,8 +3995,12 @@ document.addEventListener('DOMContentLoaded', function(){
 }
 function closePageModal() {
   var modal = document.getElementById('pageModal');
+  var closeBtn = document.getElementById('closeModal');
+  var mc = document.getElementById('modalContent');
   if (modal){ modal.classList.remove('modal-open'); modal.style.display='none'; }
   document.body.style.overflow = '';
+  if (closeBtn) closeBtn.style.display = 'flex';
+  if (mc) mc.style.background = '';
   document.querySelectorAll('.modal-page').forEach(function(p){ p.classList.remove('active'); p.style.display='none'; });
 }
 // (Legacy Firebase-era stub functions removed — handleLogin, socialLogin,
