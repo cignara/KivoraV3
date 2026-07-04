@@ -3991,6 +3991,11 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 /* ═══════════════════════════════════════ */
 function openPage(pageName) {
+  // Parent dashboard is now a standalone full page — never open in modal
+  if (pageName === 'parent-dashboard') {
+    window.location.href = './parents.html';
+    return;
+  }
   var modal = document.getElementById('pageModal');
   var closeBtn = document.getElementById('closeModal');
   var mc = document.getElementById('modalContent');
