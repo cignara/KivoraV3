@@ -151,7 +151,20 @@
     if (!ns.db || !getUid()) return Promise.resolve();
     return dbRef('progress/' + childId + '/' + code).set({
       childId: childId, code: code, ts: data.ts || Date.now(), stars: data.stars || 1,
-      xp: data.xp || 0, coins: data.coins || 0
+      xp: data.xp || 0, coins: data.coins || 0,
+      name: data.name || code, world: data.world || '', icon: data.icon || '📚'
+    });
+  };
+
+  ns.saveScreenTimeSettings = function(childId, settings) {
+    if (!ns.db || !getUid()) return Promise.resolve();
+    return dbRef('settings/' + childId).set(settings);
+  };
+
+  ns.loadScreenTimeSettings = function(childId) {
+    if (!ns.db || !getUid()) return Promise.resolve({});
+    return dbRef('settings/' + childId).once('value').then(function(snap) {
+      return snap.val() || {};
     });
   };
 
@@ -282,7 +295,7 @@
           var childId = raw ? JSON.parse(raw) : null;
           if (childId) {
             var act = (window.ACTS || []).find(function(x) { return x.code === code; });
-            ns.saveProgress(childId, code, { ts: Date.now(), stars: 1, xp: act ? act.xp : 0, coins: act ? act.coins : 0 });
+            ns.saveProgress(childId, code, { ts: Date.now(), stars: 1, xp: act ? act.xp : 0, coins: act ? act.coins : 0, name: act ? act.title : code, world: act ? act.world : '', icon: act ? act.icon : '📚' });
           }
         } catch(e) {}
       }

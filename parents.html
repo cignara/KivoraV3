@@ -1,20 +1,404 @@
-<!DOCTYPE html><html lang="en" class="scroll-smooth"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kivora for Parents — Kivora Learning</title><meta name="description" content="Safe, ad-free learning for ages 2–11. Screen time controls, progress reports and multi-child profiles. Free forever."><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">  <link rel="stylesheet" href="assets/style.css" />
-</head><body class="bg-white text-slate-700"><div id="nav-root"></div>
-<section style="background:linear-gradient(160deg,#fff9c4,#fce4ec);padding:80px 0 60px;text-align:center">
-  <div style="max-width:48rem;margin:0 auto;padding:0 1.5rem">
-    <div class="section-badge" style="background:linear-gradient(135deg,#F39C12,#E91E63);color:#fff">For Parents</div>
-    <h1 style="font-family:'Baloo 2',cursive;font-size:3rem;font-weight:800;color:#1e293b;line-height:1.15;margin:0 0 16px">Learning You Can <span style="background:linear-gradient(to right,#F39C12,#E91E63);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Trust</span></h1>
-    <p style="color:#475569;font-size:1.05rem;font-weight:600;line-height:1.7;margin:0 0 28px">Zero ads. No in-app purchases. No chat. Just joyful educational content with full parental control over every aspect of your child's experience.</p>
-    <a href="./index.html?auth=register" style="display:inline-block;padding:16px 36px;background:linear-gradient(to right,#F39C12,#E91E63);border-radius:16px;font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:#fff;text-decoration:none">🚀 Start Free — No Card Needed</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Parent Dashboard · Kivora Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;600;700&family=Fredoka:wght@500;600&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--sky:#4A90E2;--coral:#FF6B6B;--yellow:#FFD93D;--green:#52C41A;--purple:#9B59B6;--charcoal:#2C3E50;--gray:#7F8C8D}
+  body{font-family:'Nunito',sans-serif;background:#F0F4F8;min-height:100vh;color:var(--charcoal)}
+  a{text-decoration:none;color:inherit}
+  /* Nav */
+  .pd-nav{height:64px;background:white;display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 10px rgba(0,0,0,.06);position:sticky;top:0;z-index:100;border-bottom:2px solid var(--yellow)}
+  .pd-nav-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+  .pd-logo{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:var(--charcoal);display:flex;align-items:center;gap:8px}
+  .pd-logo-icon{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--green),var(--sky));display:flex;align-items:center;justify-content:center;font-size:16px}
+  .pd-logo span{color:var(--sky)}
+  .pd-nav-right{display:flex;gap:10px;align-items:center}
+  .pd-user-email{font-size:.78rem;color:var(--gray);font-weight:600}
+  .pd-btn{font-family:'Fredoka',sans-serif;font-size:.82rem;font-weight:600;padding:8px 16px;border-radius:8px;border:1.5px solid #DDE5ED;cursor:pointer;background:white;color:var(--charcoal);transition:all .2s}
+  .pd-btn:hover{border-color:var(--sky);color:var(--sky)}
+  .pd-btn.primary{background:var(--sky);color:white;border-color:var(--sky)}
+  .pd-btn.danger{border-color:#fca5a5;color:#dc2626}
+  /* Layout */
+  .pd-wrap{max-width:1200px;margin:0 auto;padding:28px 20px 60px;display:grid;grid-template-columns:260px 1fr;gap:24px}
+  /* Sidebar */
+  .pd-sidebar{display:flex;flex-direction:column;gap:12px}
+  .pd-children{background:white;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+  .pd-children-title{font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;color:var(--gray);margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px}
+  .child-tab{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all .2s;margin-bottom:4px}
+  .child-tab.active{background:var(--sky);color:white}
+  .child-tab:not(.active):hover{background:#EAF4FE;color:var(--sky)}
+  .child-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--yellow));display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+  .child-name{font-family:'Fredoka',sans-serif;font-size:.9rem;font-weight:600}
+  .child-age{font-size:.7rem;opacity:.7}
+  .add-child-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:2px dashed #DDE5ED;color:var(--gray);cursor:pointer;font-family:'Fredoka',sans-serif;font-size:.85rem;font-weight:500;transition:all .2s;margin-top:6px}
+  .add-child-btn:hover{border-color:var(--sky);color:var(--sky)}
+  .pd-quick{background:white;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+  .pd-quick-title{font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;color:var(--gray);margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px}
+  .quick-link{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:all .2s;font-family:'Fredoka',sans-serif;font-size:.85rem;color:var(--charcoal)}
+  .quick-link:hover{background:#F0F4F8;color:var(--sky)}
+  /* Main */
+  .pd-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+  .pd-stat{background:white;border-radius:14px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+  .pd-stat-icon{font-size:1.5rem;margin-bottom:6px}
+  .pd-stat-val{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;margin-bottom:2px}
+  .pd-stat-label{font-size:.75rem;color:var(--gray)}
+  .pd-stat-trend{font-size:.72rem;color:var(--green);margin-top:4px}
+  .pd-card{background:white;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.05);margin-bottom:18px}
+  .pd-card-title{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:var(--charcoal);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+  /* Subject bars */
+  .subject-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+  .subj-icon{font-size:1.2rem;width:32px;text-align:center}
+  .subj-name{font-family:'Fredoka',sans-serif;font-size:.85rem;font-weight:600;width:100px;flex-shrink:0}
+  .subj-bar-wrap{flex:1;height:8px;background:#E8EFF6;border-radius:4px;overflow:hidden}
+  .subj-bar{height:100%;border-radius:4px;transition:width 1s ease}
+  .subj-pct{font-family:'Fredoka',sans-serif;font-size:.78rem;font-weight:600;width:36px;text-align:right;flex-shrink:0}
+  /* Activity list */
+  .activity-list{display:flex;flex-direction:column;gap:10px}
+  .activity-item{display:flex;align-items:center;gap:12px;padding:12px;background:#F8FAFB;border-radius:10px}
+  .act-icon{font-size:1.4rem;width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#EAF4FE}
+  .act-name{font-family:'Fredoka',sans-serif;font-size:.88rem;font-weight:600;color:var(--charcoal)}
+  .act-sub{font-size:.72rem;color:var(--gray);margin-top:2px}
+  .act-time{font-size:.72rem;color:var(--gray);margin-left:auto;white-space:nowrap;padding-left:8px}
+  .act-xp{font-family:'Fredoka',sans-serif;font-size:.75rem;font-weight:700;color:var(--sky);background:#EAF4FE;padding:3px 8px;border-radius:20px;white-space:nowrap;margin-left:6px}
+  /* Screen time */
+  .time-controls{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .time-ctrl{background:#F8FAFB;border-radius:12px;padding:14px}
+  .tc-label{font-family:'Fredoka',sans-serif;font-size:.82rem;font-weight:600;color:var(--gray);margin-bottom:8px}
+  .tc-input{display:flex;align-items:center;gap:10px}
+  .tc-input input{width:70px;padding:6px 10px;border-radius:8px;border:1.5px solid #DDE5ED;font-family:'Nunito',sans-serif;font-size:.9rem;text-align:center}
+  .tc-save{margin-top:10px;font-family:'Fredoka',sans-serif;font-size:.78rem;font-weight:600;padding:7px 16px;border:none;border-radius:20px;background:var(--sky);color:white;cursor:pointer}
+  /* Empty / loading states */
+  .empty-state{text-align:center;padding:40px;color:var(--gray);font-size:.9rem}
+  .loading{opacity:.5;font-size:.85rem;text-align:center;padding:24px}
+  @media(max-width:900px){
+    .pd-wrap{grid-template-columns:1fr}
+    .pd-sidebar{display:grid;grid-template-columns:1fr 1fr}
+    .pd-summary{grid-template-columns:repeat(2,1fr)}
+    .time-controls{grid-template-columns:1fr}
+  }
+  @media(max-width:520px){
+    .pd-summary{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<nav class="pd-nav">
+  <div class="pd-nav-inner">
+    <a class="pd-logo" href="index.html">
+      <div class="pd-logo-icon">🐨</div>
+      Kivora<span>Learning</span>
+    </a>
+    <div class="pd-nav-right">
+      <span class="pd-user-email" id="pdUserEmail"></span>
+      <a href="index.html"><button class="pd-btn primary">+ Activities</button></a>
+      <button class="pd-btn danger" onclick="kivoraSignOut()">Sign Out</button>
+    </div>
   </div>
-</section>
-<section style="padding:80px 0;background:#f8fafc"><div style="max-width:72rem;margin:0 auto;padding:0 1.5rem">
-  <div style="text-align:center;margin-bottom:48px"><h2 style="font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:800;color:#1e293b;margin:0">Everything Parents Asked For</h2></div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px"><div class="card-lift reveal" style="background:#fff;border-radius:20px;padding:28px;border-top:4px solid #F39C12"><div style="font-size:2rem;margin-bottom:12px">👨‍👩‍👧</div><h3 style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#1e293b;margin:0 0 8px">Multi-Child Profiles</h3><p style="color:#64748b;font-size:.88rem;line-height:1.65;margin:0">Up to 6 children with separate profiles, progress and personalised content for each age.</p></div><div class="card-lift reveal" style="background:#fff;border-radius:20px;padding:28px;border-top:4px solid #E91E63"><div style="font-size:2rem;margin-bottom:12px">⏰</div><h3 style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#1e293b;margin:0 0 8px">Screen Time Controls</h3><p style="color:#64748b;font-size:.88rem;line-height:1.65;margin:0">Set daily limits and bedtime locks. Kivora stops automatically — no arguments!</p></div><div class="card-lift reveal" style="background:#fff;border-radius:20px;padding:28px;border-top:4px solid #27AE60"><div style="font-size:2rem;margin-bottom:12px">📊</div><h3 style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#1e293b;margin:0 0 8px">Weekly Reports</h3><p style="color:#64748b;font-size:.88rem;line-height:1.65;margin:0">A beautiful weekly email: what they learned, which badges earned, what to try next.</p></div><div class="card-lift reveal" style="background:#fff;border-radius:20px;padding:28px;border-top:4px solid #7C3AED"><div style="font-size:2rem;margin-bottom:12px">🔒</div><h3 style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#1e293b;margin:0 0 8px">100% Child Safe</h3><p style="color:#64748b;font-size:.88rem;line-height:1.65;margin:0">No ads, no in-app purchases, no chat, no social. Pure educational content only.</p></div><div class="card-lift reveal" style="background:#fff;border-radius:20px;padding:28px;border-top:4px solid #0EA5E9"><div style="font-size:2rem;margin-bottom:12px">📱</div><h3 style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#1e293b;margin:0 0 8px">Any Device</h3><p style="color:#64748b;font-size:.88rem;line-height:1.65;margin:0">Phone, tablet, laptop or desktop — any modern browser. No app download needed.</p></div><div class="card-lift reveal" style="background:#fff;border-radius:20px;padding:28px;border-top:4px solid #9B59B6"><div style="font-size:2rem;margin-bottom:12px">🎓</div><h3 style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#1e293b;margin:0 0 8px">Curriculum Aligned</h3><p style="color:#64748b;font-size:.88rem;line-height:1.65;margin:0">Common Core and UK National Curriculum. Know exactly what your child is learning.</p></div><div class="card-lift reveal" style="background:#fff;border-radius:20px;padding:28px;border-top:4px solid #16A085"><div style="font-size:2rem;margin-bottom:12px">🌍</div><h3 style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#1e293b;margin:0 0 8px">Cultural Richness</h3><p style="color:#64748b;font-size:.88rem;line-height:1.65;margin:0">Celebrates cultures worldwide — South Asian festivals, animals, stories and more.</p></div><div class="card-lift reveal" style="background:#fff;border-radius:20px;padding:28px;border-top:4px solid #F39C12"><div style="font-size:2rem;margin-bottom:12px">🆓</div><h3 style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#1e293b;margin:0 0 8px">Generous Free Plan</h3><p style="color:#64748b;font-size:.88rem;line-height:1.65;margin:0">50 activities, 10 stories and 20 coloring pages free — forever, no trial ending.</p></div></div>
-</div></section>
-<section style="padding:64px 0;background:#fff"><div style="max-width:64rem;margin:0 auto;padding:0 1.5rem">
-  <div style="text-align:center;margin-bottom:40px"><h2 style="font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;color:#1e293b;margin:0">Your Parent Dashboard</h2></div>
-  <div style="background:linear-gradient(135deg,#f8fafc,#ede9fe);border-radius:28px;padding:48px">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:32px"><div class="reveal" style="text-align:center;padding:20px"><div style="width:56px;height:56px;background:linear-gradient(135deg,#27AE60,#52D68A);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 14px">📈</div><h3 style="font-family:'Baloo 2',cursive;font-weight:800;font-size:.95rem;color:#1e293b;margin:0 0 6px">See Progress</h3><p style="color:#64748b;font-size:.8rem;line-height:1.55;margin:0">Track XP, activities and world mastery.</p></div><div class="reveal" style="text-align:center;padding:20px"><div style="width:56px;height:56px;background:linear-gradient(135deg,#F39C12,#F7C06A);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 14px">⏱️</div><h3 style="font-family:'Baloo 2',cursive;font-weight:800;font-size:.95rem;color:#1e293b;margin:0 0 6px">Monitor Time</h3><p style="color:#64748b;font-size:.8rem;line-height:1.55;margin:0">Daily and weekly screen time at a glance.</p></div><div class="reveal" style="text-align:center;padding:20px"><div style="width:56px;height:56px;background:linear-gradient(135deg,#7C3AED,#C39BD3);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 14px">🏆</div><h3 style="font-family:'Baloo 2',cursive;font-weight:800;font-size:.95rem;color:#1e293b;margin:0 0 6px">Celebrate Wins</h3><p style="color:#64748b;font-size:.8rem;line-height:1.55;margin:0">Every badge, certificate and star earned.</p></div><div class="reveal" style="text-align:center;padding:20px"><div style="width:56px;height:56px;background:linear-gradient(135deg,#0EA5E9,#5BBCFF);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 14px">📅</div><h3 style="font-family:'Baloo 2',cursive;font-weight:800;font-size:.95rem;color:#1e293b;margin:0 0 6px">Review Activity</h3><p style="color:#64748b;font-size:.8rem;line-height:1.55;margin:0">Which activities were done and when.</p></div></div>
+</nav>
+
+<div class="pd-wrap">
+  <!-- Sidebar -->
+  <div class="pd-sidebar">
+    <div class="pd-children">
+      <div class="pd-children-title">My Children</div>
+      <div id="childrenList"><div class="loading">Loading…</div></div>
+      <div class="add-child-btn" onclick="alert('Add child — go to Activities and enter a new child name!')">+ Add Child</div>
+    </div>
+    <div class="pd-quick">
+      <div class="pd-quick-title">Quick Links</div>
+      <a href="index.html" class="quick-link">📚 Learning Activities</a>
+      <a href="printables.html" class="quick-link">🖨️ Printable Worksheets</a>
+      <a href="index.html" class="quick-link">🏆 View Rewards</a>
+      <a href="pricing.html" class="quick-link">💳 Manage Subscription</a>
+    </div>
   </div>
-</div></section><section style="background:linear-gradient(135deg,#F39C12,#E91E63);padding:80px 0;text-align:center"><h2 style="font-family:'Baloo 2',cursive;font-size:2.4rem;font-weight:800;color:#fff;margin:0 0 16px">Give Your Child the Best Start!</h2><p style="color:rgba(255,255,255,.85);font-size:1.05rem;font-weight:600;margin:0 0 28px">Thousands of families use Kivora for fun, safe learning at home.</p><a href="./index.html?auth=register" style="display:inline-block;padding:16px 40px;background:#FFD93D;border-radius:16px;font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:#F39C12;text-decoration:none">👨‍👩‍👧 Start Free Today!</a></section><div id="footer-root"></div><button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:24px;right:24px;z-index:500;background:linear-gradient(135deg,#7C3AED,#FF4E8B);color:#fff;width:44px;height:44px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer">↑</button><script src="./shared.js"></script></body></html>
+
+  <!-- Main content -->
+  <div class="pd-main" id="pdMain">
+    <div class="loading">Loading dashboard…</div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var CONFIG = {
+    apiKey: "AIzaSyBXdDDJvdInfdhovdx_Jo3YN_dhY-RY8yo",
+    authDomain: "kivora-learning.firebaseapp.com",
+    projectId: "kivora-learning",
+    storageBucket: "kivora-learning.firebasestorage.app",
+    messagingSenderId: "145485791442",
+    appId: "1:145485791442:web:d0a6f467aecc29101f6d0b"
+  };
+
+  if (!firebase.apps.length) firebase.initializeApp(CONFIG);
+  var auth = firebase.auth();
+  var db   = firebase.database();
+
+  var activeChildId = null;
+  var allChildren   = [];
+
+  // World → subject mapping
+  var WORLD_SUBJECT = {
+    'alphabet-island':  { label: 'Language',   icon: '📚', color: 'linear-gradient(90deg,#FF69B4,#9B59B6)' },
+    'number-kingdom':   { label: 'Math',        icon: '🔢', color: 'linear-gradient(90deg,#4A90E2,#9B59B6)' },
+    'science-lab':      { label: 'Science',     icon: '🔬', color: 'linear-gradient(90deg,#00C49A,#52C41A)' },
+    'creative-studio':  { label: 'Creative',    icon: '🎨', color: 'linear-gradient(90deg,#FF8C42,#FFD93D)' },
+    'logic-land':       { label: 'Logic',       icon: '🧩', color: 'linear-gradient(90deg,#9B59B6,#4A90E2)' },
+    'life-skills':      { label: 'Life Skills', icon: '❤️', color: 'linear-gradient(90deg,#FF6B6B,#FF8C42)' }
+  };
+  var SUBJECT_ORDER = ['Language','Math','Science','Creative','Logic','Life Skills'];
+
+  function dbRef(uid, path) { return db.ref('users/' + uid + '/' + path); }
+
+  function relTime(ts) {
+    var d = Date.now() - ts;
+    if (d < 60000) return 'Just now';
+    if (d < 3600000) return Math.floor(d/60000) + 'm ago';
+    if (d < 86400000) return Math.floor(d/3600000) + 'h ago';
+    if (d < 172800000) return 'Yesterday';
+    return new Date(ts).toLocaleDateString();
+  }
+
+  function gradeLabel(grade) {
+    var m = { 'pre-k':'Pre-K','kindergarten':'Kindergarten','grade-1':'Grade 1','grade-2':'Grade 2','grade-3':'Grade 3','grade-4':'Grade 4','grade-5':'Grade 5' };
+    return m[grade] || grade || '';
+  }
+
+  function computeStreak(progressObj) {
+    if (!progressObj) return 0;
+    var days = {};
+    Object.values(progressObj).forEach(function(p) {
+      if (p.ts) {
+        var d = new Date(p.ts);
+        var key = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
+        days[key] = true;
+      }
+    });
+    var streak = 0;
+    var cur = new Date();
+    while (true) {
+      var key = cur.getFullYear() + '-' + cur.getMonth() + '-' + cur.getDate();
+      if (days[key]) { streak++; cur.setDate(cur.getDate() - 1); }
+      else break;
+    }
+    return streak;
+  }
+
+  function renderChildren(uid) {
+    dbRef(uid, 'children').once('value').then(function(snap) {
+      allChildren = [];
+      snap.forEach(function(d) { allChildren.push(d.val()); });
+
+      // Also check localStorage for children not yet synced
+      try {
+        var local = JSON.parse(localStorage.getItem('kivora_children') || '[]');
+        local.forEach(function(c) {
+          if (!allChildren.find(function(x) { return x.id === c.id; })) allChildren.push(c);
+        });
+      } catch(e) {}
+
+      var list = document.getElementById('childrenList');
+      if (!allChildren.length) {
+        list.innerHTML = '<div class="empty-state" style="padding:12px">No children yet.<br>Start an activity to add one!</div>';
+        renderMainEmpty();
+        return;
+      }
+      list.innerHTML = allChildren.map(function(c, i) {
+        return '<div class="child-tab' + (i === 0 ? ' active' : '') + '" onclick="selectChild(\'' + c.id + '\',this)">' +
+          '<div class="child-avatar">' + (c.avatar || '🐨') + '</div>' +
+          '<div><div class="child-name">' + escHtml(c.name) + '</div>' +
+          '<div class="child-age">' + gradeLabel(c.grade) + '</div></div>' +
+          '</div>';
+      }).join('');
+
+      // select first child by default
+      activeChildId = allChildren[0].id;
+      renderChildDashboard(uid, allChildren[0]);
+    });
+  }
+
+  window.selectChild = function(childId, el) {
+    activeChildId = childId;
+    document.querySelectorAll('.child-tab').forEach(function(t) { t.classList.remove('active'); });
+    el.classList.add('active');
+    var child = allChildren.find(function(c) { return c.id === childId; });
+    if (child) renderChildDashboard(auth.currentUser.uid, child);
+  };
+
+  function renderChildDashboard(uid, child) {
+    var main = document.getElementById('pdMain');
+    main.innerHTML = '<div class="loading">Loading ' + escHtml(child.name) + '\'s data…</div>';
+
+    dbRef(uid, 'progress/' + child.id).once('value').then(function(snap) {
+      var progressObj = snap.val() || {};
+      var entries = Object.values(progressObj);
+
+      // Stats
+      var totalXP   = entries.reduce(function(s, p) { return s + (p.xp || 0); }, 0);
+      var totalActs = entries.length;
+      var totalStars = entries.reduce(function(s, p) { return s + (p.stars || 1); }, 0);
+      var streak    = computeStreak(progressObj);
+
+      // Subject breakdown
+      var subjectMap = {};
+      entries.forEach(function(p) {
+        var subj = (WORLD_SUBJECT[p.world] || { label: 'General', icon: '🌟', color: 'linear-gradient(90deg,#94a3b8,#64748b)' });
+        if (!subjectMap[subj.label]) subjectMap[subj.label] = { count: 0, xp: 0, icon: subj.icon, color: subj.color };
+        subjectMap[subj.label].count++;
+        subjectMap[subj.label].xp += (p.xp || 0);
+      });
+      var maxSubjCount = Math.max(1, Math.max.apply(null, Object.values(subjectMap).map(function(s) { return s.count; })));
+
+      var subjHTML = SUBJECT_ORDER.filter(function(s) { return subjectMap[s]; }).map(function(label) {
+        var s = subjectMap[label];
+        var pct = Math.round((s.count / maxSubjCount) * 100);
+        return '<div class="subject-row">' +
+          '<span class="subj-icon">' + s.icon + '</span>' +
+          '<span class="subj-name">' + label + '</span>' +
+          '<div class="subj-bar-wrap"><div class="subj-bar" style="width:0%;background:' + s.color + '" data-pct="' + pct + '"></div></div>' +
+          '<span class="subj-pct">' + s.count + ' act</span>' +
+          '</div>';
+      }).join('') || '<div class="empty-state">No activities yet — start learning!</div>';
+
+      // Recent activity (last 8, sorted by ts desc)
+      var recent = entries.slice().sort(function(a, b) { return (b.ts || 0) - (a.ts || 0); }).slice(0, 8);
+      var recentHTML = recent.map(function(p) {
+        var subj = WORLD_SUBJECT[p.world] || { label: 'General', icon: '🌟' };
+        return '<div class="activity-item">' +
+          '<div class="act-icon">' + (p.icon || subj.icon) + '</div>' +
+          '<div><div class="act-name">' + escHtml(p.name || p.code) + '</div>' +
+          '<div class="act-sub">' + subj.label + ' · ' + (p.stars || 1) + '⭐</div></div>' +
+          '<span class="act-time">' + (p.ts ? relTime(p.ts) : '') + '</span>' +
+          '<span class="act-xp">+' + (p.xp || 0) + ' XP</span>' +
+          '</div>';
+      }).join('') || '<div class="empty-state">No activities yet — go explore!</div>';
+
+      main.innerHTML =
+        '<div class="pd-summary">' +
+          statCard('⏱️', totalXP + ' XP', 'Total XP earned', var_color('sky'), '') +
+          statCard('📚', totalActs, 'Activities done', var_color('purple'), '') +
+          statCard('⭐', totalStars, 'Stars earned', var_color('yellow'), '') +
+          statCard('🔥', streak + ' day' + (streak === 1 ? '' : 's'), 'Current streak', var_color('coral'), '') +
+        '</div>' +
+
+        '<div class="pd-card">' +
+          '<div class="pd-card-title">📊 Progress by Subject <span style="font-size:.75rem;font-weight:500;color:var(--gray)">' + totalActs + ' activities total</span></div>' +
+          subjHTML +
+        '</div>' +
+
+        '<div class="pd-card">' +
+          '<div class="pd-card-title">⚡ Recent Activity</div>' +
+          '<div class="activity-list">' + recentHTML + '</div>' +
+        '</div>' +
+
+        '<div class="pd-card" id="screenTimeCard">' +
+          '<div class="pd-card-title">⏰ Screen Time Controls</div>' +
+          '<div class="loading">Loading settings…</div>' +
+        '</div>';
+
+      // Animate progress bars
+      setTimeout(function() {
+        document.querySelectorAll('.subj-bar[data-pct]').forEach(function(bar) {
+          bar.style.width = bar.getAttribute('data-pct') + '%';
+        });
+      }, 50);
+
+      // Load screen time settings
+      loadScreenTime(uid, child.id);
+    });
+  }
+
+  function loadScreenTime(uid, childId) {
+    dbRef(uid, 'settings/' + childId).once('value').then(function(snap) {
+      var s = snap.val() || {};
+      var card = document.getElementById('screenTimeCard');
+      if (!card) return;
+      card.innerHTML =
+        '<div class="pd-card-title">⏰ Screen Time Controls</div>' +
+        '<div class="time-controls">' +
+          '<div class="time-ctrl">' +
+            '<div class="tc-label">Daily Time Limit</div>' +
+            '<div class="tc-input"><input type="number" id="stLimit" value="' + (s.dailyLimit || 60) + '" min="15" max="240"/><span>min / day</span></div>' +
+            '<button class="tc-save" onclick="saveScreenTime(\'' + childId + '\')">Save</button>' +
+          '</div>' +
+          '<div class="time-ctrl">' +
+            '<div class="tc-label">Bedtime Lock (no screen after)</div>' +
+            '<div class="tc-input"><input type="time" id="stBedtime" value="' + (s.bedtime || '20:00') + '"/></div>' +
+            '<button class="tc-save" onclick="saveScreenTime(\'' + childId + '\')">Save</button>' +
+          '</div>' +
+        '</div>';
+    });
+  }
+
+  window.saveScreenTime = function(childId) {
+    var uid = auth.currentUser && auth.currentUser.uid;
+    if (!uid) return;
+    var limit   = parseInt(document.getElementById('stLimit').value, 10) || 60;
+    var bedtime = document.getElementById('stBedtime').value || '20:00';
+    dbRef(uid, 'settings/' + childId).set({ dailyLimit: limit, bedtime: bedtime })
+      .then(function() { showToast('✅ Screen time saved'); })
+      .catch(function(e) { showToast('Error: ' + e.message); });
+  };
+
+  function renderMainEmpty() {
+    document.getElementById('pdMain').innerHTML =
+      '<div class="pd-card"><div class="empty-state">' +
+      '<div style="font-size:3rem;margin-bottom:12px">🦊</div>' +
+      '<div style="font-family:\'Baloo 2\',cursive;font-size:1.1rem;font-weight:800;margin-bottom:8px">No children yet!</div>' +
+      '<p>Go to <a href="index.html" style="color:var(--sky)">Activities</a> and enter a child\'s name to get started.</p>' +
+      '</div></div>';
+  }
+
+  function statCard(icon, val, label, color, trend) {
+    return '<div class="pd-stat">' +
+      '<div class="pd-stat-icon">' + icon + '</div>' +
+      '<div class="pd-stat-val" style="color:' + color + '">' + val + '</div>' +
+      '<div class="pd-stat-label">' + label + '</div>' +
+      (trend ? '<div class="pd-stat-trend">' + trend + '</div>' : '') +
+    '</div>';
+  }
+
+  function var_color(name) { return 'var(--' + name + ')'; }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function showToast(msg) {
+    var t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 20px;border-radius:10px;font-size:.85rem;font-weight:700;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.2)';
+    document.body.appendChild(t);
+    setTimeout(function() { t.remove(); }, 2800);
+  }
+
+  window.kivoraSignOut = function() {
+    auth.signOut().then(function() { window.location.href = './index.html'; });
+  };
+
+  // Auth guard
+  auth.onAuthStateChanged(function(user) {
+    if (!user) {
+      window.location.href = './index.html';
+      return;
+    }
+    var emailEl = document.getElementById('pdUserEmail');
+    if (emailEl) emailEl.textContent = user.displayName || user.email || '';
+    renderChildren(user.uid);
+  });
+
+})();
+</script>
+</body>
+</html>
