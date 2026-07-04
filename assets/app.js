@@ -3746,8 +3746,18 @@ function showParentDashboard() {
   var activeChild = kids.find(function(c){return c.id===activeId;}) || kids[0] || null;
 
   if (!kids.length) {
-    closePageModal();
-    openPage('login');
+    var listEl = document.getElementById('pd-child-list');
+    if (listEl) listEl.innerHTML = '';
+    var barsEl = document.getElementById('pd-subject-bars');
+    if (barsEl) barsEl.innerHTML = '<p style="color:#94a3b8;font-size:.85rem;text-align:center;padding:40px 20px">No children yet. <br><br><button onclick="closePageModal();setTimeout(function(){openPage(\'login\')},100)" style="padding:12px 24px;border-radius:12px;border:none;background:linear-gradient(to right,#7C3AED,#4F46E5);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;font-size:1rem">+ Add a Child Profile</button></p>';
+    var actEl = document.getElementById('pd-activity-list');
+    if (actEl) actEl.innerHTML = '';
+    ['pdStatTime','pdStatXP','pdStatActivities','pdStatStreak'].forEach(function(id){
+      var e = document.getElementById(id); if(e) e.textContent = '—';
+    });
+    ['pdStatTimeTrend','pdStatXPTrend','pdStatActTrend','pdStatStreakTrend'].forEach(function(id){
+      var e = document.getElementById(id); if(e) e.textContent = '';
+    });
     return;
   }
 

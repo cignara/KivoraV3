@@ -60,7 +60,9 @@
       ns._googlePopupPending = false;
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
       _syncLocalToCloud(result.user.uid);
-      _loadCloudIntoLocal();
+      _loadCloudIntoLocal(true);
+      // Immediate redirect for users with local data; _loadCloudIntoLocal callback
+      // will navigate again once cloud data arrives (in case local was empty).
       if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
       return result;
     }).catch(function(e) {
@@ -74,7 +76,7 @@
     return ns.auth.signInWithEmailAndPassword(email, password).then(function(result) {
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
       _syncLocalToCloud(result.user.uid);
-      _loadCloudIntoLocal();
+      _loadCloudIntoLocal(true);
       if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
       return result;
     });
@@ -85,7 +87,7 @@
     return ns.auth.createUserWithEmailAndPassword(email, password).then(function(result) {
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
       _syncLocalToCloud(result.user.uid);
-      _loadCloudIntoLocal();
+      _loadCloudIntoLocal(true);
       if (typeof openPage === 'function') { setTimeout(function() { openPage('parent-dashboard'); }, 50); }
       return result;
     });
@@ -184,7 +186,9 @@
   }
 
   // Load all cloud children + progress into localStorage
-  function _loadCloudIntoLocal() {
+  // navigate=true → open parent-dashboard after sync (from sign-in action)
+  // navigate=false → just merge data silently (from page-load syncFromCloud)
+  function _loadCloudIntoLocal(navigate) {
     ns.loadChildren().then(function(cloudKids) {
       if (!cloudKids.length) return;
       var local = JSON.parse(localStorage.getItem('kivora_children') || '[]');
@@ -206,12 +210,13 @@
           try { localStorage.setItem(key, JSON.stringify(localProg)); } catch(e) {}
         });
       });
-      if (typeof showParentDashboard === 'function') showParentDashboard();
+      if (navigate && typeof openPage === 'function') openPage('parent-dashboard');
+      else if (typeof showParentDashboard === 'function') showParentDashboard();
     });
   }
 
   // Explicit sync after sign-in (called from auth functions)
-  ns.loadFromCloud = _loadCloudIntoLocal;
+  ns.loadFromCloud = function() { _loadCloudIntoLocal(false); };
 
   // Hook into existing auth functions
   var origStart = window.startLearning;
