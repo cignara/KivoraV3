@@ -3314,7 +3314,125 @@ Mailing address: Kivora Learning, Colombo, Sri Lanka.</p>
 
     <!-- PARENT DASHBOARD -->
     <div id="page-parent-dashboard" class="modal-page" style="display:none;background:#F0F4F8;padding:0;overflow:hidden;height:100%">
-      <div id="pd-content" style="height:100%;overflow-y:auto;overflow-x:hidden"></div>
+      <style>
+        #page-parent-dashboard *,:before,:after{box-sizing:border-box;margin:0;padding:0}
+        #page-parent-dashboard{--sky:#4A90E2;--coral:#FF6B6B;--yellow:#FFD93D;--green:#52C41A;--purple:#9B59B6;--charcoal:#2C3E50;--gray:#7F8C8D;font-family:'Nunito',sans-serif;min-height:100vh;color:var(--charcoal)}
+        #page-parent-dashboard a{text-decoration:none;color:inherit}
+        .pd-nav{height:64px;background:white;display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 10px rgba(0,0,0,.06);position:sticky;top:0;z-index:100;border-bottom:2px solid #FFD93D}
+        .pd-nav-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+        .pd-logo{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:var(--charcoal);display:flex;align-items:center;gap:8px}
+        .pd-logo-icon{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--green),var(--sky));display:flex;align-items:center;justify-content:center;font-size:16px}
+        .pd-logo span{color:var(--sky)}
+        .pd-nav-right{display:flex;gap:10px;align-items:center}
+        .pd-btn{font-family:'Fredoka',sans-serif;font-size:.82rem;font-weight:600;padding:8px 16px;border-radius:8px;border:1.5px solid #DDE5ED;cursor:pointer;background:white;color:var(--charcoal);transition:all .2s}
+        .pd-btn:hover{border-color:var(--sky);color:var(--sky)}
+        .pd-btn.primary{background:var(--sky);color:white;border-color:var(--sky)}
+        .pd-wrap{max-width:1200px;margin:0 auto;padding:28px 20px 60px;display:grid;grid-template-columns:260px 1fr;gap:24px}
+        .pd-sidebar{display:flex;flex-direction:column;gap:12px}
+        .pd-children{background:white;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+        .pd-children-title{font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;color:var(--gray);margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px}
+        .child-tab{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all .2s;margin-bottom:4px}
+        .child-tab.active,.child-tab:hover{background:var(--sky);color:white}
+        .child-tab:hover{background:#EAF4FE;color:var(--sky)}
+        .child-tab.active:hover{background:var(--sky);color:white}
+        .child-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--yellow));display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+        .child-name{font-family:'Fredoka',sans-serif;font-size:.9rem;font-weight:600}
+        .child-age{font-size:.7rem;opacity:.7}
+        .add-child-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:2px dashed #DDE5ED;color:var(--gray);cursor:pointer;font-family:'Fredoka',sans-serif;font-size:.85rem;font-weight:500;transition:all .2s;margin-top:6px}
+        .add-child-btn:hover{border-color:var(--sky);color:var(--sky)}
+        .pd-quick{background:white;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+        .pd-quick-title{font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;color:var(--gray);margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px}
+        .quick-link{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:all .2s;font-family:'Fredoka',sans-serif;font-size:.85rem;color:var(--charcoal)}
+        .quick-link:hover{background:#F0F4F8;color:var(--sky)}
+        .pd-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+        .pd-stat{background:white;border-radius:14px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+        .pd-stat-icon{font-size:1.5rem;margin-bottom:6px}
+        .pd-stat-val{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;margin-bottom:2px}
+        .pd-stat-label{font-size:.75rem;color:var(--gray)}
+        .pd-stat-trend{font-size:.72rem;color:var(--green);margin-top:4px}
+        .pd-card{background:white;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.05);margin-bottom:18px}
+        .pd-card-title{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:var(--charcoal);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+        .subject-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+        .subj-icon{font-size:1.2rem;width:32px;text-align:center}
+        .subj-name{font-family:'Fredoka',sans-serif;font-size:.85rem;font-weight:600;width:100px;flex-shrink:0}
+        .subj-bar-wrap{flex:1;height:8px;background:#E8EFF6;border-radius:4px;overflow:hidden}
+        .subj-bar{height:100%;border-radius:4px;transition:width 1s ease}
+        .subj-pct{font-family:'Fredoka',sans-serif;font-size:.78rem;font-weight:600;width:36px;text-align:right;flex-shrink:0}
+        .activity-list{display:flex;flex-direction:column;gap:10px}
+        .activity-item{display:flex;align-items:center;gap:12px;padding:12px;background:#F8FAFB;border-radius:10px}
+        .act-icon{font-size:1.4rem;width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .act-name{font-family:'Fredoka',sans-serif;font-size:.88rem;font-weight:600;color:var(--charcoal)}
+        .act-sub{font-size:.72rem;color:var(--gray);margin-top:2px}
+        .act-time{font-size:.72rem;color:var(--gray);margin-left:auto;white-space:nowrap}
+        .act-xp{font-family:'Fredoka',sans-serif;font-size:.75rem;font-weight:700;color:var(--sky);background:#EAF4FE;padding:3px 8px;border-radius:20px;white-space:nowrap}
+        .time-controls{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+        .time-ctrl{background:#F8FAFB;border-radius:12px;padding:14px}
+        .tc-label{font-family:'Fredoka',sans-serif;font-size:.82rem;font-weight:600;color:var(--gray);margin-bottom:8px}
+        .tc-input{display:flex;align-items:center;gap:10px}
+        .tc-input input{width:60px;padding:6px 10px;border-radius:8px;border:1.5px solid #DDE5ED;font-family:'Nunito',sans-serif;font-size:.9rem;text-align:center}
+        .tc-input span{font-size:.8rem;color:var(--gray)}
+        .tc-save{margin-top:8px;font-family:'Fredoka',sans-serif;font-size:.78rem;font-weight:600;padding:6px 14px;border:none;border-radius:20px;background:var(--sky);color:white;cursor:pointer}
+        @media(max-width:900px){.pd-wrap{grid-template-columns:1fr}.pd-sidebar{display:grid;grid-template-columns:1fr 1fr}.pd-summary{grid-template-columns:repeat(2,1fr)}}
+      </style>
+      <div id="pd-content" style="height:100%;overflow-y:auto;overflow-x:hidden">
+        <nav class="pd-nav">
+          <div class="pd-nav-inner">
+            <span class="pd-logo" style="cursor:pointer" onclick="closePageModal()">
+              <div class="pd-logo-icon">🦊</div>Kivora<span>Learning</span> — Parent Dashboard
+            </span>
+            <div class="pd-nav-right">
+              <button class="pd-btn" id="pdLearnBtn" onclick="learnBtnClick()">▶ Learn</button>
+              <button class="pd-btn primary" onclick="closePageModal()">🏠 Home</button>
+            </div>
+          </div>
+        </nav>
+        <div class="pd-wrap">
+          <div class="pd-sidebar">
+            <div class="pd-children">
+              <div class="pd-children-title">My Children</div>
+              <div id="pd-child-list"></div>
+              <div class="add-child-btn" onclick="closePageModal();setTimeout(function(){openPage('login')},100)">+ Add Child Profile</div>
+            </div>
+            <div class="pd-quick">
+              <div class="pd-quick-title">Quick Links</div>
+              <div class="quick-link" onclick="closePageModal()">📚 Learning Activities</div>
+              <div class="quick-link">🏆 View Rewards</div>
+              <div class="quick-link" onclick="alert('Coming soon!')">❓ Help Centre</div>
+            </div>
+          </div>
+          <div>
+            <div class="pd-summary">
+              <div class="pd-stat"><div class="pd-stat-icon">⏱️</div><div class="pd-stat-val" id="pdStatTime" style="color:var(--sky)">—</div><div class="pd-stat-label">Est. learning time</div><div class="pd-stat-trend" id="pdStatTimeTrend"></div></div>
+              <div class="pd-stat"><div class="pd-stat-icon">⭐</div><div class="pd-stat-val" id="pdStatXP" style="color:var(--yellow)">—</div><div class="pd-stat-label">Total XP earned</div><div class="pd-stat-trend" id="pdStatXPTrend"></div></div>
+              <div class="pd-stat"><div class="pd-stat-icon">📚</div><div class="pd-stat-val" id="pdStatActivities" style="color:var(--purple)">—</div><div class="pd-stat-label">Activities done</div><div class="pd-stat-trend" id="pdStatActTrend"></div></div>
+              <div class="pd-stat"><div class="pd-stat-icon">🔥</div><div class="pd-stat-val" id="pdStatStreak" style="color:var(--coral)">—</div><div class="pd-stat-label">Day streak</div><div class="pd-stat-trend" id="pdStatStreakTrend"></div></div>
+            </div>
+            <div class="pd-card">
+              <div class="pd-card-title">📊 Progress by Subject <span id="pdSubjLabel" style="font-size:.75rem;font-weight:500;color:var(--gray)"></span></div>
+              <div id="pd-subject-bars"></div>
+            </div>
+            <div class="pd-card">
+              <div class="pd-card-title">⚡ Recent Activity</div>
+              <div class="activity-list" id="pd-activity-list"></div>
+            </div>
+            <div class="pd-card">
+              <div class="pd-card-title">⏰ Screen Time Controls</div>
+              <div class="time-controls">
+                <div class="time-ctrl">
+                  <div class="tc-label">Daily Time Limit</div>
+                  <div class="tc-input"><input type="number" value="60" min="15" max="240" id="pdTimeLimit"/><span>minutes per day</span></div>
+                  <button class="tc-save" onclick="var v=document.getElementById('pdTimeLimit').value;var p=JSON.parse(localStorage.getItem('kivora_screen_prefs')||'{}');p.daily=parseInt(v)||60;localStorage.setItem('kivora_screen_prefs',JSON.stringify(p));alert('✅ Limit saved to '+v+' minutes')">Save</button>
+                </div>
+                <div class="time-ctrl">
+                  <div class="tc-label">Bedtime Lock (no screen after)</div>
+                  <div class="tc-input"><input type="time" value="20:00" id="pdBedtime"/></div>
+                  <button class="tc-save" onclick="var v=document.getElementById('pdBedtime').value;var p=JSON.parse(localStorage.getItem('kivora_screen_prefs')||'{}');p.bedtime=v;localStorage.setItem('kivora_screen_prefs',JSON.stringify(p));alert('✅ Bedtime lock set to '+v)">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- TEACHER LOGIN / CREATE CLASS -->

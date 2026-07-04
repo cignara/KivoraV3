@@ -3741,145 +3741,87 @@ function _recentActivity(childId, limit) {
 }
 
 function showParentDashboard() {
-  var root = document.getElementById('pd-content');
-  if (!root) return;
   var kids = getChildren();
   var activeId = _lsGet('kivora_active_child') || (kids.length ? kids[0].id : null);
   var activeChild = kids.find(function(c){return c.id===activeId;}) || kids[0] || null;
 
   if (!kids.length) {
-    root.innerHTML = '<div style="padding:40px;text-align:center"><div style="font-size:3rem;margin-bottom:12px">👨‍👩‍👧</div><h2 style="font-family:\'Baloo 2\',cursive;font-size:1.4rem;font-weight:800;color:#1e293b;margin:0 0 8px">Parent Dashboard</h2><p style="color:#64748b;font-weight:600;margin:0 0 20px">No children added yet. Start learning to create a profile!</p><button onclick="closePageModal();startLearningAsChild(null)" style="padding:12px 24px;border-radius:12px;border:none;background:linear-gradient(to right,#7C3AED,#4F46E5);color:#fff;font-weight:800;cursor:pointer;font-family:inherit;font-size:1rem">▶ Start Learning</button></div>';
+    closePageModal();
+    openPage('login');
     return;
   }
 
-  // Compute stats for active child
-  var prog = _lsGet('kivora_progress_'+activeChild.id) || {};
+  var prog = _lsGet('kivora_progress_' + activeChild.id) || {};
   var p = getChildProgress(activeChild.id);
   var streak = _computeStreak(prog);
   var subjects = _subjectProgress(activeChild.id);
   var recent = _recentActivity(activeChild.id, 8);
-  var screens = _lsGet('kivora_screen_prefs') || { daily:60, bedtime:'20:00' };
+  var screens = _lsGet('kivora_screen_prefs') || { daily: 60, bedtime: '20:00' };
 
-  // Time estimate: ~5 min per activity
   var timeMin = Object.keys(prog).length * 5;
-  var timeStr = timeMin >= 60 ? Math.floor(timeMin/60)+'h '+ (timeMin%60)+'m' : timeMin+'m';
+  var timeStr = timeMin >= 60 ? Math.floor(timeMin / 60) + 'h ' + (timeMin % 60) + 'm' : timeMin + 'm';
 
-  // Build sidebar children tabs
-  var sidebarTabs = kids.map(function(c,i) {
-    var act = c.id === activeChild.id;
-    var cp = getChildProgress(c.id);
-    return '<div class="pd-child-tab'+(act?' active':'')+'" data-id="'+c.id+'" onclick="switchParentChild(\''+c.id+'\')"><div class="pd-child-avatar" style="background:linear-gradient(135deg,'+(act?'#7C3AED':'#FF6B6B')+','+(act?'#4F46E5':'#FFD93D')+')">'+(c.avatar||'🐨')+'</div><div><div class="pd-child-name">'+c.name+'</div><div class="pd-child-age">'+(c.grade||'')+' · ⭐ '+cp.xp+' XP</div></div></div>';
-  }).join('');
+  var el = function(id) { return document.getElementById(id); };
 
-  // Build subject progress bars
-  var subjectBars = subjects.map(function(s) {
-    var pct = s.total ? Math.round(s.done/s.total*100) : 0;
-    return '<div class="pd-subject-row"><span class="pd-subj-icon">'+s.emoji+'</span><span class="pd-subj-name">'+s.name+'</span><div class="pd-subj-bar-wrap"><div class="pd-subj-bar" style="width:'+pct+'%;background:linear-gradient(90deg,'+s.color+','+s.color+'88)"></div></div><span class="pd-subj-pct" style="color:'+s.color+'">'+pct+'%</span></div>';
-  }).join('') || '<p style="color:#94a3b8;font-size:.85rem;text-align:center;padding:12px 0">No activity data yet</p>';
+  // Children sidebar tabs
+  var listEl = el('pd-child-list');
+  if (listEl) {
+    listEl.innerHTML = kids.map(function(c) {
+      var act = c.id === activeChild.id;
+      var cp = getChildProgress(c.id);
+      var bg = act ? 'linear-gradient(135deg,#4A90E2,#357ABD)' : 'linear-gradient(135deg,#FF6B6B,#FFD93D)';
+      return '<div class="child-tab' + (act ? ' active' : '') + '" onclick="switchParentChild(\'' + c.id + '\')">' +
+        '<div class="child-avatar" style="background:' + bg + '">' + (c.avatar || '🐨') + '</div>' +
+        '<div><div class="child-name">' + c.name + '</div><div class="child-age">' + (c.grade || '') + ' · ⭐ ' + cp.xp + ' XP</div></div></div>';
+    }).join('');
+  }
 
-  // Build recent activity
-  var activityItems = recent.map(function(r) {
-    var ago = r.ts ? _timeAgo(r.ts) : '';
-    var wColor = r.world ? r.world.c : '#94a3b8';
-    var wEmoji = r.world ? r.world.e : '📋';
-    var wName = r.world ? r.world.n : '';
-    return '<div class="pd-activity-item"><div class="pd-act-icon" style="background:'+wColor+'22">'+wEmoji+'</div><div><div class="pd-act-name">'+r.title+'</div><div class="pd-act-sub">'+wName+(r.type?' · '+r.type:'')+'</div></div><span class="pd-act-time">'+ago+'</span><span class="pd-act-xp">+'+r.xp+' XP</span></div>';
-  }).join('') || '<p style="color:#94a3b8;font-size:.85rem;text-align:center;padding:12px 0">No recent activity</p>';
+  // Summary stats
+  if (el('pdStatTime')) el('pdStatTime').textContent = timeStr;
+  if (el('pdStatTimeTrend')) el('pdStatTimeTrend').textContent = p.completed + ' activities';
+  if (el('pdStatXP')) el('pdStatXP').textContent = String(p.xp);
+  if (el('pdStatXPTrend')) el('pdStatXPTrend').textContent = p.coins + ' coins';
+  if (el('pdStatActivities')) el('pdStatActivities').textContent = String(p.completed);
+  if (el('pdStatActTrend')) el('pdStatActTrend').textContent = Object.keys(prog).length + ' completions';
+  if (el('pdStatStreak')) el('pdStatStreak').textContent = String(streak.current);
+  if (el('pdStatStreakTrend')) el('pdStatStreakTrend').textContent = 'Best: ' + streak.best + ' days';
+  if (el('pdSubjLabel')) el('pdSubjLabel').textContent = 'for ' + activeChild.name;
 
-  root.innerHTML =
-    '<style>'+
-    '.pd-nav{height:64px;background:white;display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:100;border-bottom:2px solid #FFD93D}'+
-    '.pd-nav-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}'+
-    '.pd-logo{font-family:\'Baloo 2\',cursive;font-size:1.2rem;font-weight:800;color:#2C3E50;display:flex;align-items:center;gap:8px}'+
-    '.pd-logo-icon{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#52C41A,#4A90E2);display:flex;align-items:center;justify-content:center;font-size:16px}'+
-    '.pd-logo span{color:#4A90E2}.pd-nav-right{display:flex;gap:10px;align-items:center}'+
-    '.pd-btn{font-family:\'Fredoka\',sans-serif;font-size:.82rem;font-weight:600;padding:8px 16px;border-radius:8px;border:1.5px solid #DDE5ED;cursor:pointer;background:white;color:#2C3E50;transition:all .2s}'+
-    '.pd-btn:hover{border-color:#4A90E2;color:#4A90E2}.pd-btn.primary{background:#4A90E2;color:white;border-color:#4A90E2}'+
-    '.pd-wrap{max-width:1200px;margin:0 auto;padding:28px 20px 60px;display:grid;grid-template-columns:260px 1fr;gap:24px}'+
-    '.pd-sidebar{display:flex;flex-direction:column;gap:12px}'+
-    '.pd-children{background:white;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.05)}'+
-    '.pd-children-title{font-family:\'Baloo 2\',cursive;font-size:.9rem;font-weight:700;color:#7F8C8D;margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px}'+
-    '.pd-child-tab{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all .2s;margin-bottom:4px}'+
-    '.pd-child-tab.active,.pd-child-tab:hover{background:#4A90E2;color:white}'+
-    '.pd-child-tab:hover{background:#EAF4FE;color:#4A90E2}'+
-    '.pd-child-tab.active:hover{background:#4A90E2;color:white}'+
-    '.pd-child-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}'+
-    '.pd-child-name{font-family:\'Fredoka\',sans-serif;font-size:.9rem;font-weight:600}'+
-    '.pd-child-age{font-size:.7rem;opacity:.7}'+
-    '.pd-add-child-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:2px dashed #DDE5ED;color:#7F8C8D;cursor:pointer;font-family:\'Fredoka\',sans-serif;font-size:.85rem;font-weight:500;transition:all .2s;margin-top:6px}'+
-    '.pd-add-child-btn:hover{border-color:#4A90E2;color:#4A90E2}'+
-    '.pd-quick{background:white;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.05)}'+
-    '.pd-quick-title{font-family:\'Baloo 2\',cursive;font-size:.9rem;font-weight:700;color:#7F8C8D;margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px}'+
-    '.pd-quick-link{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:all .2s;font-family:\'Fredoka\',sans-serif;font-size:.85rem;color:#2C3E50}'+
-    '.pd-quick-link:hover{background:#F0F4F8;color:#4A90E2}'+
-    '.pd-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}'+
-    '.pd-stat{background:white;border-radius:14px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.05)}'+
-    '.pd-stat-icon{font-size:1.5rem;margin-bottom:6px}'+
-    '.pd-stat-val{font-family:\'Baloo 2\',cursive;font-size:1.5rem;font-weight:800;margin-bottom:2px}'+
-    '.pd-stat-label{font-size:.75rem;color:#7F8C8D}.pd-stat-trend{font-size:.72rem;color:#52C41A;margin-top:4px}'+
-    '.pd-card{background:white;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.05);margin-bottom:18px}'+
-    '.pd-card-title{font-family:\'Baloo 2\',cursive;font-size:1rem;font-weight:800;color:#2C3E50;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}'+
-    '.pd-subject-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}'+
-    '.pd-subj-icon{font-size:1.2rem;width:32px;text-align:center}'+
-    '.pd-subj-name{font-family:\'Fredoka\',sans-serif;font-size:.85rem;font-weight:600;width:100px;flex-shrink:0}'+
-    '.pd-subj-bar-wrap{flex:1;height:8px;background:#E8EFF6;border-radius:4px;overflow:hidden}'+
-    '.pd-subj-bar{height:100%;border-radius:4px;transition:width 1s ease}'+
-    '.pd-subj-pct{font-family:\'Fredoka\',sans-serif;font-size:.78rem;font-weight:600;width:36px;text-align:right;flex-shrink:0}'+
-    '.pd-activity-list{display:flex;flex-direction:column;gap:10px}'+
-    '.pd-activity-item{display:flex;align-items:center;gap:12px;padding:12px;background:#F8FAFB;border-radius:10px}'+
-    '.pd-act-icon{font-size:1.4rem;width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}'+
-    '.pd-act-name{font-family:\'Fredoka\',sans-serif;font-size:.88rem;font-weight:600;color:#2C3E50}'+
-    '.pd-act-sub{font-size:.72rem;color:#7F8C8D;margin-top:2px}'+
-    '.pd-act-time{font-size:.72rem;color:#7F8C8D;margin-left:auto;white-space:nowrap}'+
-    '.pd-act-xp{font-family:\'Fredoka\',sans-serif;font-size:.75rem;font-weight:700;color:#4A90E2;background:#EAF4FE;padding:3px 8px;border-radius:20px;white-space:nowrap}'+
-    '.pd-time-controls{display:grid;grid-template-columns:1fr 1fr;gap:14px}'+
-    '.pd-time-ctrl{background:#F8FAFB;border-radius:12px;padding:14px}'+
-    '.pd-tc-label{font-family:\'Fredoka\',sans-serif;font-size:.82rem;font-weight:600;color:#7F8C8D;margin-bottom:8px}'+
-    '.pd-tc-input{display:flex;align-items:center;gap:10px}'+
-    '.pd-tc-input input{width:60px;padding:6px 10px;border-radius:8px;border:1.5px solid #DDE5ED;font-family:\'Nunito\',sans-serif;font-size:.9rem;text-align:center}'+
-    '.pd-tc-input span{font-size:.8rem;color:#7F8C8D}'+
-    '.pd-tc-save{margin-top:8px;font-family:\'Fredoka\',sans-serif;font-size:.78rem;font-weight:600;padding:6px 14px;border:none;border-radius:20px;background:#4A90E2;color:white;cursor:pointer}'+
-    '@media(max-width:900px){.pd-wrap{grid-template-columns:1fr}.pd-sidebar{display:grid;grid-template-columns:1fr 1fr}.pd-summary{grid-template-columns:repeat(2,1fr)}}'+
-    '</style>'+
-    '<nav class="pd-nav"><div class="pd-nav-inner">'+
-      '<span class="pd-logo" style="cursor:pointer" onclick="closePageModal()"><div class="pd-logo-icon">🦊</div>Kivora<span>Learning</span> — Parent Dashboard</span>'+
-      '<div class="pd-nav-right">'+
-        '<button class="pd-btn" onclick="startLearningAsChild(\''+activeChild.id+'\');closePageModal()">▶ Learn</button>'+
-        '<button class="pd-btn primary" onclick="closePageModal()">🏠 Home</button>'+
-      '</div>'+
-    '</div></nav>'+
-    '<div class="pd-wrap">'+
-      '<div class="pd-sidebar">'+
-        '<div class="pd-children"><div class="pd-children-title">My Children</div>'+sidebarTabs+
-          '<div class="pd-add-child-btn" onclick="closePageModal();setTimeout(function(){openPage(\'login\')},100)">+ Add Child Profile</div>'+
-        '</div>'+
-        '<div class="pd-quick"><div class="pd-quick-title">Quick Links</div>'+
-          '<div class="pd-quick-link" onclick="closePageModal()">📚 Learning Activities</div>'+
-          '<div class="pd-quick-link" onclick="closePageModal()">🖨️ Printable Worksheets</div>'+
-          '<div class="pd-quick-link">🏆 View Rewards</div>'+
-          '<div class="pd-quick-link" onclick="alert(\'Coming soon!\')">❓ Help Centre</div>'+
-        '</div>'+
-      '</div>'+
-      '<div>'+
-        '<div class="pd-summary">'+
-          '<div class="pd-stat"><div class="pd-stat-icon">⏱️</div><div class="pd-stat-val" style="color:#4A90E2">'+timeStr+'</div><div class="pd-stat-label">Est. learning time</div><div class="pd-stat-trend">'+p.completed+' activities completed</div></div>'+
-          '<div class="pd-stat"><div class="pd-stat-icon">⭐</div><div class="pd-stat-val" style="color:#FFD93D">'+p.xp+'</div><div class="pd-stat-label">Total XP earned</div><div class="pd-stat-trend">'+p.coins+' coins</div></div>'+
-          '<div class="pd-stat"><div class="pd-stat-icon">📚</div><div class="pd-stat-val" style="color:#9B59B6">'+p.completed+'</div><div class="pd-stat-label">Activities done</div><div class="pd-stat-trend">'+Object.keys(prog).length+' total completions</div></div>'+
-          '<div class="pd-stat"><div class="pd-stat-icon">🔥</div><div class="pd-stat-val" style="color:#FF6B6B">'+streak.current+'</div><div class="pd-stat-label">Day streak</div><div class="pd-stat-trend">Best: '+streak.best+' days</div></div>'+
-        '</div>'+
-        '<div class="pd-card"><div class="pd-card-title">📊 Progress by Subject <span style="font-size:.75rem;font-weight:500;color:#7F8C8D">for '+activeChild.name+'</span></div>'+subjectBars+'</div>'+
-        '<div class="pd-card"><div class="pd-card-title">⚡ Recent Activity</div><div class="pd-activity-list">'+activityItems+'</div></div>'+
-        '<div class="pd-card"><div class="pd-card-title">⏰ Screen Time Controls</div>'+
-          '<div class="pd-time-controls">'+
-            '<div class="pd-time-ctrl"><div class="pd-tc-label">Daily Time Limit</div><div class="pd-tc-input"><input type="number" value="'+screens.daily+'" min="15" max="240" id="pd-time-limit"/><span>min/day</span></div><button class="pd-tc-save" onclick="var v=document.getElementById(\'pd-time-limit\').value;var p=JSON.parse(localStorage.getItem(\'kivora_screen_prefs\')||\'{}\');p.daily=parseInt(v)||60;localStorage.setItem(\'kivora_screen_prefs\',JSON.stringify(p));alert(\'✅ Time limit saved to \'+v+\' minutes\')">Save</button></div>'+
-            '<div class="pd-time-ctrl"><div class="pd-tc-label">Bedtime Lock</div><div class="pd-tc-input"><input type="time" value="'+screens.bedtime+'" id="pd-bedtime"/></div><button class="pd-tc-save" onclick="var v=document.getElementById(\'pd-bedtime\').value;var p=JSON.parse(localStorage.getItem(\'kivora_screen_prefs\')||\'{}\');p.bedtime=v;localStorage.setItem(\'kivora_screen_prefs\',JSON.stringify(p));alert(\'✅ Bedtime lock set to \'+v)">Save</button></div>'+
-          '</div>'+
-        '</div>'+
-        '<div style="text-align:right;padding:8px 0 16px">'+
-          '<span style="font-size:.72rem;color:#94a3b8">Signed in'+(typeof kivoraFirebase!=='undefined'&&kivoraFirebase.getUser()?'':' (local)')+'</span>'+
-        '</div>'+
-      '</div>'+
-    '</div>';
+  // Progress bars
+  var barsEl = el('pd-subject-bars');
+  if (barsEl) {
+    barsEl.innerHTML = subjects.map(function(s) {
+      var pct = s.total ? Math.round(s.done / s.total * 100) : 0;
+      return '<div class="subject-row"><span class="subj-icon">' + s.emoji + '</span><span class="subj-name">' + s.name +
+        '</span><div class="subj-bar-wrap"><div class="subj-bar" style="width:' + pct + '%;background:linear-gradient(90deg,' + s.color + ',' + s.color + '88)"></div></div>' +
+        '<span class="subj-pct" style="color:' + s.color + '">' + pct + '%</span></div>';
+    }).join('') || '<p style="color:#94a3b8;font-size:.85rem;text-align:center;padding:20px 0">No activity data yet — start learning!</p>';
+  }
+
+  // Activity feed
+  var actEl = el('pd-activity-list');
+  if (actEl) {
+    actEl.innerHTML = recent.map(function(r) {
+      var ago = r.ts ? _timeAgo(r.ts) : '';
+      var wc = r.world ? r.world.c : '#94a3b8';
+      var we = r.world ? r.world.e : '📋';
+      var wn = r.world ? r.world.n : '';
+      return '<div class="activity-item"><div class="act-icon" style="background:' + wc + '22">' + we +
+        '</div><div><div class="act-name">' + r.title + '</div><div class="act-sub">' + wn + (r.type ? ' · ' + r.type : '') +
+        '</div></div><span class="act-time">' + ago + '</span><span class="act-xp">+' + r.xp + ' XP</span></div>';
+    }).join('') || '<p style="color:#94a3b8;font-size:.85rem;text-align:center;padding:20px 0">No activity yet — start learning!</p>';
+  }
+
+  // Screen time
+  if (el('pdTimeLimit')) el('pdTimeLimit').value = String(screens.daily);
+  if (el('pdBedtime')) el('pdBedtime').value = screens.bedtime;
+}
+
+function learnBtnClick() {
+  var kids = getChildren();
+  var activeId = _lsGet('kivora_active_child') || (kids.length ? kids[0].id : null);
+  if (activeId) { startLearningAsChild(activeId); closePageModal(); }
+  else { closePageModal(); startLearningAsChild(null); }
 }
 
 function switchParentChild(childId) {
@@ -3889,13 +3831,13 @@ function switchParentChild(childId) {
 
 function _timeAgo(ts) {
   var diff = Date.now() - ts;
-  var min = Math.floor(diff/60000);
-  if (min<1) return 'just now';
-  if (min<60) return min+'m ago';
-  var hrs = Math.floor(min/60);
-  if (hrs<24) return hrs+'h ago';
-  var days = Math.floor(hrs/24);
-  return days+'d ago';
+  var min = Math.floor(diff / 60000);
+  if (min < 1) return 'just now';
+  if (min < 60) return min + 'm ago';
+  var hrs = Math.floor(min / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  var days = Math.floor(hrs / 24);
+  return days + 'd ago';
 }
 
 // ── TEACHER / CLASS DASHBOARD ──────────────────────────────────────
