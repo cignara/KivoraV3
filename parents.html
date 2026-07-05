@@ -216,9 +216,6 @@ if(!firebase.apps.length) firebase.initializeApp(CONFIG);
 var auth = firebase.auth();
 var db   = firebase.database();
 
-// Ensure LOCAL persistence so sessions survive page refreshes and navigation
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(){});
-
 var allChildren    = [];
 var activeChild    = null;
 var activeUid      = null;
