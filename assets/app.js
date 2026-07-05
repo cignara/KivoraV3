@@ -3416,7 +3416,9 @@ function openPrintable(packKey){
 const SPA_PAGES = new Set([
   'home','player','worlds','activities','games','stories','videos','coloring',
   'printables','crafts','special-needs','paths','pricing','about',
-  'teachers','parents','blog','careers','privacy','terms','compliance'
+  'blog','careers','privacy','terms','compliance'
+  // 'parents' and 'teachers' intentionally excluded — those are standalone .html pages
+  // (dashboard and teacher page), not SPA sections. Anchor nav uses HOME_TEASER_ANCHORS.
 ]);
 
 function openWorldInPlayer(num){
