@@ -6108,7 +6108,139 @@ const ACTS = [
    icon:'🧠',q:'Find all matching shape pairs!',
    pairs:[{a:'⬛',b:'Square'},{a:'⬤',b:'Circle'},{a:'▲',b:'Triangle'},{a:'⬟',b:'Pentagon'}],
    hint:'Remember the shape positions!',
-   load:['Flip the cards and find the pairs!'],ok:['Yes! Remember the shape positions!']}
+   load:['Flip the cards and find the pairs!'],ok:['Yes! Remember the shape positions!']},
+
+  /* ── MATH MOUNTAIN — SPEEDY SUMS (timed arcade race) ─── */
+  {code:'MM-R-001',world:'math-mountain',type:'race',xp:20,coins:10,
+   icon:'🏁',title:'Speedy Sums: Add to 5',timeLimit:25,
+   rounds:[{q:'1 + 1',a:'2'},{q:'2 + 1',a:'3'},{q:'1 + 3',a:'4'},{q:'2 + 2',a:'4'},{q:'3 + 2',a:'5'}],
+   load:['Ready to race the clock?','Solve each sum before time runs out!','Go go go!'],
+   ok:['You beat the clock!','Speedy solving — amazing!','You are a Math Mountain champion!'],
+   timeup:['Time ran out — but great effort!','Let us try again, a little faster this time!','You can beat the clock!']},
+  {code:'MM-R-002',world:'math-mountain',type:'race',xp:20,coins:10,
+   icon:'🏁',title:'Speedy Sums: Add to 10',timeLimit:30,
+   rounds:[{q:'4 + 3',a:'7'},{q:'5 + 4',a:'9'},{q:'6 + 2',a:'8'},{q:'3 + 6',a:'9'},{q:'7 + 3',a:'10'}],
+   load:['Bigger sums this time!','Race against the clock!','Ready, set, solve!'],
+   ok:['Lightning fast! You beat the clock!','Ten out of ten speedy work!','Fantastic racing!'],
+   timeup:['So close! Time ran out.','Let us try that race again!','You are getting faster every time!']},
+  {code:'MM-R-003',world:'math-mountain',type:'race',xp:20,coins:10,
+   icon:'🏁',title:'Quick Subtract Sprint',timeLimit:30,
+   rounds:[{q:'9 - 3',a:'6'},{q:'10 - 4',a:'6'},{q:'8 - 5',a:'3'},{q:'7 - 2',a:'5'},{q:'6 - 1',a:'5'}],
+   load:['Time to subtract at top speed!','Solve each one before the timer runs out!','Go!'],
+   ok:['Subtraction speedster — you did it!','Amazing quick thinking!','You beat the clock!'],
+   timeup:['Almost! Time ran out this round.','Take a breath and try the sprint again!','Faster next time — you can do it!']},
+  {code:'MM-R-004',world:'math-mountain',type:'race',xp:22,coins:11,
+   icon:'🏁',title:'Double Trouble Race',timeLimit:30,
+   rounds:[{q:'2 + 2',a:'4'},{q:'3 + 3',a:'6'},{q:'4 + 4',a:'8'},{q:'5 + 5',a:'10'},{q:'6 + 6',a:'12'}],
+   load:['Doubles race — same number twice!','Solve each double before time runs out!','Ready, set, go!'],
+   ok:['Double champion! You beat the clock!','Super speedy doubling!','Incredible racing!'],
+   timeup:['Time ran out on that double!','Doubles take practice — try again!','You will beat the clock this time!']},
+  {code:'MM-R-005',world:'math-mountain',type:'race',xp:24,coins:12,
+   icon:'🏁',title:'Speedy Sums: Add to 20',timeLimit:35,
+   rounds:[{q:'9 + 8',a:'17'},{q:'7 + 9',a:'16'},{q:'8 + 8',a:'16'},{q:'6 + 9',a:'15'},{q:'9 + 9',a:'18'}],
+   load:['Big number race!','Solve each sum before the clock runs out!','Go go go!'],
+   ok:['Big number champion — you beat the clock!','Incredibly speedy work!','You are unstoppable!'],
+   timeup:['So close on that big race!','Big sums take practice — try again!','You will get there — go again!']},
+  {code:'MM-R-006',world:'math-mountain',type:'race',xp:26,coins:13,
+   icon:'🏁',title:'Mixed Math Sprint',timeLimit:40,
+   rounds:[{q:'12 - 5',a:'7'},{q:'6 + 7',a:'13'},{q:'15 - 9',a:'6'},{q:'8 + 8',a:'16'},{q:'20 - 11',a:'9'}],
+   load:['The ultimate mixed sprint — adding AND subtracting!','Solve each one before time runs out!','Ready, set, go!'],
+   ok:['Mixed math master — you beat the clock!','You raced through addition and subtraction!','Outstanding sprinting!'],
+   timeup:['Time ran out on the sprint!','Mixed math is tricky — try again!','You are so close — go again!']},
+
+  /* ── ALPHABET ISLAND — KEYBOARD QUEST (typing race) ─── */
+  {code:'AI-K-001',world:'alphabet-island',type:'type',xp:15,coins:8,
+   icon:'⌨️',title:'Keyboard Quest: Home Row',timeLimit:35,
+   targets:['a','s','d','f','j','k','l'],
+   load:['Time to practise typing!','Type each letter before the clock runs out!','Use the keys below — or your keyboard!'],
+   ok:['Home row hero — you typed them all!','Your fingers are so fast!','Keyboard champion!'],
+   timeup:['Time ran out — nice try!','Keep practising those keys!','Let us try the keyboard quest again!']},
+  {code:'AI-K-002',world:'alphabet-island',type:'type',xp:15,coins:8,
+   icon:'⌨️',title:'Keyboard Quest: Top Row',timeLimit:40,
+   targets:['q','w','e','r','t','y','u','i','o','p'],
+   load:['Let us type the top row of letters!','Race the clock — type each one!','Go!'],
+   ok:['Top row typing star!','You typed every letter — amazing!','Fantastic fingers!'],
+   timeup:['So close! Time ran out.','Practice makes perfect — try again!','You will beat the clock this time!']},
+  {code:'AI-K-003',world:'alphabet-island',type:'type',xp:15,coins:8,
+   icon:'⌨️',title:'Keyboard Quest: Bottom Row',timeLimit:35,
+   targets:['z','x','c','v','b','n','m'],
+   load:['Bottom row letters — ready?','Type each letter before time runs out!','Go go go!'],
+   ok:['Bottom row boss — you did it!','Speedy typing!','You beat the clock!'],
+   timeup:['Time ran out that round!','Let us give it another go!','You are getting faster!']},
+  {code:'AI-K-004',world:'alphabet-island',type:'type',xp:18,coins:9,
+   icon:'⌨️',title:'Keyboard Quest: Animal Words',timeLimit:50,
+   targets:['cat','dog','pig','hen','fox','owl'],
+   load:['Type whole animal words this time!','Race the clock — one letter at a time!','Ready, set, type!'],
+   ok:['Animal word wizard — you typed them all!','Incredible typing!','You are a Keyboard Quest champion!'],
+   timeup:['Time ran out on the animal words!','Words take a little longer — try again!','You will get every word this time!']},
+  {code:'AI-K-005',world:'alphabet-island',type:'type',xp:18,coins:9,
+   icon:'⌨️',title:'Keyboard Quest: Colour Words',timeLimit:45,
+   targets:['red','blue','pink','gold'],
+   load:['Type each colour word!','Beat the clock, one letter at a time!','Go!'],
+   ok:['Colourful typing star!','You typed every colour word!','Amazing work!'],
+   timeup:['Time ran out — so close!','Colour words take practice — try again!','You will beat the clock this time!']},
+  {code:'AI-K-006',world:'alphabet-island',type:'type',xp:18,coins:9,
+   icon:'⌨️',title:"Keyboard Quest: Kivi's Favourite Words",timeLimit:50,
+   targets:['sun','star','moon','tree','leaf'],
+   load:["Type Kivi's favourite words!","Race the clock, letter by letter!","Ready, set, type!"],
+   ok:['Kivi is so proud — you typed them all!','Wonderful typing!','Keyboard Quest champion!'],
+   timeup:['Time ran out this round!','Kivi believes in you — try again!','You are so close — go again!']},
+
+  /* ── ALPHABET ISLAND — SOUND SORT (drag & drop) ─── */
+  {code:'AI-D-001',world:'alphabet-island',type:'drag',xp:15,coins:8,
+   icon:'🗂️',title:'Sound Sort: A or B?',
+   q:'Drag each picture to the letter it starts with!',
+   bins:[{id:'a',label:'🅰️ Starts with A',icon:'🅰️'},{id:'b',label:'🅱️ Starts with B',icon:'🅱️'}],
+   items:[{t:'🍎',label:'Apple',bin:'a'},{t:'🐻',label:'Bear',bin:'b'},{t:'🐜',label:'Ant',bin:'a'},
+          {t:'🎈',label:'Balloon',bin:'b'},{t:'✈️',label:'Airplane',bin:'a'},{t:'🍌',label:'Banana',bin:'b'}],
+   load:['Drag each picture into the right box!','Listen for the beginning sound!','You can do it!'],
+   ok:['Perfect sorting!','You matched every sound!','Sound Sort champion!'],
+   no:['Not quite — try that one again!']},
+  {code:'AI-D-002',world:'alphabet-island',type:'drag',xp:15,coins:8,
+   icon:'🗂️',title:'Sound Sort: C or D?',
+   q:'Drag each picture to the letter it starts with!',
+   bins:[{id:'c',label:'Starts with C',icon:'🅲️'},{id:'d',label:'Starts with D',icon:'🅳️'}],
+   items:[{t:'🐱',label:'Cat',bin:'c'},{t:'🐶',label:'Dog',bin:'d'},{t:'🌽',label:'Corn',bin:'c'},
+          {t:'🦆',label:'Duck',bin:'d'},{t:'☕',label:'Cup',bin:'c'},{t:'🪑',label:'Desk',bin:'d'}],
+   load:['Drag each picture into the right box!','Listen for the beginning sound!','Go!'],
+   ok:['Wonderful sorting!','Every picture in the right spot!','Amazing work!'],
+   no:['Not quite — try that one again!']},
+  {code:'AI-D-003',world:'alphabet-island',type:'drag',xp:15,coins:8,
+   icon:'🗂️',title:'Sound Sort: M or S?',
+   q:'Drag each picture to the letter it starts with!',
+   bins:[{id:'m',label:'Starts with M',icon:'🅼️'},{id:'s',label:'Starts with S',icon:'🆂️'}],
+   items:[{t:'🌙',label:'Moon',bin:'m'},{t:'☀️',label:'Sun',bin:'s'},{t:'🐭',label:'Mouse',bin:'m'},
+          {t:'⭐',label:'Star',bin:'s'},{t:'🥛',label:'Milk',bin:'m'},{t:'🐍',label:'Snake',bin:'s'}],
+   load:['Drag each picture into the right box!','Listen carefully!','You can do it!'],
+   ok:['Fantastic sorting!','You matched every sound!','Sound Sort star!'],
+   no:['Not quite — try that one again!']},
+  {code:'AI-D-004',world:'alphabet-island',type:'drag',xp:16,coins:8,
+   icon:'🗂️',title:'Sort the Letters: Vowel or Consonant',
+   q:'Drag each letter into the right box!',
+   bins:[{id:'vowel',label:'🎵 Vowel',icon:'🎵'},{id:'consonant',label:'🔤 Consonant',icon:'🔤'}],
+   items:[{t:'A',bin:'vowel'},{t:'B',bin:'consonant'},{t:'E',bin:'vowel'},
+          {t:'T',bin:'consonant'},{t:'O',bin:'vowel'},{t:'K',bin:'consonant'}],
+   load:['Vowels or consonants — sort them all!','A, E, I, O, U are vowels — the rest are consonants!','Go!'],
+   ok:['Vowel and consonant expert!','Perfect sorting!','You are so clever!'],
+   no:['Not quite — try that one again!']},
+  {code:'AI-D-005',world:'alphabet-island',type:'drag',xp:16,coins:8,
+   icon:'🗂️',title:'Sort the Words: Short or Long',
+   q:'Drag each word to Short or Long!',
+   bins:[{id:'short',label:'✂️ Short Word',icon:'✂️'},{id:'long',label:'📏 Long Word',icon:'📏'}],
+   items:[{t:'🐱',label:'cat',bin:'short'},{t:'🐘',label:'elephant',bin:'long'},{t:'🐶',label:'dog',bin:'short'},
+          {t:'🦋',label:'butterfly',bin:'long'},{t:'☀️',label:'sun',bin:'short'},{t:'🌈',label:'rainbow',bin:'long'}],
+   load:['Some words are short, some are long!','Count the letters and drag each word to the right box!','Go!'],
+   ok:['Word length wizard!','Perfect sorting!','You counted every letter!'],
+   no:['Not quite — try that one again!']},
+  {code:'AI-D-006',world:'alphabet-island',type:'drag',xp:15,coins:8,
+   icon:'🗂️',title:'Sort It: Animal or Food',
+   q:'Drag each picture to Animal or Food!',
+   bins:[{id:'animal',label:'🐾 Animal',icon:'🐾'},{id:'food',label:'🍽️ Food',icon:'🍽️'}],
+   items:[{t:'🐶',label:'Dog',bin:'animal'},{t:'🍕',label:'Pizza',bin:'food'},{t:'🐱',label:'Cat',bin:'animal'},
+          {t:'🍎',label:'Apple',bin:'food'},{t:'🐟',label:'Fish',bin:'animal'},{t:'🍞',label:'Bread',bin:'food'}],
+   load:['Is it an animal or a food? Drag each one to the right box!','You can do it!','Go!'],
+   ok:['Sorting superstar!','Every picture in the right box!','Amazing work!'],
+   no:['Not quite — try that one again!']}
 ];
 /* ══════════════════════════════════════════════
    STATE
@@ -6135,7 +6267,10 @@ function unlockAndStart(){
   window.speechSynthesis.cancel();
   window.speechSynthesis.resume();
 
+  let voicePicked=false;
   function pickVoiceAndGo(){
+    if(voicePicked)return;
+    voicePicked=true;
     const voices=window.speechSynthesis.getVoices();
     const priority=['Google UK English Female','Google UK English Male','Google US English',
                     'Samantha','Karen','Moira','Nicky','Aria','Zira'];
@@ -6265,7 +6400,7 @@ function showGrid(){
       <div class="num">${act.code}</div>
       <div class="icon">${act.icon}</div>
       <div class="act-title">${act.title}</div>
-      <span class="type-badge type-${act.type}">${act.type==='tap'?'🎯 Tap':act.type==='sing'?'🎵 Sing':act.type==='match'?'🔗 Match':act.type==='order'?'🔢 Order':act.type==='memory'?'🧠 Memory':act.type==='mix'?'🎨 Mix':act.type==='blank'?'✏️ Fill-In':'📖 Read'}</span>
+      <span class="type-badge type-${act.type}">${act.type==='tap'?'🎯 Tap':act.type==='sing'?'🎵 Sing':act.type==='match'?'🔗 Match':act.type==='order'?'🔢 Order':act.type==='memory'?'🧠 Memory':act.type==='mix'?'🎨 Mix':act.type==='blank'?'✏️ Fill-In':act.type==='race'?'🏁 Race':act.type==='type'?'⌨️ Type':act.type==='drag'?'🗂️ Sort':'📖 Read'}</span>
       <div class="xp-label">⭐${act.xp} XP · 🪙${act.coins}</div>
       ${isDone?'<div class="done-badge">✅</div>':''}`;
     card.onclick=()=>launchActivity(act);
@@ -6313,6 +6448,9 @@ function launchActivity(act){
   else if(act.type==='memory') body.innerHTML=buildMemoryUI(act);
   else if(act.type==='mix') body.innerHTML=buildMixUI(act);
   else if(act.type==='blank') body.innerHTML=buildBlankUI(act);
+  else if(act.type==='race') body.innerHTML=buildRaceUI(act);
+  else if(act.type==='type') body.innerHTML=buildTypeUI(act);
+  else if(act.type==='drag'){ body.innerHTML=buildDragUI(act); initDragUI(); }
 
   setTimeout(()=>speak(act.load),350);
 }
@@ -6320,6 +6458,7 @@ function launchActivity(act){
 function goBack(){
   if(window.speechSynthesis)window.speechSynthesis.cancel();
   stopSpeaking();
+  clearArcadeTimers();
   if(window._kivoraGameSource){
     const src = window._kivoraGameSource;
     window._kivoraGameSource = null;
@@ -6756,6 +6895,291 @@ function blankAnswer(opt,isCorrect,text){
     setBubble(currentAct.no.join(' '),'no');
     setTimeout(()=>speak(currentAct.no),400);
   }
+}
+
+/* ══════════════════════════════════════════════
+   ARCADE TIMER HELPERS (shared by RACE + TYPE)
+══════════════════════════════════════════════ */
+let arcadeTimerId=null;
+function clearArcadeTimers(){
+  if(arcadeTimerId){clearInterval(arcadeTimerId);arcadeTimerId=null;}
+  document.removeEventListener('keydown',typeKeydownHandler);
+  document.removeEventListener('pointermove',dragPointerMove);
+  document.removeEventListener('pointerup',dragPointerUp);
+}
+function generateDistractors(correct){
+  const used=new Set([correct]),out=[];
+  let guard=0;
+  while(out.length<3&&guard<40){
+    guard++;
+    const delta=(Math.floor(Math.random()*4)+1)*(Math.random()<.5?-1:1);
+    const val=correct+delta;
+    if(val>=0&&!used.has(val)){used.add(val);out.push(val);}
+  }
+  while(out.length<3)out.push(correct+out.length+1);
+  return out;
+}
+
+/* ══════════════════════════════════════════════
+   RACE GAME (timed maths sprint)
+══════════════════════════════════════════════ */
+let raceState=null;
+function buildRaceUI(act){
+  raceState={idx:0,timeLeft:act.timeLimit,started:false};
+  setTimeout(startRaceTimer,1500);
+  return `
+    ${kiviUI(act)}
+    <div class="arcade-hud">
+      <div class="arcade-round">Round <span id="raceRoundNum">1</span>/${act.rounds.length}</div>
+      <div class="arcade-timer-wrap"><div class="arcade-timer-fill" id="raceTimerFill" style="width:100%"></div></div>
+      <div class="arcade-timer-label" id="raceTimerLabel">${act.timeLimit}s</div>
+    </div>
+    <div class="q-box"><div class="target-badge" id="raceQ">${act.rounds[0].q} = ?</div></div>
+    <div class="ans-grid" id="raceAnsGrid">${renderRaceRound(act,0)}</div>
+    <div class="arcade-ready-overlay" id="raceReadyOverlay"><div class="arcade-ready-text">Ready&hellip; Set&hellip;<br>GO! 🏁</div></div>
+    <div class="controls" id="raceControls" style="display:none"><button class="ctrl-btn" onclick="restartRace()">🔄 Try Again</button></div>`;
+}
+function renderRaceRound(act,idx){
+  const round=act.rounds[idx];
+  const correctNum=parseFloat(round.a);
+  const opts=[{t:round.a,c:true},...generateDistractors(correctNum).map(d=>({t:String(d),c:false}))]
+    .sort(()=>Math.random()-.5);
+  return opts.map((ans,i)=>`
+    <div class="ans-card ${CARD_COLS[i]}" onclick="raceTapAnswer(this,${ans.c})">
+      <div class="aletter">${ans.t}</div>
+    </div>`).join('');
+}
+function startRaceTimer(){
+  const overlay=document.getElementById('raceReadyOverlay');
+  if(overlay)overlay.classList.add('hide');
+  if(!raceState)return;
+  raceState.started=true;
+  arcadeTimerId=setInterval(()=>{
+    raceState.timeLeft-=.1;
+    const pct=Math.max(0,raceState.timeLeft/currentAct.timeLimit*100);
+    const fill=document.getElementById('raceTimerFill');
+    if(fill){fill.style.width=pct+'%';fill.classList.toggle('danger',pct<25);}
+    const lbl=document.getElementById('raceTimerLabel');
+    if(lbl)lbl.textContent=Math.max(0,Math.ceil(raceState.timeLeft))+'s';
+    if(raceState.timeLeft<=0){clearInterval(arcadeTimerId);arcadeTimerId=null;raceTimeUp();}
+  },100);
+}
+function raceTapAnswer(card,isCorrect){
+  if(answered||!raceState||!raceState.started)return;
+  if(isCorrect){
+    card.classList.add('state-correct');
+    document.querySelectorAll('#raceAnsGrid .ans-card').forEach(c=>{if(c!==card)c.classList.add('state-disabled');});
+    launchSparkles();
+    setTimeout(()=>{
+      raceState.idx++;
+      if(raceState.idx>=currentAct.rounds.length){raceWin();}
+      else{
+        const numEl=document.getElementById('raceRoundNum'); if(numEl)numEl.textContent=raceState.idx+1;
+        const qEl=document.getElementById('raceQ'); if(qEl)qEl.textContent=currentAct.rounds[raceState.idx].q+' = ?';
+        const gridEl=document.getElementById('raceAnsGrid'); if(gridEl)gridEl.innerHTML=renderRaceRound(currentAct,raceState.idx);
+      }
+    },450);
+  }else{
+    card.classList.add('state-wrong');
+    setTimeout(()=>card.classList.remove('state-wrong'),400);
+  }
+}
+function raceWin(){
+  if(answered)return;
+  answered=true;
+  if(arcadeTimerId){clearInterval(arcadeTimerId);arcadeTimerId=null;}
+  setBubble(currentAct.ok.join(' '),'ok');speak(currentAct.ok);
+  setTimeout(launchSparkles,300);
+  setTimeout(()=>showReward(currentAct),2000);
+}
+function raceTimeUp(){
+  if(answered)return;
+  setBubble(currentAct.timeup.join(' '),'no');speak(currentAct.timeup);
+  document.querySelectorAll('#raceAnsGrid .ans-card').forEach(c=>c.classList.add('state-disabled'));
+  const ctrl=document.getElementById('raceControls'); if(ctrl)ctrl.style.display='flex';
+}
+function restartRace(){
+  answered=false;wrongAttempts=0;
+  document.getElementById('playerBody').innerHTML=buildRaceUI(currentAct);
+  setTimeout(()=>speak(currentAct.load),300);
+}
+
+/* ══════════════════════════════════════════════
+   TYPE GAME (keyboard quest)
+══════════════════════════════════════════════ */
+let typeState=null;
+function buildTypeUI(act){
+  typeState={idx:0,charIdx:0,timeLeft:act.timeLimit,started:false};
+  setTimeout(startTypeTimer,1500);
+  return `
+    ${kiviUI(act)}
+    <div class="arcade-hud">
+      <div class="arcade-round">Word <span id="typeWordNum">1</span>/${act.targets.length}</div>
+      <div class="arcade-timer-wrap"><div class="arcade-timer-fill" id="typeTimerFill" style="width:100%"></div></div>
+      <div class="arcade-timer-label" id="typeTimerLabel">${act.timeLimit}s</div>
+    </div>
+    <div class="type-target" id="typeTarget">${renderTypeTarget(act,0,0)}</div>
+    <div class="type-keyboard" id="typeKeyboard">${renderTypeKeyboard()}</div>
+    <div class="arcade-ready-overlay" id="typeReadyOverlay"><div class="arcade-ready-text">Ready&hellip; Set&hellip;<br>TYPE! ⌨️</div></div>
+    <div class="controls" id="typeControls" style="display:none"><button class="ctrl-btn" onclick="restartType()">🔄 Try Again</button></div>`;
+}
+function renderTypeTarget(act,wordIdx,charIdx){
+  return act.targets[wordIdx].split('').map((ch,i)=>
+    `<span class="type-char${i<charIdx?' done':''}${i===charIdx?' active':''}">${ch.toUpperCase()}</span>`).join('');
+}
+function renderTypeKeyboard(){
+  return ['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'].map(row=>
+    `<div class="kb-row">${row.split('').map(k=>
+      `<button class="kb-key" data-key="${k.toLowerCase()}" onclick="typeKeyPress('${k.toLowerCase()}',this)">${k}</button>`).join('')}</div>`
+  ).join('');
+}
+function startTypeTimer(){
+  const overlay=document.getElementById('typeReadyOverlay');
+  if(overlay)overlay.classList.add('hide');
+  if(!typeState)return;
+  typeState.started=true;
+  document.removeEventListener('keydown',typeKeydownHandler);
+  document.addEventListener('keydown',typeKeydownHandler);
+  arcadeTimerId=setInterval(()=>{
+    typeState.timeLeft-=.1;
+    const pct=Math.max(0,typeState.timeLeft/currentAct.timeLimit*100);
+    const fill=document.getElementById('typeTimerFill');
+    if(fill){fill.style.width=pct+'%';fill.classList.toggle('danger',pct<25);}
+    const lbl=document.getElementById('typeTimerLabel');
+    if(lbl)lbl.textContent=Math.max(0,Math.ceil(typeState.timeLeft))+'s';
+    if(typeState.timeLeft<=0){clearInterval(arcadeTimerId);arcadeTimerId=null;typeTimeUp();}
+  },100);
+}
+function typeKeydownHandler(e){
+  const k=e.key.toLowerCase();
+  if(k.length!==1||!/[a-z]/.test(k))return;
+  const btn=document.querySelector(`.kb-key[data-key="${k}"]`);
+  if(btn)typeKeyPress(k,btn);
+}
+function typeKeyPress(key,btnEl){
+  if(answered||!typeState||!typeState.started)return;
+  const act=currentAct,word=act.targets[typeState.idx],expected=word[typeState.charIdx];
+  if(key===expected){
+    btnEl.classList.add('kb-correct');setTimeout(()=>btnEl.classList.remove('kb-correct'),200);
+    typeState.charIdx++;
+    const tEl=document.getElementById('typeTarget'); if(tEl)tEl.innerHTML=renderTypeTarget(act,typeState.idx,typeState.charIdx);
+    if(typeState.charIdx>=word.length){
+      launchSparkles();
+      setTimeout(()=>{
+        typeState.idx++;typeState.charIdx=0;
+        if(typeState.idx>=act.targets.length){typeWin();}
+        else{
+          const wEl=document.getElementById('typeWordNum'); if(wEl)wEl.textContent=typeState.idx+1;
+          const tgt=document.getElementById('typeTarget'); if(tgt)tgt.innerHTML=renderTypeTarget(act,typeState.idx,0);
+        }
+      },500);
+    }
+  }else{
+    btnEl.classList.add('kb-wrong');setTimeout(()=>btnEl.classList.remove('kb-wrong'),300);
+  }
+}
+function typeWin(){
+  if(answered)return;
+  answered=true;
+  if(arcadeTimerId){clearInterval(arcadeTimerId);arcadeTimerId=null;}
+  document.removeEventListener('keydown',typeKeydownHandler);
+  setBubble(currentAct.ok.join(' '),'ok');speak(currentAct.ok);
+  setTimeout(launchSparkles,300);
+  setTimeout(()=>showReward(currentAct),2000);
+}
+function typeTimeUp(){
+  if(answered)return;
+  document.removeEventListener('keydown',typeKeydownHandler);
+  setBubble(currentAct.timeup.join(' '),'no');speak(currentAct.timeup);
+  const ctrl=document.getElementById('typeControls'); if(ctrl)ctrl.style.display='flex';
+}
+function restartType(){
+  answered=false;
+  document.getElementById('playerBody').innerHTML=buildTypeUI(currentAct);
+  setTimeout(()=>speak(currentAct.load),300);
+}
+
+/* ══════════════════════════════════════════════
+   DRAG GAME (sound sort — pointer-based drag & drop)
+══════════════════════════════════════════════ */
+let dragState=null,dragCurrent=null,dragStartX=0,dragStartY=0;
+function buildDragUI(act){
+  dragState={placed:0,total:act.items.length};
+  const itemsHtml=act.items.map((it,i)=>`
+    <div class="drag-item" id="dragItem${i}" data-bin="${it.bin}">
+      <div class="drag-item-emoji">${it.t}</div>
+      ${it.label?`<div class="drag-item-label">${it.label}</div>`:''}
+    </div>`).join('');
+  const binsHtml=act.bins.map(b=>`
+    <div class="drag-bin" data-bin="${b.id}">
+      <div class="drag-bin-icon">${b.icon}</div>
+      <div class="drag-bin-label">${b.label}</div>
+      <div class="drag-bin-items"></div>
+    </div>`).join('');
+  return `
+    ${kiviUI(act)}
+    <div class="q-box"><h2>${act.q||'Drag each item to the right box!'}</h2></div>
+    <div class="drag-bins">${binsHtml}</div>
+    <div class="drag-pool" id="dragPool">${itemsHtml}</div>`;
+}
+function initDragUI(){
+  document.querySelectorAll('.drag-item').forEach(item=>{
+    item.addEventListener('pointerdown',dragPointerDown);
+  });
+}
+function dragPointerDown(e){
+  if(answered)return;
+  const item=e.currentTarget;
+  if(item.classList.contains('placed'))return;
+  dragCurrent=item;
+  item.classList.add('dragging');
+  item.style.pointerEvents='none';
+  dragStartX=e.clientX;dragStartY=e.clientY;
+  document.addEventListener('pointermove',dragPointerMove);
+  document.addEventListener('pointerup',dragPointerUp);
+}
+function dragPointerMove(e){
+  if(!dragCurrent)return;
+  const dx=e.clientX-dragStartX,dy=e.clientY-dragStartY;
+  dragCurrent.style.transform=`translate(${dx}px,${dy}px) scale(1.08)`;
+  document.querySelectorAll('.drag-bin').forEach(b=>b.classList.remove('hover'));
+  const under=document.elementFromPoint(e.clientX,e.clientY);
+  const bin=under&&under.closest('.drag-bin');
+  if(bin)bin.classList.add('hover');
+}
+function dragPointerUp(e){
+  if(!dragCurrent)return;
+  document.removeEventListener('pointermove',dragPointerMove);
+  document.removeEventListener('pointerup',dragPointerUp);
+  const item=dragCurrent;dragCurrent=null;
+  item.classList.remove('dragging');
+  document.querySelectorAll('.drag-bin').forEach(b=>b.classList.remove('hover'));
+  const under=document.elementFromPoint(e.clientX,e.clientY);
+  item.style.pointerEvents='';
+  const bin=under&&under.closest('.drag-bin');
+  if(bin&&bin.dataset.bin===item.dataset.bin){
+    item.style.transform='';
+    item.classList.add('placed');
+    bin.querySelector('.drag-bin-items').appendChild(item);
+    dragState.placed++;
+    launchSparkles();
+    if(dragState.placed>=dragState.total)setTimeout(dragWin,500);
+  }else{
+    if(bin){
+      bin.classList.add('bin-wrong-flash');
+      setTimeout(()=>bin.classList.remove('bin-wrong-flash'),400);
+      setBubble((currentAct.no||['Not quite — try again!']).join(' '),'no');
+    }
+    item.classList.add('snap-back');
+    item.style.transform='';
+    setTimeout(()=>item.classList.remove('snap-back'),300);
+  }
+}
+function dragWin(){
+  if(answered)return;
+  answered=true;
+  setBubble(currentAct.ok.join(' '),'ok');speak(currentAct.ok);
+  setTimeout(()=>showReward(currentAct),1200);
 }
 
 /* ══════════════════════════════════════════════
