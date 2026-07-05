@@ -212,9 +212,12 @@ var CONFIG = {
   appId:"1:145485791442:web:d0a6f467aecc29101f6d0b"
 };
 
-if(!firebase.apps.length) firebase.initializeApp(CONFIG);
-var auth = firebase.auth();
-var db   = firebase.database();
+var auth = null, db = null;
+try {
+  if(!firebase.apps.length) firebase.initializeApp(CONFIG);
+  auth = firebase.auth();
+  db   = firebase.database();
+} catch(e) {}
 
 var allChildren    = [];
 var activeChild    = null;
@@ -234,7 +237,7 @@ var WORLD_ORDER = ['alphabet-island','number-kingdom','science-lab','creative-st
 
 // ── Helpers ──────────────────────────────────────────
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function dbRef(uid,path){return db.ref('users/'+uid+'/'+path);}
+function dbRef(uid,path){if(!db)throw new Error('db not available');return db.ref('users/'+uid+'/'+path);}
 function gradeLabel(g){return {'pre-k':'Pre-K','kindergarten':'Kindergarten','grade-1':'Grade 1','grade-2':'Grade 2','grade-3':'Grade 3','grade-4':'Grade 4','grade-5':'Grade 5'}[g]||g||'';}
 function relTime(ts){var d=Date.now()-ts;if(d<60000)return 'Just now';if(d<3600000)return Math.floor(d/60000)+'m ago';if(d<86400000)return Math.floor(d/3600000)+'h ago';if(d<172800000)return 'Yesterday';return new Date(ts).toLocaleDateString();}
 function calcStreak(prog){var days={};Object.values(prog).forEach(function(p){if(p.ts){var d=new Date(p.ts);days[d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate()]=1;}});var n=0,cur=new Date();while(true){var k=cur.getFullYear()+'-'+cur.getMonth()+'-'+cur.getDate();if(days[k]){n++;cur.setDate(cur.getDate()-1);}else break;}return n;}
@@ -502,48 +505,63 @@ window.saveScreenTime=function(childId){
 };
 
 window.kivoraSignOut=function(){
-  auth.signOut().then(function(){window.location.href='./index.html';});
+  try{localStorage.removeItem('kivora_firebase_uid');}catch(e){}
+  try{localStorage.removeItem('kivora_user_role');}catch(e){}
+  try{localStorage.removeItem('kivora_display_name');}catch(e){}
+  try{localStorage.removeItem('kivora_photo_url');}catch(e){}
+  if(auth) auth.signOut().catch(function(){});
+  window.location.href='./index.html';
 };
 
-// ── Auth guard ────────────────────────────────────────
-// Show loader while Firebase restores session from IndexedDB.
-// Only redirect to index if user is definitively not authenticated.
-auth.onAuthStateChanged(function(user){
-  if(!user || user.isAnonymous){
-    // Session not found — show a friendly message inside the loader instead of
-    // a jarring blank flash, then redirect after a short delay so the user
-    // sees what's happening.
-    var loader=document.getElementById('authLoader');
-    if(loader) loader.innerHTML='<div style="text-align:center;font-family:\'Fredoka\',sans-serif">'
-      +'<div style="font-size:2.5rem;margin-bottom:12px">🔐</div>'
-      +'<p style="font-size:1rem;font-weight:600;color:#2C3E50;margin-bottom:8px">Please sign in to continue</p>'
-      +'<p style="font-size:.82rem;color:#7F8C8D;margin-bottom:16px">Redirecting to login…</p>'
-      +'<a href="./index.html" style="display:inline-block;background:#4A90E2;color:#fff;padding:9px 22px;border-radius:10px;font-weight:700;text-decoration:none">Go to Login →</a>'
-      +'</div>';
-    setTimeout(function(){window.location.href='./index.html';},2000);
-    return;
-  }
+// ── Bootstrap: localStorage-first, no Firebase timing dependency ──────
+// Read uid from localStorage immediately — set during sign-in in firebase.js.
+// This avoids onAuthStateChanged timing issues entirely.
+activeUid = (function(){try{return localStorage.getItem('kivora_firebase_uid')||'';}catch(e){return '';}}());
 
-  // Auth confirmed — hide loader and show dashboard
-  document.getElementById('authLoader').style.display='none';
-  document.getElementById('appShell').style.display='';
-
-  activeUid = user.uid;
-
-  // Show profile in nav
+// Show nav profile from localStorage cache (available instantly)
+(function(){
   var nameEl=document.getElementById('navName');
   var photoEl=document.getElementById('navPhoto');
-  var displayName = user.displayName || localStorage.getItem('kivora_display_name') || user.email || '';
-  var photoURL    = user.photoURL    || localStorage.getItem('kivora_photo_url') || '';
-  if(nameEl) nameEl.textContent = displayName;
-  if(photoEl && photoURL){photoEl.src=photoURL;photoEl.style.display='block';}
+  var displayName=localStorage.getItem('kivora_display_name')||'';
+  var photoURL=localStorage.getItem('kivora_photo_url')||'';
+  if(nameEl&&displayName) nameEl.textContent=displayName;
+  if(photoEl&&photoURL){photoEl.src=photoURL;photoEl.style.display='block';}
+}());
 
-  // Cache for other pages
-  try{if(displayName) localStorage.setItem('kivora_display_name',displayName);}catch(e){}
-  try{if(photoURL)    localStorage.setItem('kivora_photo_url',photoURL);}catch(e){}
+// Always show the dashboard shell immediately
+document.getElementById('authLoader').style.display='none';
+document.getElementById('appShell').style.display='';
 
-  loadChildren(user.uid);
-});
+if(!activeUid){
+  // No uid in localStorage → not logged in, send to login
+  document.getElementById('pdMain').innerHTML='<div class="empty" style="padding:60px 20px;text-align:center">'
+    +'<div class="big">🔐</div>'
+    +'<p style="margin-bottom:18px">Please sign in to view your dashboard</p>'
+    +'<a href="./index.html"><button class="btn primary" style="font-size:.95rem;padding:10px 24px">Go to Login →</button></a>'
+    +'</div>';
+  document.getElementById('childrenList').innerHTML='';
+} else {
+  // UID available — load dashboard from localStorage immediately
+  loadChildren(activeUid);
+
+  // Then confirm with Firebase in background and sync if session is live
+  if(auth){
+    auth.onAuthStateChanged(function(user){
+      if(user&&!user.isAnonymous){
+        activeUid=user.uid;
+        try{localStorage.setItem('kivora_firebase_uid',user.uid);}catch(e){}
+        var displayName=user.displayName||localStorage.getItem('kivora_display_name')||'';
+        var photoURL=user.photoURL||localStorage.getItem('kivora_photo_url')||'';
+        var nameEl=document.getElementById('navName');
+        var photoEl=document.getElementById('navPhoto');
+        if(nameEl&&displayName) nameEl.textContent=displayName;
+        if(photoEl&&photoURL){photoEl.src=photoURL;photoEl.style.display='block';}
+        try{if(displayName)localStorage.setItem('kivora_display_name',displayName);}catch(e){}
+        try{if(photoURL)localStorage.setItem('kivora_photo_url',photoURL);}catch(e){}
+      }
+    });
+  }
+}
 
 })();
 </script>
