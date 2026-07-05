@@ -262,8 +262,8 @@
     }).catch(function() {});
   }
 
-  // On page load: if already signed in, merge cloud → local and redirect to dashboard.
-  // Returning users should never see the login page again.
+  // On page load: sync cloud data into localStorage and update nav state.
+  // Does NOT auto-redirect — the nav Dashboard button handles navigation.
   function syncFromCloud() {
     if (!ns.auth) return;
     var handled = false;
@@ -278,13 +278,6 @@
         if (user.displayName) localStorage.setItem('kivora_display_name', user.displayName);
         if (user.photoURL)    localStorage.setItem('kivora_photo_url', user.photoURL);
       } catch(e) {}
-      // Auto-redirect returning authenticated users away from index.html
-      var path = window.location.pathname;
-      var onIndex = path === '/' || path.endsWith('/index.html') || path.endsWith('/');
-      if (onIndex) {
-        var role = localStorage.getItem('kivora_user_role') || 'parent';
-        redirectByRole(role);
-      }
     });
   }
 
