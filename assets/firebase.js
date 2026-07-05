@@ -114,8 +114,8 @@
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
       saveUserProfile(result.user, role);
       _syncLocalToCloud(result.user.uid);
-      // Use 400ms so Firebase finishes writing auth state to IndexedDB before navigation
-      setTimeout(function() { redirectByRole(role); }, 400);
+      // 1000ms lets Firebase finish writing auth state to IndexedDB before navigation
+      setTimeout(function() { redirectByRole(role); }, 1000);
       return result;
     }).catch(function(e) {
       ns._googlePopupPending = false;
@@ -130,7 +130,7 @@
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
       saveUserProfile(result.user, role);
       _syncLocalToCloud(result.user.uid);
-      setTimeout(function() { redirectByRole(role); }, 400);
+      setTimeout(function() { redirectByRole(role); }, 1000);
       return result;
     });
   };
@@ -142,7 +142,7 @@
       try { localStorage.setItem('kivora_firebase_uid', result.user.uid); } catch(e) {}
       saveUserProfile(result.user, role);
       _syncLocalToCloud(result.user.uid);
-      setTimeout(function() { redirectByRole(role); }, 400);
+      setTimeout(function() { redirectByRole(role); }, 1000);
       return result;
     });
   };

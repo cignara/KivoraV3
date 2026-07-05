@@ -512,15 +512,24 @@ window.kivoraSignOut=function(){
 // Show loader while Firebase restores session from IndexedDB.
 // Only redirect to index if user is definitively not authenticated.
 auth.onAuthStateChanged(function(user){
-  // Always hide the loader and show the app shell
-  document.getElementById('authLoader').style.display='none';
-  document.getElementById('appShell').style.display='';
-
   if(!user || user.isAnonymous){
-    // Not a logged-in parent/teacher — send to login
-    window.location.href='./index.html';
+    // Session not found — show a friendly message inside the loader instead of
+    // a jarring blank flash, then redirect after a short delay so the user
+    // sees what's happening.
+    var loader=document.getElementById('authLoader');
+    if(loader) loader.innerHTML='<div style="text-align:center;font-family:\'Fredoka\',sans-serif">'
+      +'<div style="font-size:2.5rem;margin-bottom:12px">🔐</div>'
+      +'<p style="font-size:1rem;font-weight:600;color:#2C3E50;margin-bottom:8px">Please sign in to continue</p>'
+      +'<p style="font-size:.82rem;color:#7F8C8D;margin-bottom:16px">Redirecting to login…</p>'
+      +'<a href="./index.html" style="display:inline-block;background:#4A90E2;color:#fff;padding:9px 22px;border-radius:10px;font-weight:700;text-decoration:none">Go to Login →</a>'
+      +'</div>';
+    setTimeout(function(){window.location.href='./index.html';},2000);
     return;
   }
+
+  // Auth confirmed — hide loader and show dashboard
+  document.getElementById('authLoader').style.display='none';
+  document.getElementById('appShell').style.display='';
 
   activeUid = user.uid;
 
