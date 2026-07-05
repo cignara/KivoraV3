@@ -253,23 +253,27 @@ function loadChildren(uid){
   if(localKids.length) syncKidsToCloud(uid, localKids);
 
   var done=false,timer=setTimeout(function(){done=true;},6000);
-  dbRef(uid,'children').once('value').then(function(snap){
-    clearTimeout(timer); if(done) return; done=true;
-    var added=false;
-    snap.forEach(function(d){var c=d.val();if(!allChildren.find(function(x){return x.id===c.id;})){allChildren.push(c);added=true;}});
-    if(added) renderSidebar(uid);
-  }).catch(function(){clearTimeout(timer);});
+  try{
+    dbRef(uid,'children').once('value').then(function(snap){
+      clearTimeout(timer); if(done) return; done=true;
+      var added=false;
+      snap.forEach(function(d){var c=d.val();if(!allChildren.find(function(x){return x.id===c.id;})){allChildren.push(c);added=true;}});
+      if(added) renderSidebar(uid);
+    }).catch(function(){clearTimeout(timer);});
+  }catch(e){clearTimeout(timer);}
 }
 
 function syncKidsToCloud(uid, kids){
-  kids.forEach(function(c){
-    dbRef(uid,'children/'+c.id).set(c).catch(function(){});
-    var prog=getLocal('kivora_progress_'+c.id,{});
-    Object.keys(prog).forEach(function(code){
-      var p=prog[code];
-      dbRef(uid,'progress/'+c.id+'/'+code).set({childId:c.id,code:code,ts:p.ts||Date.now(),stars:p.stars||1,xp:p.xp||0,coins:p.coins||0,name:p.name||code,world:p.world||'',icon:p.icon||'📚'}).catch(function(){});
+  try{
+    kids.forEach(function(c){
+      dbRef(uid,'children/'+c.id).set(c).catch(function(){});
+      var prog=getLocal('kivora_progress_'+c.id,{});
+      Object.keys(prog).forEach(function(code){
+        var p=prog[code];
+        dbRef(uid,'progress/'+c.id+'/'+code).set({childId:c.id,code:code,ts:p.ts||Date.now(),stars:p.stars||1,xp:p.xp||0,coins:p.coins||0,name:p.name||code,world:p.world||'',icon:p.icon||'📚'}).catch(function(){});
+      });
     });
-  });
+  }catch(e){}
 }
 
 function renderSidebar(uid){
@@ -304,12 +308,14 @@ function loadChildDashboard(uid,child){
   activeProgress=localProg;
   var done=false;
   var timer=setTimeout(function(){if(done)return;done=true;renderDashboard(uid,child,localProg);},5000);
-  dbRef(uid,'progress/'+child.id).once('value').then(function(snap){
-    clearTimeout(timer);if(done)return;done=true;
-    var cloud=snap.val()||{};
-    activeProgress=Object.assign({},localProg,cloud);
-    renderDashboard(uid,child,activeProgress);
-  }).catch(function(){clearTimeout(timer);if(!done){done=true;renderDashboard(uid,child,localProg);}});
+  try{
+    dbRef(uid,'progress/'+child.id).once('value').then(function(snap){
+      clearTimeout(timer);if(done)return;done=true;
+      var cloud=snap.val()||{};
+      activeProgress=Object.assign({},localProg,cloud);
+      renderDashboard(uid,child,activeProgress);
+    }).catch(function(){clearTimeout(timer);if(!done){done=true;renderDashboard(uid,child,localProg);}});
+  }catch(e){clearTimeout(timer);if(!done){done=true;renderDashboard(uid,child,localProg);}}
 }
 
 // ── Render full dashboard ─────────────────────────────
@@ -484,7 +490,10 @@ window.switchTab=function(name,btn){
 
 // ── Screen time ───────────────────────────────────────
 function loadScreenTime(uid,childId){
-  dbRef(uid,'settings/'+childId).once('value').then(function(snap){renderScreenTime(childId,snap.val()||{});}).catch(function(){renderScreenTime(childId,{});});
+  var local=getLocal('kivora_screentime_'+childId,{});
+  try{
+    dbRef(uid,'settings/'+childId).once('value').then(function(snap){renderScreenTime(childId,snap.val()||local);}).catch(function(){renderScreenTime(childId,local);});
+  }catch(e){renderScreenTime(childId,local);}
 }
 function renderScreenTime(childId,s){
   var el=document.getElementById('screenTimeForm');if(!el)return;
@@ -500,8 +509,12 @@ window.saveScreenTime=function(childId){
   if(!activeUid) return;
   var limit=parseInt(document.getElementById('stLimit').value,10)||60;
   var bedtime=document.getElementById('stBedtime').value||'20:00';
-  dbRef(activeUid,'settings/'+childId).set({dailyLimit:limit,bedtime:bedtime})
-    .then(function(){toast('✅ Screen time saved');}).catch(function(e){toast('Error: '+e.message);});
+  var s={dailyLimit:limit,bedtime:bedtime};
+  try{localStorage.setItem('kivora_screentime_'+childId,JSON.stringify(s));}catch(e){}
+  try{
+    dbRef(activeUid,'settings/'+childId).set(s)
+      .then(function(){toast('✅ Screen time saved');}).catch(function(){toast('✅ Saved on this device');});
+  }catch(e){toast('✅ Saved on this device');}
 };
 
 window.kivoraSignOut=function(){
@@ -528,9 +541,10 @@ activeUid = (function(){try{return localStorage.getItem('kivora_firebase_uid')||
   if(photoEl&&photoURL){photoEl.src=photoURL;photoEl.style.display='block';}
 }());
 
-// Always show the dashboard shell immediately
+// Always show the dashboard shell immediately.
+// NOTE: must be 'block', not '' — '' falls back to the #appShell{display:none} CSS rule.
 document.getElementById('authLoader').style.display='none';
-document.getElementById('appShell').style.display='';
+document.getElementById('appShell').style.display='block';
 
 if(!activeUid){
   // No uid in localStorage → not logged in, send to login
