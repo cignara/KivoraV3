@@ -5,6 +5,7 @@
   const CONFIG = {
     apiKey: "AIzaSyBXdDDJvdInfdhovdx_Jo3YN_dhY-RY8yo",
     authDomain: "kivora-learning.firebaseapp.com",
+    databaseURL: "https://kivora-learning-default-rtdb.firebaseio.com",
     projectId: "kivora-learning",
     storageBucket: "kivora-learning.firebasestorage.app",
     messagingSenderId: "145485791442",

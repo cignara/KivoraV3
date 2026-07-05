@@ -135,6 +135,7 @@
   var CONFIG = {
     apiKey: "AIzaSyBXdDDJvdInfdhovdx_Jo3YN_dhY-RY8yo",
     authDomain: "kivora-learning.firebaseapp.com",
+    databaseURL: "https://kivora-learning-default-rtdb.firebaseio.com",
     projectId: "kivora-learning",
     storageBucket: "kivora-learning.firebasestorage.app",
     messagingSenderId: "145485791442",
@@ -240,35 +241,38 @@
   }
 
   function renderChildren(uid) {
-    // Step 1: load localStorage immediately so UI never hangs
+    // Step 1: load localStorage immediately — never leave UI on "Loading…"
     var localKids = getLocalChildren();
     allChildren = localKids.slice();
+    displayChildren(uid); // renders empty state if no local kids
     if (localKids.length) {
-      displayChildren(uid);
-      // sync local data up to Firebase in background
       syncLocalChildrenToFirebase(uid, localKids);
     }
 
-    // Step 2: also load from Firebase and merge any cloud-only children
+    // Step 2: merge Firebase children; give it 6 seconds before giving up
+    var childDone = false;
+    var childTimer = setTimeout(function() {
+      childDone = true;
+      console.warn('[ParentDash] Firebase children query timed out');
+    }, 6000);
+
     dbRef(uid, 'children').once('value').then(function(snap) {
+      clearTimeout(childTimer);
+      if (childDone) return;
+      childDone = true;
       var cloudKids = [];
       snap.forEach(function(d) { cloudKids.push(d.val()); });
+      var added = false;
       cloudKids.forEach(function(c) {
         if (!allChildren.find(function(x) { return x.id === c.id; })) {
           allChildren.push(c);
+          added = true;
         }
       });
-      // Re-render only if Firebase added new children or local was empty
-      if (!localKids.length || cloudKids.length > 0) {
-        displayChildren(uid);
-      }
+      if (added) displayChildren(uid);
     }).catch(function(err) {
+      clearTimeout(childTimer);
       console.warn('[ParentDash] Firebase children load failed:', err.message);
-      if (!localKids.length) {
-        var list = document.getElementById('childrenList');
-        list.innerHTML = '<div class="empty-state" style="padding:12px">No children yet.<br><a href="index.html" style="color:var(--sky)">Go to Activities</a> to add one!</div>';
-        renderMainEmpty();
-      }
     });
   }
 
