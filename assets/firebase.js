@@ -61,15 +61,17 @@
       ns.ready = true;
       console.log('[Kivora Firebase] Ready');
 
-      // FIX: persistent auth listener moved inside init() so ns.auth is defined
+          // FIX: persistent auth listener moved inside init() so ns.auth is defined
       ns.auth.onAuthStateChanged(function(user) {
         if (user) {
           ns._uid = user.uid;
           if (!user.isAnonymous) {
             try { localStorage.setItem('kivora_firebase_uid', user.uid); } catch(e) {}
+            _updateNavForUser(user);
           }
         } else {
           ns._uid = null;
+          _updateNavForUser(null);
         }
       });
 
@@ -268,30 +270,56 @@
     }).catch(function() {});
   }
 
-  // FIX: syncFromCloud detects returning authenticated user and redirects to correct dashboard.
-  // Only redirects when on index.html — doesn't interfere with other pages.
+  // syncFromCloud: on page load, if user is already signed in, merge cloud data and update nav.
+  // Does NOT auto-redirect — the nav Dashboard button lets the user choose when to go there.
   function syncFromCloud() {
     if (!ns.auth) return;
     var handled = false;
     var unsub = ns.auth.onAuthStateChanged(function(user) {
       if (handled) return;
-      if (!user) return; // wait for a real sign-in
-      if (user.isAnonymous) return; // child session — stay on index.html
+      if (!user || user.isAnonymous) return;
       handled = true;
       if (unsub) unsub();
-      // Silently merge cloud data into localStorage
       _loadCloudIntoLocal();
-      // Redirect returning authenticated parent/teacher away from index.html
-      var path = window.location.pathname;
-      var onIndex = path === '/' || path.endsWith('/index.html') || path.endsWith('/');
-      if (onIndex) {
-        var role = localStorage.getItem('kivora_user_role') || 'parent';
-        redirectByRole(role);
-      }
+      // _updateNavForUser is already called by the persistent listener above
     });
   }
 
   ns.loadFromCloud = function() { _loadCloudIntoLocal(); };
+
+  // Update Login ↔ Dashboard button in nav based on Firebase auth state.
+  // Only runs on index.html where these elements exist.
+  function _updateNavForUser(user) {
+    var loginBtn   = document.getElementById('nav-login-btn');
+    var dashBtn    = document.getElementById('nav-dashboard-btn');
+    var startBtn   = document.getElementById('nav-start-btn');
+    var loginBtnM  = document.getElementById('nav-login-btn-m');
+    var dashBtnM   = document.getElementById('nav-dashboard-btn-m');
+    var startBtnM  = document.getElementById('nav-start-btn-m');
+    if (!loginBtn && !loginBtnM) return; // not on index.html
+
+    if (user && !user.isAnonymous) {
+      var role = localStorage.getItem('kivora_user_role') || 'parent';
+      var label  = role === 'teacher' ? '🏫 Teacher Dashboard' : '📊 Parent Dashboard';
+      var href   = role === 'teacher' ? './teachers.html' : './parents.html';
+
+      if (loginBtn)  { loginBtn.style.display  = 'none'; }
+      if (startBtn)  { startBtn.style.display   = 'none'; }
+      if (dashBtn)   { dashBtn.href = href; dashBtn.textContent = label; dashBtn.style.display = 'inline-flex'; }
+
+      if (loginBtnM) { loginBtnM.style.display  = 'none'; }
+      if (startBtnM) { startBtnM.style.display   = 'none'; }
+      if (dashBtnM)  { dashBtnM.href = href; dashBtnM.textContent = label; dashBtnM.style.display = 'flex'; }
+    } else {
+      if (loginBtn)  { loginBtn.style.display  = ''; }
+      if (startBtn)  { startBtn.style.display   = ''; }
+      if (dashBtn)   { dashBtn.style.display    = 'none'; }
+
+      if (loginBtnM) { loginBtnM.style.display  = ''; }
+      if (startBtnM) { startBtnM.style.display   = ''; }
+      if (dashBtnM)  { dashBtnM.style.display    = 'none'; }
+    }
+  }
 
   // Hook startLearning — deferred to DOMContentLoaded so app.js is guaranteed loaded
   document.addEventListener('DOMContentLoaded', function() {

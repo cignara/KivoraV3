@@ -57,8 +57,9 @@
       <!-- CTA Buttons + Dark Mode -->
       <div class="flex items-center gap-2">
         <button id="darkToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:scale-110 transition-transform text-lg" aria-label="Toggle dark mode">🌙</button>
-        <a href="#" onclick="openPage('login');return false;"    class="hidden sm:inline-flex items-center px-4 py-2 rounded-xl font-bold text-kivora-purple border-2 border-kivora-purple hover:bg-kivora-purple hover:text-white transition-all">Login</a>
-        <a href="#" onclick="openPage('register');return false;" class="inline-flex items-center px-4 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-kivora-orange to-kivora-pink hover:shadow-lg hover:scale-105 transition-all">Start Free 🚀</a>
+        <a id="nav-login-btn" href="#" onclick="openPage('login');return false;" class="hidden sm:inline-flex items-center px-4 py-2 rounded-xl font-bold text-kivora-purple border-2 border-kivora-purple hover:bg-kivora-purple hover:text-white transition-all">Login</a>
+        <a id="nav-dashboard-btn" href="./parents.html" style="display:none" class="hidden sm:inline-flex items-center px-4 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-kivora-indigo to-kivora-purple hover:shadow-lg hover:scale-105 transition-all">📊 My Dashboard</a>
+        <a id="nav-start-btn" href="#" onclick="openPage('register');return false;" class="inline-flex items-center px-4 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-kivora-orange to-kivora-pink hover:shadow-lg hover:scale-105 transition-all">Start Free 🚀</a>
         <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-xl" aria-label="Toggle menu">☰</button>
       </div>
     </div>
@@ -77,8 +78,9 @@
       <a href="#pricing"    class="px-3 py-2 rounded-xl bg-yellow-50 dark:bg-yellow-900/20 font-bold text-yellow-700 text-center text-sm">💰 Pricing</a>
     </div>
     <div class="flex gap-2 mt-3">
-      <a href="#" onclick="openPage('login');return false;"    class="flex-1 py-2 rounded-xl font-bold text-kivora-purple border-2 border-kivora-purple text-center text-sm">Login</a>
-      <a href="#" onclick="openPage('register');return false;" class="flex-1 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-kivora-orange to-kivora-pink text-center text-sm">Start Free 🚀</a>
+      <a id="nav-login-btn-m" href="#" onclick="openPage('login');return false;" class="flex-1 py-2 rounded-xl font-bold text-kivora-purple border-2 border-kivora-purple text-center text-sm">Login</a>
+      <a id="nav-dashboard-btn-m" href="./parents.html" style="display:none" class="flex-1 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-kivora-indigo to-kivora-purple text-center text-sm">📊 Dashboard</a>
+      <a id="nav-start-btn-m" href="#" onclick="openPage('register');return false;" class="flex-1 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-kivora-orange to-kivora-pink text-center text-sm">Start Free 🚀</a>
     </div>
   </div>
 </header>
