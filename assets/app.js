@@ -3839,13 +3839,13 @@ document.addEventListener('DOMContentLoaded', function(){
   function openPage(pageName) {
   // register page now has its own content (Google + email sign-up)
   var modal = document.getElementById('pageModal');
-  if(modal){ modal.classList.add('modal-open'); modal.style.display='flex'; }
+  if(modal){ modal.classList.add('modal-open'); modal.style.display='block'; }
   document.body.style.overflow = 'hidden';
   document.querySelectorAll('.modal-page').forEach(function(p){
     p.classList.remove('active'); p.style.display='none';
   });
   var target = document.getElementById('page-' + pageName);
-  if (target){ target.classList.add('active'); target.style.display='flex'; target.style.flexDirection='column'; }
+  if (target){ target.classList.add('active'); target.style.display='block'; }
   if(modal) modal.scrollTop = 0;
   if (pageName === 'login'){ if(typeof buildAvatarPicker==='function') buildAvatarPicker(); if(typeof buildExistingChildren==='function') buildExistingChildren(); }
   if (pageName === 'parent-dashboard' && typeof showParentDashboard==='function') showParentDashboard();
