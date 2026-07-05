@@ -1099,11 +1099,29 @@ function scrollRow(id, dir) {
   if (el) el.scrollBy({ left: dir * 600, behavior: 'smooth' });
 }
 
+// Print-and-colour packs surfaced as game cards under the Creative filter —
+// these open a real printable PDF (via openPrintable) instead of the quiz engine.
+const PRINTABLE_GAME_CARDS = [
+  { key: 'col_kivi_poses', name: 'Colour: Kivi Poses',     emoji: '🦊', bg: 'bg-orange-50 dark:bg-orange-900/20' },
+  { key: 'col_mandalas',   name: 'Colour: Mandalas',       emoji: '🌀', bg: 'bg-purple-50 dark:bg-purple-900/20' },
+  { key: 'col_science',    name: 'Colour: Science Scenes', emoji: '🔬', bg: 'bg-teal-50 dark:bg-teal-900/20' },
+  { key: 'col_ocean',      name: 'Colour: Ocean Life',     emoji: '🐬', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+];
+
+function makeCard_printableGame(p) {
+  return `<div class="card-lift ${p.bg} dark:bg-slate-800 rounded-2xl p-4 shadow cursor-pointer border border-transparent hover:border-kivora-purple transition-all flex-shrink-0" style="width:160px" role="button" tabindex="0" aria-label="Print and colour ${p.name}" onclick="openPrintable('${p.key}')">
+    <div class="text-4xl mb-3 text-center">${p.emoji}</div>
+    <div class="font-display font-extrabold text-sm text-center text-slate-800 dark:text-white mb-2 leading-tight">${p.name}</div>
+    <div class="mt-2 text-center"><span class="text-xs font-bold bg-kivora-purple/10 text-kivora-purple px-2 py-1 rounded-full">🖨️ Print &amp; Colour</span></div>
+  </div>`;
+}
+
 function renderGames(filter='all') {
   const el = document.getElementById('gamesGrid');
   const btn = document.getElementById('gamesShowMore');
   const data = filter === 'all' ? GAMES : GAMES.filter(g => g.tag === filter);
-  el.innerHTML = data.slice(0, PREVIEW_COUNT).map(makeCard_game).join('');
+  const extra = (filter === 'all' || filter === 'creative') ? PRINTABLE_GAME_CARDS : [];
+  el.innerHTML = extra.map(makeCard_printableGame).join('') + data.slice(0, PREVIEW_COUNT).map(makeCard_game).join('');
   el.dataset.filter = filter;
   el.dataset.shown = PREVIEW_COUNT;
   if (btn) btn.style.display = data.length > PREVIEW_COUNT ? '' : 'none';
