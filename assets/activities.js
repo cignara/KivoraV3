@@ -336,6 +336,136 @@ const ACTS = [
    load:['Scared feelings are normal.','Everyone feels scared sometimes.','Let us learn what to do.'],
    ok:['You are so brave! Telling a grown-up when scared is the right thing to do! 💛']},
 
+  {code:'SN-AU-011',world:'special-needs',title:'My Bedtime Routine',type:'read',xp:5,coins:3,
+   icon:'🌙',
+   pages:[
+     {e:'🧸',t:'It is almost bedtime.\nI tidy up my toys first.'},
+     {e:'🛁',t:'I have a warm bath or wash.\nThe water helps my body relax.'},
+     {e:'🪥',t:'I brush my teeth.\nBrush, brush, brush — nice and clean.'},
+     {e:'📖',t:'I read a story or listen to one.\nQuiet stories help me feel sleepy.'},
+     {e:'💡',t:'The lights go dim.\nMy room is calm and cosy.'},
+     {e:'😴',t:'I lie down in my bed.\nGoodnight — I did my whole routine! 🌟'},
+   ],
+   load:['It is bedtime!','Let us go through our calm bedtime routine together.'],
+   ok:['Well done! The same steps every night help your body know it is time to rest. 💛']},
+
+  {code:'SN-AU-012',world:'special-needs',title:'Brushing My Teeth',type:'read',xp:5,coins:3,
+   icon:'🪥',
+   pages:[
+     {e:'🪥',t:'I get my toothbrush and toothpaste.\nA small pea-sized amount is enough.'},
+     {e:'💧',t:'I wet my toothbrush.\nJust a little water.'},
+     {e:'🦷',t:'I brush the top teeth first.\nSmall gentle circles.'},
+     {e:'🦷',t:'Then I brush the bottom teeth.\nSmall gentle circles again.'},
+     {e:'💦',t:'I rinse my mouth with water.\nSpit it out — all done!'},
+     {e:'😁',t:'My teeth feel clean and smooth.\nGreat job brushing! 🌟'},
+   ],
+   load:['Time to brush our teeth!','Let us do it together, step by step.'],
+   ok:['Fantastic brushing! Clean teeth keep our smile healthy. 🦷']},
+
+  {code:'SN-AU-013',world:'special-needs',title:'Going to the Dentist',type:'read',xp:5,coins:3,
+   icon:'🦷',
+   pages:[
+     {e:'🚗',t:'Today we are going to the dentist.\nThe dentist helps keep my teeth healthy.'},
+     {e:'🏥',t:'We arrive and sit in the waiting room.\nI can bring a toy or look at a book.'},
+     {e:'🪑',t:'I sit in the special chair.\nIt might tilt back a little — that is OK.'},
+     {e:'💡',t:'The dentist looks at my teeth with a light.\nIt does not hurt, just a little look.'},
+     {e:'🔢',t:'The dentist counts my teeth.\nI can rest my hands calmly.'},
+     {e:'⭐',t:'All done! I did a great job.\nMy teeth are healthy and strong! 🎉'},
+   ],
+   load:['We are going to the dentist today.','The dentist is a helper who keeps our teeth healthy.'],
+   ok:['You were so brave at the dentist! Well done! 🌟']},
+
+  {code:'SN-AU-014',world:'special-needs',title:'Getting a Haircut',type:'read',xp:5,coins:3,
+   icon:'✂️',
+   pages:[
+     {e:'🚶',t:'Today I am going to get a haircut.\nMy hair will feel lighter after.'},
+     {e:'🪑',t:'I sit in the big chair.\nA cape goes around my shoulders.'},
+     {e:'💧',t:'My hair might get a little wet.\nThat helps it get cut evenly.'},
+     {e:'✂️',t:'I hear snip-snip sounds.\nI try to sit still and calm.'},
+     {e:'🪞',t:'I can look in the mirror.\nMy hair is getting shorter and neat.'},
+     {e:'😎',t:'All finished! My hair looks great.\nI did such a good job sitting still! 🌟'},
+   ],
+   load:['It is haircut day!','Let us learn what happens, step by step.'],
+   ok:['Amazing job sitting calmly for your haircut! You look fantastic! 💛']},
+
+  {code:'SN-AU-015',world:'special-needs',title:'A Trip to the Doctor',type:'read',xp:5,coins:3,
+   icon:'🩺',
+   pages:[
+     {e:'🚗',t:'Today we are visiting the doctor.\nThe doctor helps our bodies stay healthy.'},
+     {e:'🏥',t:'We check in and wait for our turn.\nI can breathe slowly while I wait.'},
+     {e:'⚖️',t:'The doctor might check my height and weight.\nI just stand still for a moment.'},
+     {e:'🩺',t:'The doctor listens to my heart.\nIt feels cool and it is quick.'},
+     {e:'🗣️',t:'I can tell the doctor how I feel.\nIt is OK to ask questions.'},
+     {e:'🌟',t:'All done! The doctor is helping me stay healthy.\nI was so brave! 🎉'},
+   ],
+   load:['We are visiting the doctor today.','The doctor is a helper, not something to fear.'],
+   ok:['You were wonderfully brave at the doctor! Well done! 💛']},
+
+  {code:'SN-AU-016',world:'special-needs',title:'Riding in the Car',type:'read',xp:5,coins:3,
+   icon:'🚗',
+   pages:[
+     {e:'🚪',t:'It is time to go somewhere in the car.\nI walk to the car with my grown-up.'},
+     {e:'🪑',t:'I climb into my car seat.\nI sit down all the way back.'},
+     {e:'🔒',t:'I click my seatbelt or straps.\nClick! Now I am safe.'},
+     {e:'🎵',t:'The car starts moving.\nI can look out the window or listen to music.'},
+     {e:'⏳',t:'Sometimes the ride is short.\nSometimes the ride is long — that is OK.'},
+     {e:'🏁',t:'We arrive!\nI unclick my seatbelt when the grown-up says it is safe. 🌟'},
+   ],
+   load:['Let us learn about riding safely in the car.','Being buckled in keeps us safe.'],
+   ok:['Great job staying safely buckled in! You are a car-riding star! 🌟']},
+
+  {code:'SN-AU-017',world:'special-needs',title:'Going to the Library',type:'read',xp:5,coins:3,
+   icon:'📚',
+   pages:[
+     {e:'🚶',t:'Today we are going to the library.\nThe library is full of books to explore.'},
+     {e:'🤫',t:'Inside the library, voices are quiet.\nI use my calm, quiet voice too.'},
+     {e:'📚',t:'I look at the shelves.\nSo many books to choose from!'},
+     {e:'🖐️',t:'I pick a book that looks interesting.\nI hold it carefully with two hands.'},
+     {e:'🪑',t:'I can sit and read quietly.\nOr I can borrow the book to take home.'},
+     {e:'😊',t:'What a wonderful library visit!\nReading is a great adventure! 🌟'},
+   ],
+   load:['We are visiting the library today.','Libraries are calm, quiet places full of stories.'],
+   ok:['Well done using your quiet library voice! Books are wonderful friends! 📚']},
+
+  {code:'SN-AU-018',world:'special-needs',title:'Playing at the Playground',type:'read',xp:5,coins:3,
+   icon:'🛝',
+   pages:[
+     {e:'🌳',t:'We arrive at the playground.\nThere is so much to explore!'},
+     {e:'👀',t:'I look around and see what is free to use.\nSome things might have a line to wait in.'},
+     {e:'⏳',t:'If it is busy, I wait for my turn.\nWaiting is hard sometimes, but I can do it.'},
+     {e:'🛝',t:'I climb, swing or slide carefully.\nI hold on with both hands.'},
+     {e:'🤝',t:'I might play with other children.\nI can say "Can I play too?"'},
+     {e:'😊',t:'What a fun time at the playground!\nMoving my body feels great! 🌟'},
+   ],
+   load:['Let us go play at the playground!','We take turns and play safely.'],
+   ok:['Fantastic playing today! Sharing and taking turns makes it fun for everyone! 🌟']},
+
+  {code:'SN-AU-019',world:'special-needs',title:'A Birthday Party',type:'read',xp:5,coins:3,
+   icon:'🎂',
+   pages:[
+     {e:'🎈',t:'Today is a birthday party!\nThere might be balloons, music and lots of people.'},
+     {e:'🔊',t:'Parties can feel loud and busy.\nIf it feels like too much, I can find a quiet corner.'},
+     {e:'🎁',t:'I might give a gift and say "Happy Birthday!"\nA smile is a lovely gift too.'},
+     {e:'🎂',t:'Everyone might sing and there will be cake.\nI can join in as much or as little as I like.'},
+     {e:'🎮',t:'There might be games to play.\nI can join in, or watch, both are OK.'},
+     {e:'💛',t:'What a fun celebration!\nParties are a chance to celebrate together. 🌟'},
+   ],
+   load:['We are going to a birthday party!','Parties can be exciting and sometimes loud — that is OK.'],
+   ok:['You had such a great time at the party! Well done! 🎉']},
+
+  {code:'SN-AU-020',world:'special-needs',title:'Saying Goodbye',type:'read',xp:5,coins:3,
+   icon:'👋',
+   pages:[
+     {e:'⏰',t:'It is time to say goodbye.\nSaying goodbye can feel hard sometimes.'},
+     {e:'💛',t:'It is OK to feel a little sad.\nThat means I care about the person.'},
+     {e:'🤗',t:'I can give a hug, wave or high-five.\nI choose what feels comfortable for me.'},
+     {e:'🗣️',t:'I say "Goodbye! See you soon!"\nSaying it out loud helps me feel ready.'},
+     {e:'🚶',t:'I walk away calmly.\nI know I will see them again.'},
+     {e:'🌈',t:'Goodbyes help us get ready for new things.\nI did a great job! 🌟'},
+   ],
+   load:['Saying goodbye can feel tricky.','Let us learn a calm way to say goodbye.'],
+   ok:['Wonderful! You said goodbye calmly and bravely. See you next time! 💛']},
+
 
   /* ══════════════════════════════════════════════════════════════
      WORLD 3 — STORY COVE  🌊  Reading, Comprehension, Vocabulary
@@ -7308,7 +7438,11 @@ function saveProgress(code) {
     const key = _childProgressKey();
     const d = JSON.parse(localStorage.getItem(key) || '{}');
     const act = ACTS.find(x => x.code === code);
-    d[code] = { ts: Date.now(), stars: 1, xp: act ? act.xp : 0, coins: act ? act.coins : 0 };
+    d[code] = {
+      ts: Date.now(), stars: 1,
+      xp: act ? act.xp : 0, coins: act ? act.coins : 0,
+      world: act ? act.world : '', name: act ? act.title : code, icon: act ? act.icon : '📚'
+    };
     localStorage.setItem(key, JSON.stringify(d));
   } catch(e) {}
 }

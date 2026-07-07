@@ -1960,6 +1960,17 @@ window.addEventListener('scroll', () => {
     var p = params.get('auth');
     if (p === 'login')    document.addEventListener('DOMContentLoaded', function(){ setTimeout(function(){ openPage('login');    }, 600); });
     if (p === 'register') document.addEventListener('DOMContentLoaded', function(){ setTimeout(function(){ openPage('register'); }, 600); });
+    // ?auth=teacher-dashboard&classId=… — launched from the admin dashboard "View as Teacher" button
+    if (p === 'teacher-dashboard') {
+      var launchClassId = params.get('classId');
+      document.addEventListener('DOMContentLoaded', function(){
+        setTimeout(function(){
+          if (launchClassId) _lsSet('kivora_active_class', launchClassId);
+          if (typeof showTeacherDashboard === 'function') showTeacherDashboard();
+          openPage('teacher-dashboard');
+        }, 600);
+      });
+    }
     // ?childId=… — launched from parent dashboard "▶ Start Learning" button
     var launchChildId = params.get('childId');
     if (launchChildId) {
@@ -4032,7 +4043,7 @@ function openPage(pageName) {
   var modal = document.getElementById('pageModal');
   var closeBtn = document.getElementById('closeModal');
   var mc = document.getElementById('modalContent');
-  if (modal){ modal.classList.add('modal-open'); modal.style.display='flex'; }
+  if (modal){ modal.classList.add('modal-open'); modal.style.display='block'; }
   document.body.style.overflow = 'hidden';
   document.querySelectorAll('.modal-page').forEach(function(p){
     p.classList.remove('active'); p.style.display='none';

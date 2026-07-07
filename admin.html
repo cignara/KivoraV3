@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>School Admin · Kivora Learning</title>
+<meta name="description" content="School admin overview: all classes, teachers and students on this device, with aggregate progress."/>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;600;700;800&family=Fredoka:wght@500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#F0F4F8;min-height:100vh;color:#2C3E50}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit}
+
+.nav{height:62px;background:#fff;display:flex;align-items:center;padding:0 20px;box-shadow:0 2px 10px rgba(0,0,0,.06);position:sticky;top:0;z-index:100;border-bottom:3px solid #4F46E5}
+.nav-inner{max-width:1280px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;display:flex;align-items:center;gap:8px}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#4F46E5,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:15px}
+.logo span{color:#4F46E5}
+.btn{font-family:'Fredoka',sans-serif;font-size:.82rem;font-weight:600;padding:7px 15px;border-radius:9px;border:1.5px solid #E2EAF2;background:#fff;color:#2C3E50;transition:all .15s}
+.btn:hover{border-color:#4F46E5;color:#4F46E5}
+.btn.primary{background:#4F46E5;color:#fff;border-color:#4F46E5}
+
+.wrap{max-width:1280px;margin:0 auto;padding:28px 16px 60px}
+.hero{background:linear-gradient(135deg,#0f172a,#312e81);border-radius:24px;padding:36px 32px;color:#fff;margin-bottom:24px}
+.hero h1{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:800;margin-bottom:6px}
+.hero p{color:#c7d2fe;font-size:.9rem;font-weight:600;max-width:640px;line-height:1.6}
+.hero .scope-note{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:rgba(255,255,255,.1);border-radius:999px;padding:6px 14px;font-size:.78rem;font-weight:700}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.stat{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.05);text-align:center}
+.stat-icon{font-size:1.7rem;margin-bottom:6px}
+.stat-val{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;color:#4F46E5}
+.stat-label{font-size:.76rem;font-weight:700;color:#7F8C8D;margin-top:2px}
+
+.card{background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:20px}
+.card-title{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#2C3E50;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#7F8C8D;padding:8px 10px;border-bottom:2px solid #EEF2F7}
+td{padding:12px 10px;border-bottom:1px solid #F0F4F8;font-size:.86rem;font-weight:600}
+tr:last-child td{border-bottom:none}
+.class-name{font-family:'Fredoka',sans-serif;font-weight:600;color:#2C3E50}
+.class-sub{font-size:.74rem;color:#7F8C8D;font-weight:600}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.74rem;font-weight:700}
+.pill.xp{background:#ede9fe;color:#7C3AED}
+.pill.done{background:#dcfce7;color:#15803d}
+.row-actions{display:flex;gap:6px}
+.row-actions button{padding:5px 11px;border-radius:8px;font-size:.76rem;font-weight:700;border:1.5px solid #E2EAF2;background:#fff;color:#2C3E50}
+.row-actions button.danger{color:#dc2626;border-color:#fca5a5}
+.row-actions button.danger:hover{background:#fee2e2}
+.row-actions button.primary{background:#0EA5E9;color:#fff;border-color:#0EA5E9}
+
+.empty{text-align:center;padding:40px 20px;color:#7F8C8D}
+.empty .big{font-size:2.4rem;margin-bottom:10px}
+
+.leader-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #F0F4F8}
+.leader-row:last-child{border-bottom:none}
+.leader-rank{width:22px;text-align:center;font-weight:800;color:#94a3b8;flex-shrink:0}
+.leader-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FFD93D);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.leader-info{flex:1;min-width:0}
+.leader-name{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.86rem}
+.leader-sub{font-size:.72rem;color:#7F8C8D}
+.leader-xp{font-weight:800;color:#4F46E5;font-size:.86rem;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="index.html"><div class="logo-icon">🛡️</div>Kivora <span>Admin</span></a>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a href="index.html"><button class="btn">🏠 Site</button></a>
+      <a href="teachers.html"><button class="btn">🏫 Teachers</button></a>
+      <a href="parents.html"><button class="btn primary">👨‍👩‍👧 Parents</button></a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>🛡️ School Admin Overview</h1>
+    <p>A live view of every class, teacher and student registered on this device — aggregate XP, activity completion and a school-wide leaderboard, all in one place.</p>
+    <span class="scope-note">📍 Shows classes created on this browser/device — Kivora stores class data locally, same as the teacher dashboard.</span>
+  </div>
+
+  <div class="stat-grid" id="adminStats"></div>
+
+  <div class="card">
+    <div class="card-title"><span>🏫 All Classes</span></div>
+    <div id="classesTableWrap"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>🏆 School-Wide Leaderboard</span><span style="font-size:.76rem;font-weight:700;color:#7F8C8D">Top 10 students by XP</span></div>
+    <div id="leaderboardWrap"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>👨‍🎓 All Students</span></div>
+    <div id="studentsTableWrap"></div>
+  </div>
+</div>
+
+<script src="./shared.js"></script>
+<script>
+(function(){
+'use strict';
+
+function getLocal(k,def){ try{ return JSON.parse(localStorage.getItem(k)||'null') || def; }catch(e){ return def; } }
+function setLocal(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function gradeLabel(g){ return {'pre-k':'Pre-K','kindergarten':'Kindergarten','grade-1':'Grade 1','grade-2':'Grade 2','grade-3':'Grade 3','grade-4':'Grade 4','grade-5':'Grade 5'}[g] || g || ''; }
+
+function progressFor(childId){
+  const d = getLocal('kivora_progress_'+childId, {});
+  const completed = Object.keys(d).length;
+  const xp = Object.values(d).reduce((s,v)=>s+(v.xp||0),0);
+  const coins = Object.values(d).reduce((s,v)=>s+(v.coins||0),0);
+  return { completed, xp, coins };
+}
+
+function render(){
+  const classes  = getLocal('kivora_classes', []);
+  const children = getLocal('kivora_children', []);
+  const childMap = {};
+  children.forEach(c => childMap[c.id] = c);
+
+  // ── Aggregate stats ──
+  const teacherSet = new Set(classes.map(c => c.teacherName));
+  let totalStudents = 0, totalXP = 0, totalDone = 0;
+  const allStudentRows = [];
+
+  classes.forEach(cls => {
+    (cls.students||[]).forEach(st => {
+      totalStudents++;
+      const p = progressFor(st.id);
+      totalXP += p.xp; totalDone += p.completed;
+      allStudentRows.push({ student: st, cls, progress: p });
+    });
+  });
+
+  document.getElementById('adminStats').innerHTML = [
+    ['🏫', classes.length, 'Classes'],
+    ['🧑‍🏫', teacherSet.size, 'Teachers'],
+    ['🧑‍🎓', totalStudents, 'Students'],
+    ['⭐', totalXP, 'Total XP Earned'],
+    ['✅', totalDone, 'Activities Completed'],
+  ].map(([icon,val,label]) => `<div class="stat"><div class="stat-icon">${icon}</div><div class="stat-val">${val}</div><div class="stat-label">${label}</div></div>`).join('');
+
+  // ── Classes table ──
+  const classesWrap = document.getElementById('classesTableWrap');
+  if(!classes.length){
+    classesWrap.innerHTML = '<div class="empty"><div class="big">🏫</div><p>No classes yet on this device.</p><p style="font-size:.82rem;margin-top:6px">Classes appear here once a teacher creates one via <a href="teachers.html" style="color:#4F46E5;font-weight:700">Teacher Sign In</a>.</p></div>';
+  } else {
+    const rows = classes.map(cls => {
+      const students = cls.students || [];
+      const xp = students.reduce((s,st) => s + progressFor(st.id).xp, 0);
+      const done = students.reduce((s,st) => s + progressFor(st.id).completed, 0);
+      return `<tr>
+        <td><div class="class-name">${esc(cls.name)}</div><div class="class-sub">Created ${new Date(cls.createdAt).toLocaleDateString()}</div></td>
+        <td>${esc(cls.teacherName)}</td>
+        <td>${students.length}</td>
+        <td><span class="pill xp">⭐ ${xp} XP</span></td>
+        <td><span class="pill done">✅ ${done} done</span></td>
+        <td class="row-actions">
+          <button class="primary" onclick="adminViewClass('${cls.id}')">👁️ View as Teacher</button>
+          <button class="danger" onclick="adminDeleteClass('${cls.id}')">🗑️ Delete</button>
+        </td>
+      </tr>`;
+    }).join('');
+    classesWrap.innerHTML = `<table><thead><tr><th>Class</th><th>Teacher</th><th>Students</th><th>XP</th><th>Progress</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  // ── Leaderboard ──
+  const top = allStudentRows.slice().sort((a,b)=>b.progress.xp - a.progress.xp).slice(0,10);
+  const lbWrap = document.getElementById('leaderboardWrap');
+  if(!top.length){
+    lbWrap.innerHTML = '<div class="empty"><div class="big">🏆</div><p>No student activity yet.</p></div>';
+  } else {
+    lbWrap.innerHTML = top.map((row,i) => `<div class="leader-row">
+      <div class="leader-rank">${i+1}</div>
+      <div class="leader-av">${esc(row.student.avatar||'🎓')}</div>
+      <div class="leader-info"><div class="leader-name">${esc(row.student.name)}</div><div class="leader-sub">${esc(row.cls.name)} · ${gradeLabel(row.student.grade)}</div></div>
+      <div class="leader-xp">⭐ ${row.progress.xp} XP</div>
+    </div>`).join('');
+  }
+
+  // ── All students table ──
+  const stWrap = document.getElementById('studentsTableWrap');
+  if(!allStudentRows.length){
+    stWrap.innerHTML = '<div class="empty"><div class="big">🧑‍🎓</div><p>No students yet.</p></div>';
+  } else {
+    const rows = allStudentRows.slice().sort((a,b)=>b.progress.xp - a.progress.xp).map(row => `<tr>
+      <td>${esc(row.student.avatar||'🎓')} <strong>${esc(row.student.name)}</strong></td>
+      <td>${gradeLabel(row.student.grade)}</td>
+      <td>${esc(row.cls.name)}</td>
+      <td><span class="pill xp">⭐ ${row.progress.xp} XP</span></td>
+      <td><span class="pill done">✅ ${row.progress.completed} done</span></td>
+      <td class="row-actions"><button class="primary" onclick="startLearningAsChildAdmin('${row.student.id}')">▶ Learn</button></td>
+    </tr>`).join('');
+    stWrap.innerHTML = `<table><thead><tr><th>Student</th><th>Grade</th><th>Class</th><th>XP</th><th>Progress</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+}
+
+window.adminViewClass = function(classId){
+  window.location.href = 'index.html?auth=teacher-dashboard&classId=' + encodeURIComponent(classId);
+};
+
+window.adminDeleteClass = function(classId){
+  const classes = getLocal('kivora_classes', []);
+  const cls = classes.find(c=>c.id===classId);
+  if(!cls) return;
+  if(!confirm('Delete "'+cls.name+'" and remove it from this device? Student progress records are kept, but the class roster will be gone.')) return;
+  const remaining = classes.filter(c=>c.id!==classId);
+  setLocal('kivora_classes', remaining);
+  const activeId = getLocal('kivora_active_class', null);
+  if(activeId===classId) setLocal('kivora_active_class', remaining.length ? remaining[0].id : null);
+  render();
+};
+
+window.startLearningAsChildAdmin = function(childId){
+  setLocal('kivora_active_child', childId);
+  window.location.href = 'kivora-activity-player.html';
+};
+
+render();
+})();
+</script>
+</body>
+</html>

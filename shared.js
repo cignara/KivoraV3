@@ -107,6 +107,7 @@
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">
           <li><a href="./parents.html"  style="color:#94a3b8;text-decoration:none;font-size:.85rem;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">For Parents</a></li>
           <li><a href="./teachers.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">For Teachers</a></li>
+          <li><a href="./admin.html"    style="color:#94a3b8;text-decoration:none;font-size:.85rem;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">School Admin</a></li>
           <li><a href="./pricing.html"  style="color:#94a3b8;text-decoration:none;font-size:.85rem;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">Pricing</a></li>
           <li><a href="./index.html?auth=login"   style="color:#94a3b8;text-decoration:none;font-size:.85rem;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">Login</a></li>
           <li><a href="./compliance.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">Compliance</a></li>
