@@ -36,9 +36,64 @@
   <div style="max-width:56rem;margin:0 auto;padding:0 1.5rem">
     <div style="background:linear-gradient(135deg,#ede9fe,#dbeafe);border-radius:28px;padding:48px;text-align:center">
       <div style="font-size:3rem;margin-bottom:16px">📋</div>
-      <h2 style="font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:#1e293b;margin:0 0 12px">Coming Soon: Special Needs Dashboard</h2>
-      <p style="color:#475569;font-size:.95rem;line-height:1.7;max-width:440px;margin:0 auto 24px">A dedicated parent panel with IEP-friendly progress tracking, sensory preference settings, and recommended activity sequences built by SEN specialists.</p>
-      <a href="./index.html?auth=register" style="display:inline-block;padding:14px 32px;background:linear-gradient(to right,#7C3AED,#4F46E5);border-radius:14px;color:#fff;font-weight:800;text-decoration:none">🔔 Get Early Access</a>
+      <h2 style="font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:#1e293b;margin:0 0 12px">Special Needs Dashboard</h2>
+      <p style="color:#475569;font-size:.95rem;line-height:1.7;max-width:440px;margin:0 auto 28px">Track social-story progress, set sensory preferences that the learning app respects, and print a progress summary to share with teachers or therapists.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;text-align:left" id="snDashboard">
+        <!-- Progress card -->
+        <div style="background:#fff;border-radius:20px;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,.07)">
+          <h3 style="font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;color:#1e293b;margin:0 0 4px">📖 Social Stories Progress</h3>
+          <p style="font-size:.8rem;font-weight:700;color:#94a3b8;margin:0 0 12px"><span id="snDoneCount">0</span> of 10 completed</p>
+          <div style="background:#e2e8f0;border-radius:999px;height:10px;overflow:hidden;margin-bottom:16px"><div id="snProgressFill" style="height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#7C3AED,#4F46E5);transition:width .5s"></div></div>
+          <ul id="snStoryList" style="list-style:none;padding:0;margin:0;font-size:.85rem;font-weight:700;color:#475569;line-height:2"></ul>
+          <a href="./kivora-activity-player.html#world=special-needs" style="display:inline-block;margin-top:14px;padding:10px 22px;background:linear-gradient(to right,#7C3AED,#4F46E5);border-radius:12px;color:#fff;font-weight:800;font-size:.85rem;text-decoration:none">▶ Open Social Stories</a>
+        </div>
+        <!-- Sensory settings card -->
+        <div style="background:#fff;border-radius:20px;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,.07)">
+          <h3 style="font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;color:#1e293b;margin:0 0 4px">🎛️ Sensory Preferences</h3>
+          <p style="font-size:.8rem;font-weight:700;color:#94a3b8;margin:0 0 16px">Applied automatically in the learning app on this device</p>
+          <label style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer">
+            <input type="checkbox" id="snCalmMode" style="width:20px;height:20px;accent-color:#7C3AED" onchange="snSaveSetting('kivora_calm_mode',this.checked)">
+            <span style="font-size:.9rem;font-weight:800;color:#1e293b">Calm visuals<br><span style="font-size:.76rem;font-weight:600;color:#64748b">Reduces animations, bouncing and sparkles</span></span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer">
+            <input type="checkbox" id="snQuietStart" style="width:20px;height:20px;accent-color:#7C3AED" onchange="snSaveSetting('kivora_quiet_start',this.checked)">
+            <span style="font-size:.9rem;font-weight:800;color:#1e293b">Quiet start<br><span style="font-size:.76rem;font-weight:600;color:#64748b">Activities begin muted — tap 🔊 to enable sound</span></span>
+          </label>
+          <button onclick="window.print()" style="margin-top:6px;padding:10px 22px;border-radius:12px;border:2px solid #7C3AED;background:#fff;color:#7C3AED;font-family:inherit;font-weight:800;font-size:.85rem;cursor:pointer">🖨️ Print Progress Summary</button>
+        </div>
+      </div>
+
+      <script>
+      (function(){
+        const STORIES = [
+          ['SN-AU-001','My Morning Routine with Kivi'],['SN-AU-002','Getting Dressed: Step by Step'],
+          ['SN-AU-003','Breakfast Time!'],['SN-AU-004','Going to School with Kivi'],
+          ['SN-AU-005','Saying Hello to a New Friend'],['SN-AU-006','Taking Turns at Play'],
+          ['SN-AU-007','Sharing My Toys'],['SN-AU-008','When I Feel Angry'],
+          ['SN-AU-009','When I Feel Sad'],['SN-AU-010','When I Feel Scared']
+        ];
+        function progressKey(){
+          try{ const raw=localStorage.getItem('kivora_active_child'); const id=raw?JSON.parse(raw):null;
+               return id?'kivora_progress_'+id:'kivora_progress'; }catch(e){ return 'kivora_progress'; }
+        }
+        let done={};
+        try{ done=JSON.parse(localStorage.getItem(progressKey())||'{}'); }catch(e){}
+        const list=document.getElementById('snStoryList');
+        let n=0;
+        STORIES.forEach(function(st){
+          const isDone=!!done[st[0]]; if(isDone)n++;
+          const li=document.createElement('li');
+          li.textContent=(isDone?'✅ ':'⬜ ')+st[1];
+          list.appendChild(li);
+        });
+        document.getElementById('snDoneCount').textContent=n;
+        document.getElementById('snProgressFill').style.width=(n*10)+'%';
+        document.getElementById('snCalmMode').checked = localStorage.getItem('kivora_calm_mode')==='1';
+        document.getElementById('snQuietStart').checked = localStorage.getItem('kivora_quiet_start')==='1';
+        window.snSaveSetting=function(key,on){ try{ localStorage.setItem(key,on?'1':'0'); }catch(e){} };
+      })();
+      </script>
     </div>
   </div>
 </section>
