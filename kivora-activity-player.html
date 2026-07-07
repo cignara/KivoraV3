@@ -15,8 +15,8 @@
 <div id="gate">
   <a href="./index.html" style="position:absolute;top:18px;left:18px;font-size:.8rem;font-weight:800;color:#64748b;text-decoration:none;">← Home</a>
   <div class="fox">🦊</div>
-  <h1>Alphabet Island</h1>
-  <p style="font-size:13px;font-weight:700;color:#64748b;margin-bottom:4px;">World 1 · 35 Activities · Ages 2–11</p>
+  <h1>Kivora Learning Worlds</h1>
+  <p style="font-size:13px;font-weight:700;color:#64748b;margin-bottom:4px;">10 Worlds · 1,100+ Activities · Ages 2–11</p>
   <div class="vol-note">🔊 Turn your volume up before starting!</div>
   <button class="btn-gate" onclick="unlockAndStart()">▶ Start Learning!</button>
   <div style="margin-top:8px">
@@ -31,7 +31,7 @@
 <div id="app">
   <!-- Top bar -->
   <div class="topbar">
-    <div class="topbar-title">🦊 Kivora · Alphabet Island</div>
+    <div class="topbar-title">🦊 Kivora Learning</div>
     <div class="topbar-stats">
       <div class="stat-pill">⭐ <span id="totalXP">0</span> XP</div>
       <div class="stat-pill">🪙 <span id="totalCoins">0</span></div>
@@ -40,16 +40,37 @@
     </div>
   </div>
 
-  <!-- Tab bar -->
+  <!-- Tab bar — all worlds -->
   <div class="tabbar">
     <div class="tab active" onclick="switchTab('alphabet-island')" id="tab-alphabet-island">
-      🏝️ Alphabet<br><span class="cnt" id="cnt-alphabet-island">0/15</span>
+      🏝️ Letters<br><span class="cnt" id="cnt-alphabet-island">0</span>
     </div>
     <div class="tab" onclick="switchTab('math-mountain')" id="tab-math-mountain">
-      ⛰️ Math<br><span class="cnt" id="cnt-math-mountain">0/10</span>
+      ⛰️ Maths<br><span class="cnt" id="cnt-math-mountain">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('story-cove')" id="tab-story-cove">
+      🌊 Stories<br><span class="cnt" id="cnt-story-cove">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('creativity-kingdom')" id="tab-creativity-kingdom">
+      🎨 Create<br><span class="cnt" id="cnt-creativity-kingdom">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('science-safari')" id="tab-science-safari">
+      🔬 Science<br><span class="cnt" id="cnt-science-safari">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('life-skills-village')" id="tab-life-skills-village">
+      🏘️ Life<br><span class="cnt" id="cnt-life-skills-village">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('coding-city')" id="tab-coding-city">
+      💻 Code<br><span class="cnt" id="cnt-coding-city">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('music-meadow')" id="tab-music-meadow">
+      🎵 Music<br><span class="cnt" id="cnt-music-meadow">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('brain-game-galaxy')" id="tab-brain-game-galaxy">
+      🧠 Brain<br><span class="cnt" id="cnt-brain-game-galaxy">0</span>
     </div>
     <div class="tab" onclick="switchTab('special-needs')" id="tab-special-needs">
-      ♾️ Special<br><span class="cnt" id="cnt-special-needs">0/10</span>
+      ♾️ Special<br><span class="cnt" id="cnt-special-needs">0</span>
     </div>
   </div>
 

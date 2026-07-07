@@ -6352,8 +6352,10 @@ function buildUI(){
     window._kivoraPendingWorld=null;
   } else {
     const params=new URLSearchParams(window.location.search);
-    const num=parseInt(params.get('world'),10);
-    target=NUM_TO_WORLD[num]||'alphabet-island';
+    const hashMatch=(window.location.hash||'').match(/world=([a-z-]+)/);
+    const raw=params.get('world')||(hashMatch&&hashMatch[1])||'';
+    const num=parseInt(raw,10);
+    target=NUM_TO_WORLD[num]||(WORLD_META[raw]?raw:'alphabet-island');
   }
   switchTab(target);
 }
