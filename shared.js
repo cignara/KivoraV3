@@ -228,3 +228,36 @@
   window.kivoraSetNavAuth = function() { refreshNavAuth(); };
   window.kivoraRefreshNav = refreshNavAuth;
 })();
+
+/* ── Content filtering (grade / world / search) ─────────────
+   Shared by games.html, activities.html, stories.html and any
+   page with .content-card grids. Scopes to the section group
+   containing the control that fired, so multiple filterable
+   grids on one page (SPA) stay independent. */
+window.filterContent = function(v, t) {
+  const src = document.activeElement;
+  const scope = (src && src.closest && (src.closest('.spa-page'))) || document;
+  const store = scope._kFilters || (scope._kFilters = {});
+  store[t] = (v || '').toLowerCase().trim();
+
+  scope.querySelectorAll('.content-card').forEach(card => {
+    const txt = card.textContent.toLowerCase();
+    let show = true;
+    if (store.search && !txt.includes(store.search)) show = false;
+    if (store.grade) {
+      const key = store.grade.split('(')[0].trim();      // "grade 3 (age 8)" → "grade 3"
+      if (!txt.includes(key)) show = false;
+    }
+    if (store.world) {
+      const words = store.world.replace(/[^a-z\s-]/g, '').trim().split(/\s+/);
+      if (words[0] && !txt.includes(words[0])) show = false; // "math mountain" → "math"
+    }
+    card.style.display = show ? '' : 'none';
+  });
+};
+window.filterPosts = function(cat) {
+  const key = (cat || '').toLowerCase();
+  document.querySelectorAll('.content-card, .card-lift').forEach(card => {
+    card.style.display = (!key || key === 'all' || card.textContent.toLowerCase().includes(key)) ? '' : 'none';
+  });
+};

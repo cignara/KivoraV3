@@ -3464,7 +3464,7 @@ function spaNavigate(slug, hash){
 
 function _spaResolveHref(href){
   // strips leading ./ and trailing .html, separates any #hash
-  const m=href.match(/^\.?\/?([\w-]+)\.html(?:#([\w-]+))?$/);
+  const m=href.match(/^\.?\/?([\w-]+)\.html(?:#([\w=-]+))?$/);
   if(!m) return null;
   let slug=m[1];
   if(slug==='kivora-activity-player') slug='player';
@@ -3499,6 +3499,19 @@ document.addEventListener('click', function(e){
   const resolved=_spaResolveHref(href);
   if(resolved && SPA_PAGES.has(resolved.slug)){
     e.preventDefault();
+    if(resolved.slug==='player' && resolved.hash && resolved.hash.indexOf('world=')===0){
+      const w=resolved.hash.slice(6);
+      window._kivoraPendingWorld=w;
+      spaNavigate('player');
+      setTimeout(()=>{
+        const gate=document.getElementById('gate');
+        if(gate && gate.style.display==='none' && typeof switchTab==='function'){
+          switchTab(w);
+          window._kivoraPendingWorld=null;
+        }
+      },60);
+      return;
+    }
     spaNavigate(resolved.slug, resolved.hash);
   }
   // kivora-activity-player.html links now route to the embedded #spa-player section too.
@@ -3510,9 +3523,27 @@ window.addEventListener('popstate', function(e){
   spaNavigate(slug);
 });
 
-// Shared stub filter functions (identical across activities/games/stories pages originally)
-function filterContent(v,t){ console.log('filter',t,v); }
-function filterPosts(cat){ console.log('filter:',cat); }
+// Content filtering (grade / world / search) — scoped to the SPA page containing the control
+function filterContent(v,t){
+  const src=document.activeElement;
+  const scope=(src&&src.closest&&src.closest('.spa-page'))||document;
+  const store=scope._kFilters||(scope._kFilters={});
+  store[t]=(v||'').toLowerCase().trim();
+  scope.querySelectorAll('.content-card').forEach(card=>{
+    const txt=card.textContent.toLowerCase();
+    let show=true;
+    if(store.search&&!txt.includes(store.search))show=false;
+    if(store.grade){const key=store.grade.split('(')[0].trim();if(!txt.includes(key))show=false;}
+    if(store.world){const w=store.world.replace(/[^a-z\s-]/g,'').trim().split(/\s+/)[0];if(w&&!txt.includes(w))show=false;}
+    card.style.display=show?'':'none';
+  });
+}
+function filterPosts(cat){
+  const key=(cat||'').toLowerCase();
+  document.querySelectorAll('.content-card, .card-lift').forEach(card=>{
+    card.style.display=(!key||key==='all'||card.textContent.toLowerCase().includes(key))?'':'none';
+  });
+}
 
 // Initial route on page load — supports deep-linking via #slug
 (function spaInit(){
