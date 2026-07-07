@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en" class="scroll-smooth"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Colouring Studio — Colour On-Screen with Kivi | Kivora Learning</title><meta name="description" content="Colour 600 pages on-screen with Kivi! Pick a colour, tap to fill, print your masterpiece. Animals, mandalas, letters, numbers and more."><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css" />
+</head><body class="bg-white text-slate-700"><div id="nav-root"></div>
+
+<section style="background:linear-gradient(160deg,#fce4ec,#fff9c4);padding:48px 0 32px;text-align:center">
+  <div style="max-width:48rem;margin:0 auto;padding:0 1.5rem">
+    <div class="section-badge" style="background:linear-gradient(135deg,#E91E63,#F39C12);color:#fff">600 Colouring Pages</div>
+    <h1 style="font-family:'Baloo 2',cursive;font-size:2.4rem;font-weight:800;color:#1e293b;line-height:1.15;margin:8px 0 12px">Colour On-Screen with <span style="background:linear-gradient(to right,#E91E63,#F39C12);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Kivi!</span> 🖍️</h1>
+    <p style="color:#475569;font-size:1rem;font-weight:600;line-height:1.6;margin:0">Pick a colour, tap a shape to fill it in, and print your masterpiece. 600 pages across 10 categories — no download needed!</p>
+  </div>
+</section>
+
+<section class="cs-studio" style="padding:24px 0 64px;background:#f8fafc">
+  <div style="max-width:80rem;margin:0 auto;padding:0 1.5rem">
+
+    <!-- Category strip -->
+    <div class="cs-cats" id="csCats"></div>
+
+    <div class="cs-workspace">
+      <!-- Canvas + controls -->
+      <div class="cs-main">
+        <div class="cs-toolbar">
+          <button class="cs-btn" id="csPrev" onclick="csPrev()">‹ Prev</button>
+          <span class="cs-pageinfo" id="csPageInfo"></span>
+          <button class="cs-btn" id="csNext" onclick="csNext()">Next ›</button>
+        </div>
+        <div class="cs-stage" id="csStage"></div>
+        <div class="cs-actions">
+          <button class="cs-btn cs-btn-alt" onclick="csRandom()">🎲 Surprise Me</button>
+          <button class="cs-btn cs-btn-alt" onclick="csReset()">↺ Clear</button>
+          <button class="cs-btn cs-btn-primary" onclick="csPrint()">🖨️ Print</button>
+        </div>
+      </div>
+
+      <!-- Palette -->
+      <div class="cs-side">
+        <div class="cs-side-title">🎨 Pick a colour</div>
+        <div class="cs-palette" id="csPalette"></div>
+        <p class="cs-tip">Tip: tap any white shape on the picture to fill it with your chosen colour. Choose white to erase!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-root"></div>
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:24px;right:24px;z-index:500;background:linear-gradient(135deg,#7C3AED,#FF4E8B);color:#fff;width:44px;height:44px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 16px rgba(124,58,237,.4)">↑</button>
+<script src="./shared.js"></script>
+<script src="./assets/coloring-studio.js"></script>
+</body></html>

@@ -176,6 +176,7 @@ if (isDev) {
   (async () => {
     await minifyAsset('app.js');
     await minifyAsset('activities.js');
+    await minifyAsset('coloring-studio.js');
 
     // Minify shared.js
     if (fs.existsSync(path.join(ROOT, 'shared.js'))) {
