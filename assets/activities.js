@@ -6255,6 +6255,19 @@ let selectedVoice = null;
 let totalXP     = 0;
 let totalCoins  = 0;
 
+/* ── Sensory preferences (set in the Special Needs dashboard) ── */
+try{
+  if(localStorage.getItem('kivora_quiet_start')==='1'){
+    muted=true;
+    document.addEventListener('DOMContentLoaded',function(){
+      const b=document.getElementById('muteBtn'); if(b)b.textContent='🔇';
+    });
+  }
+  if(localStorage.getItem('kivora_calm_mode')==='1'){
+    document.documentElement.classList.add('kivora-calm');
+  }
+}catch(e){}
+
 /* ══════════════════════════════════════════════
    UNLOCK + VOICE
 ══════════════════════════════════════════════ */

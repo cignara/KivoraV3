@@ -7,7 +7,7 @@
     <p style="color:#475569;font-size:1rem;font-weight:600;line-height:1.7;margin:0">Evidence-based articles for parents and educators on children's learning, digital wellbeing and making the most of Kivora.</p>
   </div>
 </section>
-<section style="padding:64px 0;background:#f8fafc">
+<section id="articleList" style="padding:64px 0;background:#f8fafc">
   <div style="max-width:72rem;margin:0 auto;padding:0 1.5rem">
     <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px">
       <button onclick="filterPosts('')" style="padding:8px 18px;border-radius:999px;border:2px solid #7C3AED;background:#7C3AED;color:#fff;font-weight:700;font-size:.85rem;cursor:pointer">All</button>
@@ -25,7 +25,7 @@
     </div>
     <h2 style="font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;color:#1e293b;margin:0 0 10px;line-height:1.35">How Phonics Games Boost Early Reading</h2>
     <p style="color:#64748b;font-size:.84rem;line-height:1.6;margin:0 0 16px">Research shows that phonics activities with immediate audio feedback accelerate letter-sound mastery by up to 30% in pre-K children. Here is how Kivora approaches phonics.</p>
-    <a href="./blog.html" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Read article →</a>
+    <a href="#article-phonics" onclick="openArticle('phonics');return false;" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none">Read article →</a>
   </div>
 </article><article class="card-lift reveal" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07)" style="animation-delay:0.08s">
   <div style="background:#7C3AED;padding:32px 24px;display:flex;align-items:center;justify-content:center;font-size:3rem">🧠</div>
@@ -36,7 +36,7 @@
     </div>
     <h2 style="font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;color:#1e293b;margin:0 0 10px;line-height:1.35">Why Children Learn Better Through Play</h2>
     <p style="color:#64748b;font-size:.84rem;line-height:1.6;margin:0 0 16px">Play-based learning activates more neural pathways than direct instruction for ages 2–7. We explore the science and how Kivora's game design puts it into practice.</p>
-    <a href="./blog.html" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Read article →</a>
+    <a href="#article-play" onclick="openArticle('play');return false;" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none">Read article →</a>
   </div>
 </article><article class="card-lift reveal" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07)" style="animation-delay:0.16s">
   <div style="background:#27AE60;padding:32px 24px;display:flex;align-items:center;justify-content:center;font-size:3rem">📱</div>
@@ -47,7 +47,7 @@
     </div>
     <h2 style="font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;color:#1e293b;margin:0 0 10px;line-height:1.35">Screen Time Guidelines for Children: What the Research Actually Says</h2>
     <p style="color:#64748b;font-size:.84rem;line-height:1.6;margin:0 0 16px">AAP, WHO and NHS guidelines differ — and none are as restrictive as headlines suggest. A calm, evidence-based look at healthy screen time for young learners.</p>
-    <a href="./blog.html" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Read article →</a>
+    <a href="#article-screentime" onclick="openArticle('screentime');return false;" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none">Read article →</a>
   </div>
 </article><article class="card-lift reveal" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07)" style="animation-delay:0.24s">
   <div style="background:#E91E63;padding:32px 24px;display:flex;align-items:center;justify-content:center;font-size:3rem">🌍</div>
@@ -58,7 +58,7 @@
     </div>
     <h2 style="font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;color:#1e293b;margin:0 0 10px;line-height:1.35">Celebrating Diversity in Children's Education</h2>
     <p style="color:#64748b;font-size:.84rem;line-height:1.6;margin:0 0 16px">From Vesak to Diwali, Eid to Christmas — how Kivora weaves world cultures into curriculum-aligned content so every child sees their world represented.</p>
-    <a href="./blog.html" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Read article →</a>
+    <a href="#article-diversity" onclick="openArticle('diversity');return false;" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none">Read article →</a>
   </div>
 </article><article class="card-lift reveal" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07)" style="animation-delay:0.32s">
   <div style="background:#2980B9;padding:32px 24px;display:flex;align-items:center;justify-content:center;font-size:3rem">💻</div>
@@ -69,7 +69,7 @@
     </div>
     <h2 style="font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;color:#1e293b;margin:0 0 10px;line-height:1.35">Teaching Children to Code at Age 5: Myth or Reality?</h2>
     <p style="color:#64748b;font-size:.84rem;line-height:1.6;margin:0 0 16px">Coding is not about syntax — it is about logic, sequencing and problem-solving. We explain how Coding City makes computational thinking accessible from age 5.</p>
-    <a href="./blog.html" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Read article →</a>
+    <a href="#article-coding" onclick="openArticle('coding');return false;" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none">Read article →</a>
   </div>
 </article><article class="card-lift reveal" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07)" style="animation-delay:0.40s">
   <div style="background:#F39C12;padding:32px 24px;display:flex;align-items:center;justify-content:center;font-size:3rem">❤️</div>
@@ -80,7 +80,7 @@
     </div>
     <h2 style="font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;color:#1e293b;margin:0 0 10px;line-height:1.35">Building Emotional Intelligence in the Early Years</h2>
     <p style="color:#64748b;font-size:.84rem;line-height:1.6;margin:0 0 16px">Social-emotional learning (SEL) predicts academic success better than IQ. Life Skills Village is built around evidence-based SEL frameworks — here is how.</p>
-    <a href="./blog.html" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Read article →</a>
+    <a href="#article-sel" onclick="openArticle('sel');return false;" style="font-weight:800;font-size:.84rem;color:#7C3AED;text-decoration:none">Read article →</a>
   </div>
 </article></div>
     <div style="text-align:center;margin-top:48px;padding:48px 24px;background:#fff;border-radius:20px;border:2px dashed #e2e8f0">
@@ -92,4 +92,161 @@
   </div>
 </section>
 
-<section style="background:linear-gradient(135deg,#7C3AED,#4F46E5);padding:80px 0;text-align:center"><h2 style="font-family:'Baloo 2',cursive;font-size:2.4rem;font-weight:800;color:#fff;margin:0 0 16px">Start Learning with Kivora!</h2><p style="color:rgba(255,255,255,.85);font-size:1.05rem;font-weight:600;margin:0 0 28px">Join 50,000+ families making learning magical — free forever plan, no credit card needed.</p><a href="./index.html?auth=register" style="display:inline-block;padding:16px 40px;background:#FFD93D;border-radius:16px;font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:#7C3AED;text-decoration:none">🚀 Try Kivora Free!</a></section><div id="footer-root"></div><button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:24px;right:24px;z-index:500;background:linear-gradient(135deg,#7C3AED,#FF4E8B);color:#fff;width:44px;height:44px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer">↑</button><script src="./shared.js"></script></body></html>
+
+<!-- ── ARTICLE READER ─────────────────────────────── -->
+<section id="articleReader" style="display:none;padding:56px 0;background:#fff">
+  <div style="max-width:46rem;margin:0 auto;padding:0 1.5rem">
+    <button onclick="closeArticle()" style="margin-bottom:24px;padding:8px 20px;border-radius:999px;border:2px solid #e2e8f0;background:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:.85rem;color:#64748b;cursor:pointer">← All Articles</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px" id="articleTags"></div>
+    <h1 id="articleTitle" style="font-family:'Baloo 2',cursive;font-size:2.1rem;font-weight:800;color:#1e293b;line-height:1.25;margin:0 0 8px"></h1>
+    <p id="articleMeta" style="color:#94a3b8;font-size:.85rem;font-weight:700;margin:0 0 28px"></p>
+    <div class="prose" id="articleBody"></div>
+    <div style="margin-top:40px;padding:28px;background:#f8fafc;border-radius:20px;text-align:center">
+      <p style="font-weight:800;color:#1e293b;margin:0 0 14px">Ready to see it in action?</p>
+      <a href="./kivora-activity-player.html" style="display:inline-block;padding:12px 28px;background:linear-gradient(to right,#7C3AED,#FF4E8B);border-radius:12px;color:#fff;font-weight:800;text-decoration:none">🎮 Try Kivora Free</a>
+    </div>
+    <button onclick="closeArticle()" style="margin-top:28px;padding:8px 20px;border-radius:999px;border:2px solid #e2e8f0;background:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:.85rem;color:#64748b;cursor:pointer">← Back to all articles</button>
+  </div>
+</section>
+
+<section style="background:linear-gradient(135deg,#7C3AED,#4F46E5);padding:80px 0;text-align:center"><h2 style="font-family:'Baloo 2',cursive;font-size:2.4rem;font-weight:800;color:#fff;margin:0 0 16px">Start Learning with Kivora!</h2><p style="color:rgba(255,255,255,.85);font-size:1.05rem;font-weight:600;margin:0 0 28px">Join 50,000+ families making learning magical — free forever plan, no credit card needed.</p><a href="./index.html?auth=register" style="display:inline-block;padding:16px 40px;background:#FFD93D;border-radius:16px;font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:#7C3AED;text-decoration:none">🚀 Try Kivora Free!</a></section><div id="footer-root"></div><button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:24px;right:24px;z-index:500;background:linear-gradient(135deg,#7C3AED,#FF4E8B);color:#fff;width:44px;height:44px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer">↑</button><script src="./shared.js"></script><script>
+const ARTICLES = {
+phonics: {
+  title: 'How Phonics Games Boost Early Reading',
+  tags: ['Literacy · Learning Science', '7 min read'],
+  meta: 'By the Kivora Learning Team',
+  body: `
+<p>Ask any early-years teacher what unlocks reading, and you will hear the same answer: the moment a child realises that letters are not shapes to memorise but <strong>sounds to hear</strong>. That insight — called the alphabetic principle — is the foundation systematic phonics instruction is built on, and it is one of the most consistently supported findings in reading research, from the U.S. National Reading Panel to England's phonics-first curriculum.</p>
+<h2>Why games help</h2>
+<p>Phonics is, at heart, pattern practice: letter <em>b</em> makes the sound <em>buh</em>, and that stays true in bear, ball and banana. Pattern practice needs repetition, and repetition is exactly where worksheets lose young children and games win them over. A well-designed phonics game gives a child three things a worksheet cannot:</p>
+<ul>
+<li><strong>Immediate feedback.</strong> Tap the wrong letter and you know instantly — no waiting for an adult to mark it. Mistakes become information rather than judgement.</li>
+<li><strong>Audio at the moment of need.</strong> Phonics is about sound, so instruction that speaks — "B says buh, like in Butterfly!" — connects the symbol and the sound in the same moment.</li>
+<li><strong>A reason to try again.</strong> Stars, sparkles and a cheering fox are not bribes; they are the emotional safety net that makes a three-year-old willing to attempt the same skill ten times.</li>
+</ul>
+<h2>How Kivora approaches phonics</h2>
+<p>Alphabet Island, our literacy world, sequences activities the way classroom phonics programmes do: single letter recognition first, then letter-sound matching ("Which picture starts with B?"), capital-to-lowercase matching, alphabet ordering, and finally vowels as a special family with their own song. Every activity speaks its instructions and its feedback aloud, so pre-readers can play entirely independently — no reading required to learn to read.</p>
+<p>Crucially, wrong answers never end the game. A child who taps <em>D</em> when looking for <em>B</em> hears a gentle hint ("B has a tall line with TWO bumps!") and tries again. Two attempts in, a visual hint appears. The design goal is simple: keep the child inside the learning loop instead of bouncing them out of it.</p>
+<h2>What parents can do at home</h2>
+<p>Games work best as one ingredient. Pair ten minutes of Alphabet Island with the oldest phonics technique there is: point at letters in the real world — on cereal boxes, street signs, their own name — and ask "what sound does that make?" The game supplies structured practice; you supply the joy of spotting letters in the wild. Together they turn the alphabet from twenty-six abstract shapes into a code your child feels proud to be cracking.</p>`
+},
+play: {
+  title: 'Why Children Learn Better Through Play',
+  tags: ['Learning Science', '5 min read'],
+  meta: 'By the Kivora Learning Team',
+  body: `
+<p>"They're just playing." It is said apologetically, as if play were the opposite of learning. Decades of developmental research say the opposite: for young children, <strong>play is the learning mechanism</strong> — the way their brains were designed to explore, test and remember.</p>
+<h2>What the science says</h2>
+<p>Researchers distinguish between free play and <em>guided play</em> — playful activity gently structured toward a learning goal. Studies across early mathematics, vocabulary and problem-solving repeatedly find that guided play matches or outperforms direct instruction for children under seven, while producing something instruction alone rarely does: children who <em>want</em> to keep going. The American Academy of Pediatrics considers play so central to healthy development that it has urged doctors to "prescribe" it.</p>
+<p>Why does play work so well? Three ingredients keep appearing in the research:</p>
+<ul>
+<li><strong>Agency.</strong> The child makes choices — which bubble to pop, which door to open. Choice keeps attention anchored.</li>
+<li><strong>Low-stakes failure.</strong> In play, a mistake costs nothing but a giggle. That safety is what lets young brains experiment.</li>
+<li><strong>Emotion.</strong> We remember what we feel. Delight literally tags memories as worth keeping.</li>
+</ul>
+<h2>Play with a purpose: how Kivora is designed</h2>
+<p>Every Kivora activity is a curriculum skill wearing a costume. Counting to five becomes coconut-collecting with Kivi the fox. Pattern recognition becomes a puzzle in Brain Game Galaxy. Sequencing — a genuine pre-coding skill — becomes guiding a robot through Coding City. The skill map underneath is deliberate; the child only ever experiences the costume.</p>
+<p>We also apply the guided-play principle to failure. No activity in Kivora shows a red X, plays a sad sound, or ends a session because of wrong answers. Feedback is always a nudge forward — a hint, a re-explanation, another go. XP and coins reward <em>completion and persistence</em>, not perfection.</p>
+<h2>The takeaway for parents</h2>
+<p>When your child finishes a Kivora session and tells you about the fox, the rocket or the dragon — not about "doing maths" — that is not a failure of the learning. That is the learning working exactly as four million years of child development intended.</p>`
+},
+screentime: {
+  title: 'Screen Time Guidelines for Children: What the Research Actually Says',
+  tags: ['Parenting · Research', '8 min read'],
+  meta: 'By the Kivora Learning Team',
+  body: `
+<p>Few parenting topics generate more guilt than screens. Yet when you read what major health bodies actually recommend — the American Academy of Pediatrics (AAP), the World Health Organization (WHO), the UK's Royal College of Paediatrics — the guidance is calmer and more nuanced than the headlines.</p>
+<h2>The guidance, briefly</h2>
+<ul>
+<li><strong>Under 18–24 months:</strong> avoid solo screen use other than video chat; anything on a screen should be shared with a caregiver.</li>
+<li><strong>Ages 2–5:</strong> the AAP suggests around an hour a day of <em>high-quality</em> content, ideally co-viewed. WHO frames similar limits within a bigger picture: enough sleep, enough physical activity.</li>
+<li><strong>School age:</strong> most bodies have moved away from fixed hour-counts toward a balance test — is screen use displacing sleep, exercise, play or family time? If not, rigid limits matter less than content quality.</li>
+</ul>
+<h2>Quality is the variable that matters most</h2>
+<p>Researchers consistently draw a line not at <em>how long</em> but at <em>what and how</em>. Passive, fast-cut video designed to hold attention is the category most associated with concerns. Interactive, slow-paced content that asks the child to think, respond and get feedback behaves differently — it is closer to a digital picture book or puzzle than to television. The strongest single predictor of a good outcome, in study after study, is whether an adult is involved: talking about the content, connecting it to the child's world.</p>
+<h2>How we designed Kivora around the guidance</h2>
+<ul>
+<li><strong>Interactive, never passive.</strong> Every Kivora activity requires the child to do something — tap, sort, order, type, sing. There is no autoplay video stream.</li>
+<li><strong>Natural stopping points.</strong> Activities run two to five minutes and end with a clear celebration screen, giving parents an easy off-ramp: "one more, then done."</li>
+<li><strong>No ads, no manipulative loops.</strong> Nothing is designed to trap attention — no countdown pressure to keep a session alive, no ad breaks, no autoplaying next episode.</li>
+<li><strong>Built for co-play.</strong> Kivi speaks everything aloud, so a parent on the sofa can join the conversation: "Which one starts with buh? You found it!"</li>
+</ul>
+<h2>A practical rule of thumb</h2>
+<p>Instead of counting minutes with a stopwatch, try the displacement test each week: is your child still sleeping well, moving plenty, playing off-screen and talking with you? If yes, a daily session of quality interactive learning is not a guilty pleasure. It is simply one healthy ingredient in a balanced week.</p>`
+},
+diversity: {
+  title: "Celebrating Diversity in Children's Education",
+  tags: ['Culture · Inclusion', '6 min read'],
+  meta: 'By the Kivora Learning Team',
+  body: `
+<p>Educators sometimes describe children's content as needing to be both a <strong>mirror and a window</strong> — a mirror in which every child sees their own life reflected, and a window through which they see lives different from their own. Most global learning platforms accidentally offer only one window, with one view: the same holidays, the same foods, the same names.</p>
+<h2>Why representation matters early</h2>
+<p>Children form their sense of what is "normal" astonishingly early. When a child never sees their festivals, food or family structure in the content they love, the quiet lesson is that their world is a special case — something to explain, not something that belongs. And the reverse is just as important: children who routinely meet other cultures in stories and games grow up treating difference as ordinary and interesting rather than strange.</p>
+<h2>How Kivora builds the mirror and the window</h2>
+<ul>
+<li><strong>Festivals from many traditions.</strong> Our seasonal content and craft packs cover a dozen celebrations — Vesak, Diwali, Eid, Christmas, Lunar New Year and more — treated with equal warmth and equal screen time.</li>
+<li><strong>Local pride, global reach.</strong> Kivora grew from Sri Lankan roots, and it shows deliberately: coloring packs feature Sri Lankan wildlife like leopards and peacocks alongside global animals; stories visit tide pools and tea country as naturally as castles.</li>
+<li><strong>Inclusive by design, not as an afterthought.</strong> Our Special Needs hub with social stories, calm visual pacing, and text that is always read aloud means children who learn differently are first-class citizens of the platform, not an accessibility checkbox.</li>
+<li><strong>Names and faces.</strong> The children in our stories carry names from many cultures, because a name in a story is one of the cheapest, most powerful mirrors there is.</li>
+</ul>
+<h2>What families can add</h2>
+<p>Content can open the door, but conversation walks through it. When a festival your family does not celebrate appears in a story or craft, resist the skip button. Ten minutes of "what do you think that lantern is for?" does more for a child's sense of the world than any lesson plan — and when their own celebration appears, watch their face. That is the mirror doing its work.</p>`
+},
+coding: {
+  title: 'Teaching Children to Code at Age 5: Myth or Reality?',
+  tags: ['Coding · Early Learning', '6 min read'],
+  meta: 'By the Kivora Learning Team',
+  body: `
+<p>The phrase "coding for five-year-olds" makes two groups of people roll their eyes: programmers, who picture a kindergartner debugging semicolons, and parents, who suspect a marketing gimmick. Both are reacting to the same misunderstanding. Early coding education has almost nothing to do with programming languages — and everything to do with a skill set researchers call <strong>computational thinking</strong>.</p>
+<h2>What five-year-olds can actually learn</h2>
+<p>Computational thinking is a bundle of ideas that happen to be the mental toolkit of programming, but are really the mental toolkit of clear thinking:</p>
+<ul>
+<li><strong>Sequencing</strong> — steps happen in order, and order matters. (Put on socks, then shoes.)</li>
+<li><strong>Decomposition</strong> — big problems break into small ones. (Tidying a room = books, then toys, then clothes.)</li>
+<li><strong>Patterns</strong> — spotting what repeats lets you predict what comes next.</li>
+<li><strong>Debugging</strong> — when the result is wrong, find the step that caused it, fix that step, try again.</li>
+</ul>
+<p>Every one of these is squarely within reach of a typical five-year-old — no reading required, no keyboard required. Educational research on tools like ScratchJr and screen-free coding toys consistently shows young children mastering sequencing and simple debugging with enthusiasm.</p>
+<h2>How Coding City teaches without code</h2>
+<p>Kivora's Coding City world runs on pictures and logic, not syntax. Children order command tiles to guide a robot, predict where a sequence will end, find the one wrong step in a broken plan, and complete visual patterns. In our newer arcade-style activities, they sequence commands under a friendly countdown — decomposition with a heartbeat. The word "code" appears; curly braces never do.</p>
+<h2>Does it actually matter later?</h2>
+<p>Honest answer: the research on whether early computational thinking makes better teenage programmers is still young. What is well-established is nearer-term and arguably more valuable — sequencing practice supports early maths and reading comprehension, and debugging practice builds the single most transferable habit a learner can own: treating a mistake as a clue rather than a verdict. If your five-year-old never writes a line of code, an inner voice that says "find the broken step and fix it" will serve them in everything from long division to friendship trouble.</p>
+<p>So: myth or reality? Reality — as long as you understand what is really being taught. It was never about the code.</p>`
+},
+sel: {
+  title: 'Building Emotional Intelligence in the Early Years',
+  tags: ['SEL · Research', '5 min read'],
+  meta: 'By the Kivora Learning Team',
+  body: `
+<p>If you could give a child one advantage for school — better focus, better friendships, better resilience when work gets hard — the research points somewhere surprising: not earlier reading, not more maths, but <strong>social-emotional learning</strong> (SEL). Large meta-analyses of school SEL programmes have found meaningful gains not only in behaviour and wellbeing but in academic achievement itself.</p>
+<h2>What SEL actually is</h2>
+<p>The most widely used framework (from CASEL, the Collaborative for Academic, Social, and Emotional Learning) breaks it into five competencies: self-awareness, self-management, social awareness, relationship skills, and responsible decision-making. For a four-year-old, those grand words reduce to beautifully concrete skills:</p>
+<ul>
+<li>Naming a feeling instead of only having it. ("I'm frustrated" beats a thrown toy.)</li>
+<li>Knowing one thing to do with a big feeling — breathe, count, squeeze a cushion, ask for help.</li>
+<li>Reading a friend's face and adjusting. ("She looks sad. Maybe she wants a turn.")</li>
+<li>Waiting, turn-taking, and repairing after conflict.</li>
+</ul>
+<h2>How Life Skills Village teaches it</h2>
+<p>Kivora's Life Skills Village turns each of these into playable moments. Children match faces to feeling words, choose what a character should do when angry, sequence calming steps in order, and practise everyday scripts — sharing, greeting, apologising — with Kivi modelling the behaviour first. Because every scenario is read aloud and illustrated, pre-readers participate fully.</p>
+<p>Our Special Needs hub extends the same work with social stories — step-by-step first-person walkthroughs of situations like morning routines, taking turns, and what to do when feelings get too big. Social stories are a long-standing, widely used support for autistic children, and we wrote ours so any child can benefit from them.</p>
+<h2>The home advantage</h2>
+<p>SEL is the one subject where parents effortlessly out-teach any app, because the curriculum is daily life. The evidence-backed habit is simple: <em>name feelings out loud</em> — yours and theirs. "You're disappointed the tower fell. I get frustrated when my things break too." A child who hears feelings named hundreds of times builds the vocabulary that self-regulation is made of. Kivora supplies the practice reps; the dinner table supplies the real thing.</p>`
+},
+};
+function openArticle(id){
+  const a = ARTICLES[id]; if(!a) return;
+  document.getElementById('articleTitle').textContent = a.title;
+  document.getElementById('articleMeta').textContent = a.meta;
+  document.getElementById('articleTags').innerHTML = a.tags.map(t=>'<span style="background:#f1f5f9;border-radius:999px;padding:3px 12px;font-size:.74rem;font-weight:700;color:#64748b">'+t+'</span>').join('');
+  document.getElementById('articleBody').innerHTML = a.body;
+  document.getElementById('articleList').style.display = 'none';
+  document.getElementById('articleReader').style.display = 'block';
+  window.scrollTo(0,0);
+}
+function closeArticle(){
+  document.getElementById('articleReader').style.display = 'none';
+  document.getElementById('articleList').style.display = '';
+  window.scrollTo(0,0);
+}
+</script></body></html>
