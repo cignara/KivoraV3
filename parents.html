@@ -226,14 +226,18 @@ var activeProgress = {};
 var activeFilter   = 'all';
 
 var WORLDS = {
-  'alphabet-island': {label:'Language',  icon:'📚', color:'linear-gradient(90deg,#FF69B4,#9B59B6)', cls:'lang'},
-  'number-kingdom':  {label:'Math',      icon:'🔢', color:'linear-gradient(90deg,#4A90E2,#9B59B6)', cls:'math'},
-  'science-lab':     {label:'Science',   icon:'🔬', color:'linear-gradient(90deg,#00C49A,#52C41A)', cls:'sci'},
-  'creative-studio': {label:'Creative',  icon:'🎨', color:'linear-gradient(90deg,#FF8C42,#FFD93D)', cls:'cre'},
-  'logic-land':      {label:'Logic',     icon:'🧩', color:'linear-gradient(90deg,#9B59B6,#4A90E2)', cls:'log'},
-  'life-skills':     {label:'Life Skills',icon:'❤️',color:'linear-gradient(90deg,#FF6B6B,#FF8C42)', cls:'life'}
+  'alphabet-island':     {label:'Alphabet Island',     icon:'🏝️', color:'linear-gradient(90deg,#FF69B4,#9B59B6)', cls:'lang'},
+  'math-mountain':       {label:'Math Mountain',        icon:'⛰️', color:'linear-gradient(90deg,#4A90E2,#9B59B6)', cls:'math'},
+  'story-cove':          {label:'Story Cove',           icon:'🌊', color:'linear-gradient(90deg,#EC407A,#F48FB1)', cls:'story'},
+  'creativity-kingdom':  {label:'Creativity Kingdom',   icon:'🎨', color:'linear-gradient(90deg,#FF8C42,#FFD93D)', cls:'cre'},
+  'science-safari':      {label:'Science Safari',       icon:'🔬', color:'linear-gradient(90deg,#00C49A,#52C41A)', cls:'sci'},
+  'life-skills-village': {label:'Life Skills Village',  icon:'🏘️', color:'linear-gradient(90deg,#FF6B6B,#FF8C42)', cls:'life'},
+  'coding-city':         {label:'Coding City',          icon:'💻', color:'linear-gradient(90deg,#14B8A6,#0EA5E9)', cls:'code'},
+  'music-meadow':        {label:'Music Meadow',         icon:'🎵', color:'linear-gradient(90deg,#9B59B6,#7C3AED)', cls:'music'},
+  'brain-game-galaxy':   {label:'Brain Game Galaxy',    icon:'🧠', color:'linear-gradient(90deg,#9B59B6,#4A90E2)', cls:'log'},
+  'special-needs':       {label:'Special Needs Hub',    icon:'♾️', color:'linear-gradient(90deg,#0EA5E9,#4F46E5)', cls:'sn'}
 };
-var WORLD_ORDER = ['alphabet-island','number-kingdom','science-lab','creative-studio','logic-land','life-skills'];
+var WORLD_ORDER = ['alphabet-island','math-mountain','story-cove','creativity-kingdom','science-safari','life-skills-village','coding-city','music-meadow','brain-game-galaxy','special-needs'];
 
 // ── Helpers ──────────────────────────────────────────
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}

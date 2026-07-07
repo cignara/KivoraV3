@@ -469,19 +469,22 @@
 <section id="crafts" class="py-20 bg-gradient-to-b from-green-50 to-teal-50 dark:from-slate-900 dark:to-slate-800">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12 reveal">
-      <span class="inline-block bg-kivora-green/10 text-kivora-green font-bold px-4 py-2 rounded-full text-sm mb-4">🛠️ 140 Crafts</span>
+      <span class="inline-block bg-kivora-green/10 text-kivora-green font-bold px-4 py-2 rounded-full text-sm mb-4">🛠️ 8 Craft Guide Packs</span>
       <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-800 dark:text-white mb-4">Make & Create! ✂️</h2>
-      <p class="text-slate-600 dark:text-slate-300 text-lg font-semibold">Step-by-step craft projects that develop fine motor skills and creativity — Kivi shows you how!</p>
+      <p class="text-slate-600 dark:text-slate-300 text-lg font-semibold">Step-by-step craft guides with printable templates — tap a category to open it instantly!</p>
     </div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 max-w-4xl mx-auto">
-      <div class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100"><div class="text-4xl mb-3">📄</div><div class="font-bold text-sm mb-1">Paper Crafts</div><div class="text-kivora-pink font-bold">40 Crafts</div></div>
-      <div class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100" style="transition-delay:.1s"><div class="text-4xl mb-3">🍃</div><div class="font-bold text-sm mb-1">Nature Crafts</div><div class="text-kivora-green font-bold">25 Crafts</div></div>
-      <div class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100" style="transition-delay:.2s"><div class="text-4xl mb-3">🎃</div><div class="font-bold text-sm mb-1">Seasonal Crafts</div><div class="text-kivora-orange font-bold">30 Crafts</div></div>
-      <div class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100" style="transition-delay:.3s"><div class="text-4xl mb-3">🧪</div><div class="font-bold text-sm mb-1">Science Crafts</div><div class="text-kivora-teal font-bold">25 Crafts</div></div>
-      <div class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100" style="transition-delay:.4s"><div class="text-4xl mb-3">♻️</div><div class="font-bold text-sm mb-1">Eco Crafts</div><div class="text-kivora-green font-bold">20 Crafts</div></div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+      <div onclick="openPrintable('craft_paper')" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100 cursor-pointer"><div class="text-4xl mb-3">📄</div><div class="font-bold text-sm mb-1">Paper Crafts</div><div class="text-kivora-pink font-bold text-xs">Origami · Cards · Pop-ups</div></div>
+      <div onclick="openPrintable('craft_paint')" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100 cursor-pointer" style="transition-delay:.05s"><div class="text-4xl mb-3">🎨</div><div class="font-bold text-sm mb-1">Painting Projects</div><div class="text-kivora-orange font-bold text-xs">Finger paint · Watercolour</div></div>
+      <div onclick="openPrintable('craft_model')" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100 cursor-pointer" style="transition-delay:.1s"><div class="text-4xl mb-3">🧱</div><div class="font-bold text-sm mb-1">Model Making</div><div class="text-kivora-purple font-bold text-xs">Salt dough · Clay · Card</div></div>
+      <div onclick="openPrintable('craft_nature')" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100 cursor-pointer" style="transition-delay:.15s"><div class="text-4xl mb-3">🍃</div><div class="font-bold text-sm mb-1">Nature Crafts</div><div class="text-kivora-green font-bold text-xs">Leaf art · Stone painting</div></div>
+      <div onclick="openPrintable('craft_festival')" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100 cursor-pointer" style="transition-delay:.2s"><div class="text-4xl mb-3">🎃</div><div class="font-bold text-sm mb-1">Festival Crafts</div><div class="text-kivora-orange font-bold text-xs">12 celebrations covered</div></div>
+      <div onclick="openPrintable('craft_textile')" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100 cursor-pointer" style="transition-delay:.25s"><div class="text-4xl mb-3">🧵</div><div class="font-bold text-sm mb-1">Textile Crafts</div><div class="text-kivora-purple font-bold text-xs">Weaving · Bracelets</div></div>
+      <div onclick="openPrintable('craft_recycled')" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100 cursor-pointer" style="transition-delay:.3s"><div class="text-4xl mb-3">♻️</div><div class="font-bold text-sm mb-1">Recycled Art</div><div class="text-kivora-green font-bold text-xs">Household item crafts</div></div>
+      <div onclick="openPrintable('craft_drama')" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-5 text-center shadow card-lift border border-slate-100 cursor-pointer" style="transition-delay:.35s"><div class="text-4xl mb-3">🎭</div><div class="font-bold text-sm mb-1">Drama Props</div><div class="text-kivora-pink font-bold text-xs">Masks · Puppets · Props</div></div>
     </div>
     <div class="text-center mt-10">
-      <a href="./crafts.html" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-white bg-gradient-to-r from-kivora-green to-kivora-teal hover:shadow-xl hover:scale-105 transition-all">Explore All 140 Crafts 🛠️</a>
+      <a href="./crafts.html" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-white bg-gradient-to-r from-kivora-green to-kivora-teal hover:shadow-xl hover:scale-105 transition-all">Explore All 8 Craft Guides 🛠️</a>
     </div>
   </div>
 </section>
@@ -494,39 +497,33 @@
     <div class="text-center mb-12 reveal">
       <span class="inline-block bg-kivora-teal/10 text-kivora-teal font-bold px-4 py-2 rounded-full text-sm mb-4">♾️ Special Needs Hub</span>
       <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-800 dark:text-white mb-4">Every Child Belongs ♾️</h2>
-      <p class="text-slate-600 dark:text-slate-300 text-lg font-semibold max-w-2xl mx-auto">145 specially designed items for children with diverse learning needs — never an afterthought, always a priority.</p>
+      <p class="text-slate-600 dark:text-slate-300 text-lg font-semibold max-w-2xl mx-auto">Built with universal design — real, working tools for children with diverse learning needs, never an afterthought.</p>
     </div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 max-w-5xl mx-auto">
-      <div class="reveal bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-lift text-center border-t-4 border-blue-400">
-        <div class="text-4xl mb-3">♾️</div>
-        <div class="font-display font-extrabold text-base mb-2">Autism-Friendly</div>
-        <div class="text-2xl font-extrabold text-blue-500 mb-1">40</div>
-        <div class="text-xs text-slate-500 font-semibold">Social stories · Visual schedules · Predictable structure</div>
-      </div>
-      <div class="reveal bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-lift text-center border-t-4 border-kivora-pink" style="transition-delay:.1s">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+      <a href="./kivora-activity-player.html#world=special-needs" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-lift text-center border-t-4 border-blue-400 block">
         <div class="text-4xl mb-3">📖</div>
-        <div class="font-display font-extrabold text-base mb-2">Dyslexia Support</div>
-        <div class="text-2xl font-extrabold text-kivora-pink mb-1">35</div>
-        <div class="text-xs text-slate-500 font-semibold">Audio-first · Colour coding · Decodable text</div>
-      </div>
-      <div class="reveal bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-lift text-center border-t-4 border-kivora-orange" style="transition-delay:.2s">
-        <div class="text-4xl mb-3">⚡</div>
-        <div class="font-display font-extrabold text-base mb-2">ADHD Sprint Set</div>
-        <div class="text-2xl font-extrabold text-kivora-orange mb-1">30</div>
-        <div class="text-xs text-slate-500 font-semibold">5-min max · High reward · Movement breaks</div>
-      </div>
-      <div class="reveal bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-lift text-center border-t-4 border-kivora-green" style="transition-delay:.3s">
-        <div class="text-4xl mb-3">✋</div>
-        <div class="font-display font-extrabold text-base mb-2">Fine Motor</div>
-        <div class="text-2xl font-extrabold text-kivora-green mb-1">20</div>
-        <div class="text-xs text-slate-500 font-semibold">80px+ targets · Tap-only · No precision dragging</div>
-      </div>
-      <div class="reveal bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-lift text-center border-t-4 border-kivora-purple" style="transition-delay:.4s">
-        <div class="text-4xl mb-3">🌟</div>
-        <div class="font-display font-extrabold text-base mb-2">Gifted &amp; Advanced</div>
-        <div class="text-2xl font-extrabold text-kivora-purple mb-1">20</div>
-        <div class="text-xs text-slate-500 font-semibold">Extension challenges across all 9 worlds</div>
-      </div>
+        <div class="font-display font-extrabold text-base mb-2">Social Stories</div>
+        <div class="text-2xl font-extrabold text-blue-500 mb-1">20</div>
+        <div class="text-xs text-slate-500 font-semibold">Autism-friendly · Predictable structure · Audio narrated</div>
+      </a>
+      <a href="./special-needs.html#features" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-lift text-center border-t-4 border-kivora-pink block" style="transition-delay:.1s">
+        <div class="text-4xl mb-3">🔊</div>
+        <div class="font-display font-extrabold text-base mb-2">Accessibility Features</div>
+        <div class="text-2xl font-extrabold text-kivora-pink mb-1">8</div>
+        <div class="text-xs text-slate-500 font-semibold">Audio-first · Adjustable pace · Sensory-friendly</div>
+      </a>
+      <a href="./special-needs.html#profiles" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-lift text-center border-t-4 border-kivora-orange block" style="transition-delay:.2s">
+        <div class="text-4xl mb-3">🧩</div>
+        <div class="font-display font-extrabold text-base mb-2">Learning Profiles</div>
+        <div class="text-2xl font-extrabold text-kivora-orange mb-1">6</div>
+        <div class="text-xs text-slate-500 font-semibold">Autism · ADHD · Dyslexia · Anxiety · Motor · Vision</div>
+      </a>
+      <a href="./index.html#printables" class="reveal bg-white dark:bg-slate-800 rounded-2xl p-6 shadow card-lift text-center border-t-4 border-kivora-green block" style="transition-delay:.3s">
+        <div class="text-4xl mb-3">🖨️</div>
+        <div class="font-display font-extrabold text-base mb-2">Inclusive Printables</div>
+        <div class="text-2xl font-extrabold text-kivora-green mb-1">4</div>
+        <div class="text-xs text-slate-500 font-semibold">Visual schedule · Emotions · Social skills · Calm-down</div>
+      </a>
     </div>
     <div class="text-center mt-10">
       <a href="./special-needs.html" class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-display font-extrabold text-lg text-white bg-gradient-to-r from-kivora-teal to-kivora-indigo hover:shadow-xl hover:scale-105 transition-all">Explore Special Needs Hub ♾️</a>
