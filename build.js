@@ -175,6 +175,7 @@ if (isDev) {
 
   (async () => {
     await minifyAsset('app.js');
+    await minifyAsset('enhancements.js');
     await minifyAsset('activities.js');
 
     // Minify shared.js
