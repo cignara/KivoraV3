@@ -198,6 +198,7 @@ button{cursor:pointer;font-family:inherit}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-functions-compat.js"></script>
 <script>
 (function(){
 'use strict';
@@ -441,16 +442,37 @@ function renderDashboard(uid,child,prog){
           +'<div style="font-size:.8rem;color:var(--gray)">'+gradeLabel(child.grade)+'</div></div>'
         +'</div>'
       +'</div>'
-      +'<div class="card"><div class="card-title">Screen Time Controls</div>'
+      +'<div class="card" style="margin-bottom:16px"><div class="card-title">Screen Time Controls</div>'
         +'<div class="set-grid" id="screenTimeForm"><div class="loading-msg">Loading…</div></div>'
       +'</div>'
+      +'<div class="card"><div class="card-title">Billing &amp; Plan</div><div id="billingBlock"><div class="loading-msg">Loading…</div></div></div>'
     +'</div>';
 
   // Animate bars
   setTimeout(function(){document.querySelectorAll('.bar[data-pct]').forEach(function(b){b.style.width=b.getAttribute('data-pct')+'%';});},60);
 
-  // Load screen time settings
+  // Load screen time settings + billing status
   loadScreenTime(uid,child.id);
+  renderBilling();
+}
+
+// ── Billing ────────────────────────────────────────────
+function renderBilling(){
+  var el=document.getElementById('billingBlock');if(!el)return;
+  var sub=getLocal('kivora_subscription',null);
+  var active=sub&&sub.active;
+  var planLabel={explorer_monthly:'Explorer (Monthly)',explorer_annual:'Explorer (Annual)',family_monthly:'Family (Monthly)',family_annual:'Family (Annual)'}[sub&&sub.plan]||'Free';
+  if(active){
+    el.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">'
+      +'<div><div style="font-family:\'Fredoka\',sans-serif;font-weight:600;font-size:.95rem">✅ '+esc(planLabel)+' plan active</div>'
+      +(sub.currentPeriodEnd?'<div style="font-size:.78rem;color:var(--gray);margin-top:2px">Renews '+new Date(sub.currentPeriodEnd).toLocaleDateString()+(sub.cancelAtPeriodEnd?' (cancels at period end)':'')+'</div>':'')
+      +'</div><button class="btn sm" onclick="kivoraStripe.openBillingPortal()">Manage Billing</button></div>';
+  } else {
+    el.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">'
+      +'<div><div style="font-family:\'Fredoka\',sans-serif;font-weight:600;font-size:.95rem">Free plan</div>'
+      +'<div style="font-size:.78rem;color:var(--gray);margin-top:2px">Upgrade to unlock all 840 activities</div></div>'
+      +'<a href="./pricing.html"><button class="btn sm primary">Upgrade Plan →</button></a></div>';
+  }
 }
 
 // ── Activities grid ───────────────────────────────────
@@ -576,12 +598,34 @@ if(!activeUid){
         if(photoEl&&photoURL){photoEl.src=photoURL;photoEl.style.display='block';}
         try{if(displayName)localStorage.setItem('kivora_display_name',displayName);}catch(e){}
         try{if(photoURL)localStorage.setItem('kivora_photo_url',photoURL);}catch(e){}
+
+        // Live-sync billing entitlement — important right after a Stripe
+        // checkout redirect (?checkout=success), since the webhook may take
+        // a moment to land after the browser returns here.
+        if(db){
+          db.ref('users/'+user.uid+'/subscription').on('value',function(snap){
+            var sub=snap.val()||{active:false};
+            try{localStorage.setItem('kivora_subscription',JSON.stringify(sub));}catch(e){}
+            renderBilling();
+          },function(){});
+        }
       }
     });
   }
 }
 
+// If we just returned from Stripe Checkout, show a quick confirmation toast
+// and jump to the Settings tab so the new plan is visible right away.
+if(window.location.search.indexOf('checkout=success')!==-1){
+  setTimeout(function(){
+    toast('🎉 Payment received — activating your plan…');
+    var tabs=document.querySelectorAll('.tab');
+    if(tabs[3]) tabs[3].click();
+  },300);
+}
+
 })();
 </script>
+<script src="assets/stripe.js" defer></script>
 </body>
 </html>

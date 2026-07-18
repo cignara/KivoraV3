@@ -153,6 +153,7 @@
     try { localStorage.removeItem('kivora_user_role'); } catch(e) {}
     try { localStorage.removeItem('kivora_display_name'); } catch(e) {}
     try { localStorage.removeItem('kivora_photo_url'); } catch(e) {}
+    try { localStorage.removeItem('kivora_subscription'); } catch(e) {}
     return ns.auth.signOut();
   };
 
@@ -273,6 +274,7 @@
       handled = true;
       // Merge cloud data into localStorage so the dashboard has fresh data
       _loadCloudIntoLocal();
+      _syncSubscriptionState(user.uid);
       // Cache display name / photo for use in navs
       try {
         if (user.displayName) localStorage.setItem('kivora_display_name', user.displayName);
@@ -280,6 +282,31 @@
       } catch(e) {}
     });
   }
+
+  // Cache billing entitlement to localStorage so gating checks are instant
+  // and work even before Firebase has resolved on a given page load.
+  // Also keeps listening for live changes (webhook updates after checkout).
+  function _syncSubscriptionState(uid) {
+    if (!ns.db) return;
+    ns.db.ref('users/' + uid + '/subscription').on('value', function(snap) {
+      var sub = snap.val() || { active: false };
+      try { localStorage.setItem('kivora_subscription', JSON.stringify(sub)); } catch(e) {}
+    }, function() { /* permission or offline — ignore, cached value stands */ });
+  }
+
+  // Returns true if the signed-in parent has an active paid plan, using the
+  // localStorage cache (instant, no async wait needed for gating UI).
+  ns.hasActiveSubscription = function() {
+    try {
+      var sub = JSON.parse(localStorage.getItem('kivora_subscription') || 'null');
+      return !!(sub && sub.active);
+    } catch(e) { return false; }
+  };
+
+  ns.getSubscription = function() {
+    try { return JSON.parse(localStorage.getItem('kivora_subscription') || 'null'); }
+    catch(e) { return null; }
+  };
 
   ns.loadFromCloud = function() { _loadCloudIntoLocal(); };
 

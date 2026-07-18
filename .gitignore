@@ -2,6 +2,9 @@ node_modules/
 dist/
 _original_head.html
 _*.js
+functions/.env
+functions/.env.*
+!functions/.env.example
 
 # reference mockups
 new verson 2/

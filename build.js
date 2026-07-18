@@ -188,6 +188,7 @@ if (isDev) {
 
     // Minify firebase.js (assets subdirectory)
     await minifyAsset('firebase.js');
+    await minifyAsset('stripe.js');
 
     // Minify HTML
     console.log('\n\x1b[33m3/4\x1b[0m Minifying HTML...');
